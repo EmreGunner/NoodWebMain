@@ -1,0 +1,58 @@
+{
+  "header": {
+    "academy": "Académie",
+    "community": "Communauté",
+    "dashboard": "Tableau de bord",
+    "blog": "Blog",
+    "bookConsultation": "Réserver une consultation"
+  },
+  "home": {
+    "title": "Votre passerelle vers le succès numérique",
+    "subtitle": "Maîtrisez les compétences numériques pour l'entrepreneuriat avec nos cours dirigés par des experts",
+    "explorePrograms": "Explorez nos programmes",
+    "offerings": "Nos offres",
+    "noodAcademy": "Académie NOOD",
+    "noodCommunity": "Communauté NOOD",
+    "academyDescription": "Maîtrisez les compétences numériques pour l'entrepreneuriat. Cours en Design Graphique, E-commerce, Apprentissage des Langues et Arts Créatifs.",
+    "communityDescription": "Rejoignez notre communauté florissante basée sur Telegram. Connectez-vous, apprenez et grandissez avec des personnes partageant les mêmes idées.",
+    "learnMore": "En savoir plus",
+    "joinNow": "Rejoindre maintenant",
+    "successStories": "Histoires de réussite",
+    "readyToStart": "Prêt à commencer votre voyage ?",
+    "readyDescription": "Que vous cherchiez à acquérir de nouvelles compétences, à développer votre entreprise ou à rejoindre une communauté de personnes partageant les mêmes idées, Nood a quelque chose pour vous.",
+    "bookFreeConsultation": "Réserver une consultation gratuite"
+  },
+  "academy": {
+    "title": "Académie NOOD",
+    "subtitle": "Libérez votre potentiel ! Maîtrisez les compétences numériques pour l'entrepreneuriat avec nos cours dirigés par des experts.",
+    "featuredCourses": "Cours en vedette",
+    "all": "Tous",
+    "virtual": "Virtuel",
+    "physical": "Physique",
+    "apply": "Postuler",
+    "notSureWhere": "Vous ne savez pas par où commencer ?",
+    "takeAssessment": "Passez notre évaluation des compétences pour obtenir des recommandations de cours personnalisées.",
+    "startAssessment": "Commencer l'évaluation",
+    "searchCourses": "Rechercher des cours..."
+  },
+  "footer": {
+    "quickLinks": "Liens rapides",
+    "contactUs": "Contactez-nous",
+    "followUs": "Suivez-nous",
+    "rights": "© 2023 NOOD. Tous droits réservés."
+  },
+  "courseDetail": {
+    "courseDescription": "Description du cours",
+    "courseDetails": "Détails du cours",
+    "courseType": "Type de cours",
+    "domain": "Domaine",
+    "startDate": "Date de début",
+    "duration": "Durée",
+    "weeks": "semaines",
+    "price": "Prix",
+    "courseObjectives": "Objectifs du cours",
+    "courseObjectivesDescription": "À la fin de ce cours, vous serez capable de...",
+    "applyNow": "Postuler maintenant",
+    "courseNotFound": "Cours non trouvé"
+  }
+}

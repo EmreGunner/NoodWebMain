@@ -1,0 +1,58 @@
+{
+  "header": {
+    "academy": "الأكاديمية",
+    "community": "المجتمع",
+    "dashboard": "لوحة التحكم",
+    "blog": "المدونة",
+    "bookConsultation": "حجز استشارة"
+  },
+  "home": {
+    "title": "بوابتك نحو النجاح الرقمي",
+    "subtitle": "أتقن المهارات الرقمية لريادة الأعمال مع دوراتنا التي يقودها الخبراء",
+    "explorePrograms": "استكشف برامجنا",
+    "offerings": "عروضنا",
+    "noodAcademy": "أكاديمية NOOD",
+    "noodCommunity": "مجتمع NOOD",
+    "academyDescription": "أتقن المهارات الرقمية لريادة الأعمال. دورات في التصميم الجرافيكي، التجارة الإلكترونية، تعلم اللغات والفنون الإبداعية.",
+    "communityDescription": "انضم إلى مجتمعنا المزدهر على تيليجرام. تواصل وتعلم وانمو مع أشخاص يشاركونك نفس الأفكار.",
+    "learnMore": "اعرف المزيد",
+    "joinNow": "انضم الآن",
+    "successStories": "قصص النجاح",
+    "readyToStart": "هل أنت مستعد لبدء رحلتك؟",
+    "readyDescription": "سواء كنت تبحث عن تعلم مهارات جديدة، أو تنمية عملك، أو الانضمام إلى مجتمع من الأشخاص ذوي التفكير المماثل، فإن Nood لديها شيء لك.",
+    "bookFreeConsultation": "احجز استشارة مجانية"
+  },
+  "academy": {
+    "title": "أكاديمية NOOD",
+    "subtitle": "أطلق العنان لإمكاناتك! أتقن المهارات الرقمية لريادة الأعمال مع دوراتنا التي يقودها الخبراء.",
+    "featuredCourses": "الدورات المميزة",
+    "all": "الكل",
+    "virtual": "افتراضي",
+    "physical": "حضوري",
+    "apply": "تقدم الآن",
+    "notSureWhere": "غير متأكد من أين تبدأ؟",
+    "takeAssessment": "خذ تقييم مهاراتنا للحصول على توصيات دورات مخصصة.",
+    "startAssessment": "ابدأ التقييم",
+    "searchCourses": "البحث عن الدورات..."
+  },
+  "footer": {
+    "quickLinks": "روابط سريعة",
+    "contactUs": "اتصل بنا",
+    "followUs": "تابعنا",
+    "rights": "© 2023 NOOD. جميع الحقوق محفوظة."
+  },
+  "courseDetail": {
+    "courseDescription": "وصف الدورة",
+    "courseDetails": "تفاصيل الدورة",
+    "courseType": "نوع الدورة",
+    "domain": "المجال",
+    "startDate": "تاريخ البدء",
+    "duration": "المدة",
+    "weeks": "أسابيع",
+    "price": "السعر",
+    "courseObjectives": "أهداف الدورة",
+    "courseObjectivesDescription": "بنهاية هذه الدورة، ستكون قادرًا على...",
+    "applyNow": "تقدم الآن",
+    "courseNotFound": "الدورة غير موجودة"
+  }
+}

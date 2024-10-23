@@ -1,0 +1,58 @@
+{
+  "header": {
+    "academy": "Academy",
+    "community": "Community",
+    "dashboard": "Dashboard",
+    "blog": "Blog",
+    "bookConsultation": "Book Consultation"
+  },
+  "home": {
+    "title": "Your Gateway to Digital Success",
+    "subtitle": "Master digital skills for entrepreneurship with our expert-led courses",
+    "explorePrograms": "Explore Our Programs",
+    "offerings": "Our Offerings",
+    "noodAcademy": "NOOD Academy",
+    "noodCommunity": "NOOD Community",
+    "academyDescription": "Master digital skills for entrepreneurship. Courses in Graphic Design, E-commerce, Language Learning, and Creative Arts.",
+    "communityDescription": "Join our thriving Telegram-based community. Connect, learn, and grow with like-minded individuals.",
+    "learnMore": "Learn More",
+    "joinNow": "Join Now",
+    "successStories": "Success Stories",
+    "readyToStart": "Ready to Start Your Journey?",
+    "readyDescription": "Whether you're looking to learn new skills, grow your business, or join a community of like-minded individuals, Nood has something for you.",
+    "bookFreeConsultation": "Book a Free Consultation"
+  },
+  "academy": {
+    "title": "NOOD Academy",
+    "subtitle": "Unlock your potential! Master digital skills for entrepreneurship with our expert-led courses.",
+    "featuredCourses": "Featured Courses",
+    "all": "All",
+    "virtual": "Virtual",
+    "physical": "Physical",
+    "apply": "Apply",
+    "notSureWhere": "Not Sure Where to Start?",
+    "takeAssessment": "Take our skills assessment to get personalized course recommendations.",
+    "startAssessment": "Start Assessment",
+    "searchCourses": "Search courses..."
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "contactUs": "Contact Us",
+    "followUs": "Follow Us",
+    "rights": "© 2023 NOOD. All rights reserved."
+  },
+  "courseDetail": {
+    "courseDescription": "Course Description",
+    "courseDetails": "Course Details",
+    "courseType": "Course Type",
+    "domain": "Domain",
+    "startDate": "Start Date",
+    "duration": "Duration",
+    "weeks": "weeks",
+    "price": "Price",
+    "courseObjectives": "Course Objectives",
+    "courseObjectivesDescription": "By the end of this course, you will be able to...",
+    "applyNow": "Apply Now",
+    "courseNotFound": "Course not found"
+  }
+}

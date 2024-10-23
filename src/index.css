@@ -1,0 +1,36 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-full font-semibold 
+           hover:bg-secondary transition duration-300 shadow-md 
+           hover:shadow-lg focus:outline-none focus:ring-2 
+           focus:ring-primary focus:ring-opacity-50;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6 hover:shadow-xl 
+           transition duration-300;
+  }
+}
+
+.hero-pattern {
+  background-color: #f9fafb;
+  background-image: radial-gradient(#84bb75 0.5px, transparent 0.5px), 
+                    radial-gradient(#84bb75 0.5px, #f9fafb 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.2;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #84bb75 0%, #5d8a54 100%);
+}
