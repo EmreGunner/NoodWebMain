@@ -26,7 +26,7 @@ const ExploreWorkshopsSection: React.FC = () => {
             </div>
             <Link 
               to="/workshops"
-              className="bg-tertiary text-white text-lg px-10 py-4 rounded-full font-semibold hover:bg-primary transition duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
+              className="bg-primary text-white text-lg px-10 py-4 rounded-full font-semibold hover:bg-secondary transition duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
             >
               Learn More <ArrowRight className="ml-3" size={24} />
             </Link>

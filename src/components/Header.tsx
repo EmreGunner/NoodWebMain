@@ -1,25 +1,47 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X, BookOpen, Users, User, FileText, Search, Moon, Sun } from 'lucide-react'
+import courses from '../data/courses.json' // Import your courses data
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState<typeof courses>([])
 
-  // Handle scroll effect
+  // Handle scroll effect with a buffer
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+      const scrollTop = window.pageYOffset;
+      if (scrollTop > 10 && !isScrolled) {
+        setIsScrolled(true);
+      } else if (scrollTop <= 10 && isScrolled) {
+        setIsScrolled(false);
+      }
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isScrolled])
 
   // Handle dark mode toggle
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     document.documentElement.classList.toggle('dark')
+  }
+
+  // Handle search
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value
+    setSearchTerm(term)
+    if (term.trim()) {
+      const filtered = courses.filter(course => 
+        course.name.toLowerCase().includes(term.toLowerCase())
+      )
+      setSearchResults(filtered.slice(0, 5)) // Limit to 5 results
+    } else {
+      setSearchResults([])
+    }
   }
 
   const navItems = [
@@ -30,7 +52,7 @@ const Header: React.FC = () => {
   ]
 
   return (
-    <header className={`bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
+    <header className={`bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-primary dark:text-white">
@@ -52,8 +74,24 @@ const Header: React.FC = () => {
                 type="text"
                 placeholder="Search courses..."
                 className="pl-8 pr-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                value={searchTerm}
+                onChange={handleSearch}
               />
               <Search className="absolute left-2 top-2.5 text-gray-400" size={18} />
+              {searchResults.length > 0 && (
+                <div className="absolute mt-2 w-full bg-white dark:bg-gray-800 rounded-md shadow-lg">
+                  {searchResults.map(course => (
+                    <Link
+                      key={course.id}
+                      to={`/academy/${course.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setSearchResults([])}
+                    >
+                      {course.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
             <button
               onClick={toggleDarkMode}
@@ -89,6 +127,35 @@ const Header: React.FC = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <div className="relative mt-2">
+                  <input
+                    type="text"
+                    placeholder="Search courses..."
+                    className="w-full pl-8 pr-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <Search className="absolute left-2 top-2.5 text-gray-400" size={18} />
+                </div>
+                {searchResults.length > 0 && (
+                  <div className="mt-2 bg-white dark:bg-gray-800 rounded-md shadow-lg">
+                    {searchResults.map(course => (
+                      <Link
+                        key={course.id}
+                        to={`/academy/${course.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => {
+                          setSearchResults([])
+                          setIsMenuOpen(false)
+                        }}
+                      >
+                        {course.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </li>
               <li>
                 <Link to="/consultation" className="btn-primary block text-center mt-4" onClick={() => setIsMenuOpen(false)}>
                   Book Consultation

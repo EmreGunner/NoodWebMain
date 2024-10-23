@@ -1,20 +1,21 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { PopupButton } from '@typeform/embed-react';
 import courses from '../data/courses.json';
 
 const CourseDetail: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const { t } = useTranslation();
   
-  const course = courses.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === courseId);
+  const course = courses.find(c => c.id === courseId);
 
   if (!course) {
     return <div>{t('courseNotFound')}</div>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">{course.name}</h1>
       <img src={course.coursePhoto} alt={course.name} className="w-full h-64 object-cover rounded-lg mb-6" />
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
@@ -28,14 +29,18 @@ const CourseDetail: React.FC = () => {
           <li>{t('domain')}: {course.domain}</li>
           <li>{t('startDate')}: {new Date(course.startDate).toLocaleDateString()}</li>
           <li>{t('duration')}: {course.duration} {t('weeks')}</li>
-          <li>{t('price')}: ${course.price}</li>
         </ul>
       </div>
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-2">{t('courseObjectives')}</h2>
-        <p>{t('courseObjectivesDescription')}</p>
+        <h2 className="text-xl font-semibold mb-2">{t('technicalRequirements')}</h2>
+        <p>{course.technicalRequirements}</p>
       </div>
-      <button className="btn-primary w-full">{t('applyNow')}</button>
+      <PopupButton 
+        id="01HQB8RH0C3WV37JX65EZ97VX4"
+        className="w-full bg-primary text-white text-center py-3 px-4 rounded-full hover:bg-secondary transition duration-300 text-lg font-semibold"
+      >
+        {t('Apply Now')}
+      </PopupButton>
     </div>
   );
 };

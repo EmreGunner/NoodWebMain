@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Play } from 'lucide-react';
 
+
 const VideoSection: React.FC = () => {
+  useEffect(() => {
+    console.log('VideoSection mounted');
+  }, []);
+
+  console.log('Rendering VideoSection');
+
   return (
     <div className="bg-[#2d0a31] py-20">
       <div className="container mx-auto px-4">
+        <h2 className="text-white text-3xl font-bold mb-8 text-center">Video Section</h2>
         <div className="relative w-full max-w-3xl mx-auto aspect-video rounded-3xl overflow-hidden border-4 border-[#4e9350]">
           <img 
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
@@ -18,6 +26,7 @@ const VideoSection: React.FC = () => {
           </div>
         </div>
       </div>
+   
     </div>
   );
 };
