@@ -1,54 +1,61 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Calendar, Search, Star, TrendingUp } from 'lucide-react'
+import { ArrowRight, Calendar, Search } from 'lucide-react'
+import { motion } from 'framer-motion'
 import courses from '../data/courses.json'
+import Card from '../components/Card'
+import Button from '../components/Button'
 
 const Academy: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [filteredCourses, setFilteredCourses] = useState(courses)
   const { t } = useTranslation()
 
-  useEffect(() => {
-    const filtered = courses.filter(course => 
-      (selectedType ? course.courseType === selectedType : true) &&
-      course.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    setFilteredCourses(filtered)
-  }, [selectedType, searchTerm])
+  const filteredCourses = courses.filter(course => 
+    (selectedType ? course.courseType === selectedType : true) &&
+    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
-    <div className="space-y-12">
+    <div className="container mx-auto px-4 py-8 space-y-12">
       <section className="text-center">
         <h1 className="text-4xl font-bold mb-4 nood-gradient-text">{t('academy.title')}</h1>
-        <p className="text-xl text-text dark:text-gray-300 max-w-3xl mx-auto">
+        <p className="text-xl text-text max-w-3xl mx-auto">
           {t('academy.subtitle')}
         </p>
       </section>
 
       <section>
-        <div className="flex flex-wrap justify-between items-center mb-8">
-          <div className="flex space-x-4 mb-4 md:mb-0">
-            {['all', 'virtual', 'physical'].map((type) => (
-              <button
-                key={type}
-                className={`px-4 py-2 rounded-full transition duration-300 ${
-                  (selectedType === type || (type === 'all' && selectedType === null))
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-200 text-text dark:bg-gray-700 dark:text-gray-300'
-                } hover:bg-opacity-80`}
-                onClick={() => setSelectedType(type === 'all' ? null : type)}
-              >
-                {t(type)}
-              </button>
-            ))}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+          <div className="flex flex-wrap justify-center md:justify-start space-x-4">
+            <Button
+              onClick={() => setSelectedType(null)}
+              variant={selectedType === null ? 'primary' : 'outline'}
+              className="mb-2 md:mb-0"
+            >
+              {t('all')}
+            </Button>
+            <Button
+              onClick={() => setSelectedType('Virtual')}
+              variant={selectedType === 'Virtual' ? 'primary' : 'outline'}
+              className="mb-2 md:mb-0"
+            >
+              {t('virtual')}
+            </Button>
+            <Button
+              onClick={() => setSelectedType('Physical')}
+              variant={selectedType === 'Physical' ? 'primary' : 'outline'}
+              className="mb-2 md:mb-0"
+            >
+              {t('physical')}
+            </Button>
           </div>
           <div className="relative w-full md:w-auto">
             <input
               type="text"
               placeholder={t('searchCourses')}
-              className="w-full md:w-64 pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+              className="w-full md:w-64 pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -56,59 +63,60 @@ const Academy: React.FC = () => {
           </div>
         </div>
         <h2 className="text-2xl font-bold mb-6">{t('featuredCourses')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCourses.map(course => (
-            <Link key={course.name} to={`/academy/${course.name.toLowerCase().replace(/\s+/g, '-')}`} className="nood-card group hover:shadow-xl transition duration-300">
-              <div className="relative">
+            <motion.div
+              key={course.name}
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-lg">
                 <img src={course.coursePhoto} alt={course.name} className="w-full h-48 object-cover rounded-t-2xl" />
-                {course.isBestSeller && (
-                  <span className="absolute top-2 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full">
-                    Best Seller
-                  </span>
-                )}
-              </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition duration-300">{course.name}</h3>
-                <p className="text-text dark:text-gray-300 mb-2">{course.domain}</p>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-lg">${course.price.toFixed(2)}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    course.courseType === 'Virtual' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                  }`}>
-                    {course.courseType}
-                  </span>
-                </div>
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  <Calendar size={16} className="mr-1" />
-                  <span>{t('startDate')}: {new Date(course.startDate).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <Star className="text-yellow-400" size={16} />
-                    <span className="ml-1 text-sm">{course.rating.toFixed(1)}</span>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition duration-300">{course.name}</h3>
+                  <p className="text-text mb-2 flex-grow">{course.domain}</p>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-bold text-lg">${course.price}</span>
+                    <span className={`text-xs px-2 py-1 rounded-full ${course.courseType === 'Virtual' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                      {course.courseType}
+                    </span>
                   </div>
-                  <div className="flex items-center text-green-600">
-                    <TrendingUp size={16} className="mr-1" />
-                    <span className="text-sm">High Demand</span>
+                  <div className="flex items-center text-sm text-gray-600 mb-4">
+                    <Calendar size={16} className="mr-1" />
+                    <span>{t('startDate')}: {new Date(course.startDate).toLocaleDateString()}</span>
                   </div>
+                  <Link 
+                    to={`/academy/${course.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="btn-primary text-center py-2 px-4 rounded-full inline-block w-full"
+                  >
+                    {t('apply')}
+                  </Link>
                 </div>
-                <button className="btn-primary text-sm px-4 py-2 w-full block text-center group-hover:bg-secondary transition duration-300">
-                  {t('apply')}
-                </button>
-              </div>
-            </Link>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="text-center py-12 bg-accent dark:bg-gray-700 rounded-3xl">
+      <section className="text-center py-12 bg-accent rounded-3xl mt-16">
         <h2 className="text-2xl font-bold mb-4">{t('notSureWhere')}</h2>
-        <p className="text-lg text-text dark:text-gray-300 mb-6">
+        <p className="text-lg text-text mb-6">
           {t('takeAssessment')}
         </p>
-        <button className="btn-secondary inline-flex items-center hover:bg-primary hover:text-white transition duration-300">
+        <Button 
+          variant="secondary"
+          className="inline-flex items-center justify-center py-3 px-6 text-lg"
+          onClick={() => {
+            const script = document.createElement('script');
+            script.src = "//embed.typeform.com/next/embed.js";
+            document.body.appendChild(script);
+            script.onload = () => {
+              (window as any).tf.createPopup('01HQB8RH0C3WV37JX65EZ97VX4').open();
+            };
+          }}
+        >
           {t('startAssessment')} <ArrowRight className="ml-2" size={20} />
-        </button>
+        </Button>
       </section>
     </div>
   )

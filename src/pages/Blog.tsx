@@ -1,32 +1,34 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const blogPosts = [
   {
     id: 1,
-    title: "10 Tips for Successful Online Learning",
-    excerpt: "Maximize your online learning experience with these essential tips...",
-    author: "Jane Doe",
-    date: "2023-05-15",
-    image: "https://source.unsplash.com/random/800x600?study"
+    title: "Three Pillars of User Delight",
+    excerpt: "Delight can be experienced viscerally, behaviourally, and reflectively. A great design is ...",
+    date: "November 16, 2014",
+    image: "/path/to/user-delight-image.jpg",
+    tags: ["Research", "UI UX"]
   },
   {
     id: 2,
-    title: "The Future of E-commerce: Trends to Watch",
-    excerpt: "Stay ahead of the curve with these emerging e-commerce trends...",
-    author: "John Smith",
-    date: "2023-05-10",
-    image: "https://source.unsplash.com/random/800x600?ecommerce"
+    title: "UX Mapping Methods",
+    excerpt: "Visual-design principles can be applied consistently throughout the process of creating a polished UX map...",
+    date: "September 24, 2017",
+    image: "/path/to/ux-mapping-image.jpg",
+    tags: ["Research", "UI Design"]
   },
   {
     id: 3,
-    title: "How to Build a Stunning Design Portfolio",
-    excerpt: "Showcase your best work and land your dream job with these portfolio tips...",
-    author: "Emily Chen",
-    date: "2023-05-05",
-    image: "https://source.unsplash.com/random/800x600?portfolio"
+    title: "Agile Development Projects and Usability",
+    excerpt: "Agile methods aim to overcome usability barriers in traditional development, but post new threats to user experience quality.",
+    date: "March 13, 2014",
+    image: "/path/to/agile-development-image.jpg",
+    tags: ["Programming", "Research", "Developments"]
   }
+  // Add more blog posts as needed
 ]
 
 const Blog: React.FC = () => {
@@ -36,29 +38,31 @@ const Blog: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="max-w-4xl mx-auto"
+      className="container mx-auto px-4 py-16"
     >
-      <h1 className="text-3xl font-bold mb-8 text-text">NOOD Blog</h1>
-      <div className="grid gap-8">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-gray-800">NOOD Blog</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {blogPosts.map(post => (
           <motion.article
             key={post.id}
             className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition duration-300"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="md:flex">
-              <img src={post.image} alt={post.title} className="w-full md:w-1/3 h-48 object-cover" />
-              <div className="p-6 md:w-2/3">
-                <h2 className="text-2xl font-semibold mb-2 text-text">{post.title}</h2>
-                <p className="text-text mb-4">{post.excerpt}</p>
-                <div className="flex justify-between items-center text-sm text-text">
-                  <span>{post.author}</span>
-                  <span>{post.date}</span>
-                </div>
-                <a href="#" className="mt-4 inline-flex items-center text-primary hover:text-secondary transition-colors duration-300">
-                  Read More <ArrowRight className="ml-1" size={16} />
-                </a>
+            <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+            <div className="p-6">
+              <p className="text-sm text-gray-500 mb-2">{post.date}</p>
+              <h2 className="text-xl font-semibold mb-2 text-gray-800">{post.title}</h2>
+              <p className="text-gray-600 mb-4">{post.excerpt}</p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {post.tags.map((tag, index) => (
+                  <span key={index} className="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">
+                    {tag}
+                  </span>
+                ))}
               </div>
+              <Link to={`/blog/${post.id}`} className="text-primary hover:text-secondary transition-colors duration-300 flex items-center">
+                Read More <ArrowRight className="ml-1" size={16} />
+              </Link>
             </div>
           </motion.article>
         ))}
