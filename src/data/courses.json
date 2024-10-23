@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "name": "Digital Illustration Mastery",
     "description": "Explore the world of digital art and illustration, learning techniques to create stunning visuals using popular software.",
     "courseType": "Physical",
@@ -16,6 +17,7 @@
     "progressTracking": "PT001"
   },
   {
+    "id": "2",
     "name": "E-commerce Essentials",
     "description": "Learn to build and manage your online store, understand digital marketing strategies, and drive sales effectively.",
     "courseType": "Physical",
@@ -32,6 +34,7 @@
     "progressTracking": "PT002"
   },
   {
+    "id": "3",
     "name": "Spanish for Beginners",
     "description": "Start your language learning journey with basic Spanish vocabulary and conversational skills.",
     "courseType": "Virtual",
@@ -48,6 +51,7 @@
     "progressTracking": "PT003"
   },
   {
+    "id": "4",
     "name": "Creative Writing Workshop",
     "description": "Enhance your storytelling skills and learn to craft compelling narratives across different genres.",
     "courseType": "Virtual",
