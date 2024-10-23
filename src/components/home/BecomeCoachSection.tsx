@@ -1,16 +1,8 @@
 import React from 'react';
 import { ArrowRight, Target, Zap, Award } from 'lucide-react';
+import { PopupButton } from '@typeform/embed-react';
 
 const BecomeCoachSection: React.FC = () => {
-  const openTypeform = () => {
-    const script = document.createElement('script');
-    script.src = "//embed.typeform.com/next/embed.js";
-    document.body.appendChild(script);
-    script.onload = () => {
-      (window as any).tf.createPopup('01HQB8RH0C3WV37JX65EZ97VX4').open();
-    };
-  };
-
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="bg-gradient-to-br from-secondary/10 to-primary/10 rounded-3xl p-12 sm:p-16 shadow-xl">
@@ -32,12 +24,12 @@ const BecomeCoachSection: React.FC = () => {
                 </div>
               ))}
             </div>
-            <button 
-              onClick={openTypeform}
+            <PopupButton
+              id="01HQB8RH0C3WV37JX65EZ97VX4"
               className="bg-secondary text-white text-lg px-10 py-4 rounded-full font-semibold hover:bg-primary transition duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
             >
               Apply Now <ArrowRight className="ml-3" size={24} />
-            </button>
+            </PopupButton>
           </div>
           <div className="lg:w-1/2">
             <img 

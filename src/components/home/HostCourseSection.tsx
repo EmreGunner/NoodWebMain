@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowRight, Video, Users, DollarSign } from 'lucide-react';
 
 const HostCourseSection: React.FC = () => {
-  const openTypeform = () => {
+  useEffect(() => {
     const script = document.createElement('script');
     script.src = "//embed.typeform.com/next/embed.js";
+    script.async = true;
     document.body.appendChild(script);
-    script.onload = () => {
-      (window as any).tf.createPopup('01HQB8RH0C3WV37JX65EZ97VX4').open();
+
+    return () => {
+      document.body.removeChild(script);
     };
-  };
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-24">
@@ -32,12 +34,7 @@ const HostCourseSection: React.FC = () => {
                 </div>
               ))}
             </div>
-            <button 
-              onClick={openTypeform}
-              className="bg-primary text-white text-lg px-10 py-4 rounded-full font-semibold hover:bg-secondary transition duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
-            >
-              Start Hosting <ArrowRight className="ml-3" size={24} />
-            </button>
+            <div data-tf-live="01HQB8RH0C3WV37JX65EZ97VX4"></div>
           </div>
           <div className="lg:w-1/2">
             <img 

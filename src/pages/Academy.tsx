@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Calendar, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { PopupButton } from '@typeform/embed-react'
 import courses from '../data/courses.json'
 import Card from '../components/Card'
 import Button from '../components/Button'
@@ -103,20 +104,12 @@ const Academy: React.FC = () => {
         <p className="text-lg text-text mb-6">
           {t('takeAssessment')}
         </p>
-        <Button 
-          variant="secondary"
-          className="inline-flex items-center justify-center py-3 px-6 text-lg"
-          onClick={() => {
-            const script = document.createElement('script');
-            script.src = "//embed.typeform.com/next/embed.js";
-            document.body.appendChild(script);
-            script.onload = () => {
-              (window as any).tf.createPopup('01HQB8RH0C3WV37JX65EZ97VX4').open();
-            };
-          }}
+        <PopupButton 
+          id="01HQB8RH0C3WV37JX65EZ97VX4"
+          className="btn-secondary inline-flex items-center justify-center py-3 px-6 text-lg"
         >
           {t('startAssessment')} <ArrowRight className="ml-2" size={20} />
-        </Button>
+        </PopupButton>
       </section>
     </div>
   )
