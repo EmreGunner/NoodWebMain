@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, BookOpen, Users, Phone, FileText, Home, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const location = useNavigate();
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const [isCareerDropdownOpen, setIsCareerDropdownOpen] = useState(false);
 
@@ -28,16 +28,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
 
-  const handleNavigation = (path: string, hash: string) => {
-    location(path);
-    setTimeout(() => {
-      const element = document.getElementById(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 0);
-  };
-
   const navItems = [
     { to: "/", icon: Home, text: "Home" },
     { to: "/academy", icon: BookOpen, text: "Academy" },
@@ -45,6 +35,20 @@ const Header: React.FC = () => {
     { to: "/contact", icon: Phone, text: "Contact Us" },
     { to: "/blog", icon: FileText, text: "Blog" },
   ];
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    if (value) {
+      const results = courses.filter(course =>
+        course.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
 
   return (
     <motion.header
@@ -83,18 +87,12 @@ const Header: React.FC = () => {
                   <Link to="/business-collaborations" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     For Business Collaborations
                   </Link>
-                  <button
-                    onClick={() => handleNavigation('/', 'host-course')}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
+                  <Link to="/#host-course" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     Host Your Course
-                  </button>
-                  <button
-                    onClick={() => handleNavigation('/', 'become-coach')}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
+                  </Link>
+                  <Link to="/#become-coach" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     Become A Coach
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -151,7 +149,7 @@ const Header: React.FC = () => {
                     <Link 
                       to={item.to} 
                       className={`text-gray-700 dark:text-white hover:text-primary dark:hover:text-primary transition duration-300 flex items-center py-2 px-2 rounded-md
-                        ${location.location.pathname === item.to ? 'text-primary font-semibold bg-gray-100 dark:bg-gray-700' : ''}
+                        ${location.pathname === item.to ? 'text-primary font-semibold bg-gray-100 dark:bg-gray-700' : ''}
                       `}
                       onClick={() => setIsMenuOpen(false)}
                     >
