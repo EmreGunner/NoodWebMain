@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react';
-import { Play } from 'lucide-react';
-
+import React from 'react';
+import HeroCard from '../HeroCard';
+import { motion } from 'framer-motion';
 
 const VideoSection: React.FC = () => {
-  useEffect(() => {
-    console.log('VideoSection mounted');
-  }, []);
-
-  console.log('Rendering VideoSection');
-
   return (
-    <div className="bg-[#2d0a31] py-20">
+    <div className="bg-gradient-to-br from-[#2d0a31] to-[#4e1d4b] py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-white text-3xl font-bold mb-8 text-center">Video Section</h2>
-        <div className="relative w-full max-w-3xl mx-auto aspect-video rounded-3xl overflow-hidden border-4 border-[#4e9350]">
-          <img 
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-            alt="Video thumbnail" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <button className="bg-[#4e9350] text-white rounded-full p-4 hover:bg-opacity-90 transition duration-300">
-              <Play size={32} />
-            </button>
+        <motion.h2 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-white text-4xl font-bold mb-12 text-center"
+        >
+          Discover Our Featured Course
+        </motion.h2>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-full max-w-4xl mx-auto"
+        >
+          <div className="bg-gradient-to-br from-[#84bb75] to-[#5d8a54] rounded-3xl p-4 sm:p-6 shadow-2xl">
+            <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-2xl">
+              <HeroCard />
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-   
     </div>
   );
 };

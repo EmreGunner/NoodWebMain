@@ -1,0 +1,45 @@
+.course-detail-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.course-detail-card {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 2rem);
+  overflow: hidden;
+}
+
+.course-image {
+  flex: 0 0 auto;
+  height: 30vh;
+}
+
+.course-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .course-detail-card {
+    flex-direction: row;
+    max-height: calc(100vh - 4rem);
+  }
+
+  .course-image {
+    flex: 0 0 50%;
+    height: auto;
+  }
+
+  .course-content {
+    flex: 0 0 50%;
+  }
+}
+
+@media (max-height: 700px) {
+  .course-detail-card {
+    max-height: none;
+    overflow: visible;
+  }
+}

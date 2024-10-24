@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowRight, Video, Users, DollarSign } from 'lucide-react';
+import { Video, Users, DollarSign } from 'lucide-react';
 
 const HostCourseSection: React.FC = () => {
   useEffect(() => {
@@ -38,7 +38,7 @@ const HostCourseSection: React.FC = () => {
           </div>
           <div className="lg:w-1/2">
             <img 
-              src="/path/to/host-course-image.jpg" 
+              src="https://images.unsplash.com/photo-1513258496099-48168024aec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
               alt="Host teaching online" 
               className="rounded-2xl shadow-2xl w-full h-auto object-cover transform hover:scale-105 transition duration-300"
             />

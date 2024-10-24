@@ -3,9 +3,16 @@ import { ArrowRight, Calendar, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ExploreWorkshopsSection: React.FC = () => {
+  const workshopImages = [
+    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    // ... add more Unsplash image URLs as needed
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-24">
-      <div className="bg-gradient-to-br from-tertiary/10 to-primary/10 rounded-3xl p-12 sm:p-16 shadow-xl">
+    <div className="bg-gray-100 py-20">
+      <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12">
             <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-gray-800">Explore Nood Workshops / Events</h2>
@@ -33,11 +40,11 @@ const ExploreWorkshopsSection: React.FC = () => {
           </div>
           <div className="lg:w-1/2">
             <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+              {workshopImages.map((src, index) => (
                 <img 
                   key={index}
-                  src={`/path/to/workshop-image-${index}.jpg`}
-                  alt={`Workshop image ${index}`}
+                  src={src}
+                  alt={`Workshop image ${index + 1}`}
                   className="rounded-lg shadow-md w-full h-40 object-cover transform hover:scale-105 transition duration-300"
                 />
               ))}

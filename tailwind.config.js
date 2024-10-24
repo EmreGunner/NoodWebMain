@@ -43,6 +43,9 @@ export default {
       perspective: {
         '1000': '1000px',
       },
+      scale: {
+        '110': '1.1',
+      },
     },
   },
   plugins: [
@@ -67,6 +70,7 @@ export default {
   variants: {
     extend: {
       animation: ['responsive', 'motion-safe', 'motion-reduce'],
+      scale: ['hover', 'focus'],
     },
   },
 }

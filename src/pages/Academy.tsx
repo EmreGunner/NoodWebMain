@@ -64,87 +64,90 @@ const Academy: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-16 space-y-16"
+      className="bg-gray-50 min-h-screen"
     >
-      <section className="text-center">
-        <h1 className="text-6xl font-bold mb-6 text-gray-900">{t('Nood Academy')}</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          {t('Unlock your potential with our expert-led courses. From fashion to e-commerce, we\'ve got your entrepreneurial journey covered.')}
-        </p>
-      </section>
+      <div className="container mx-auto px-4 py-16 space-y-16">
+        <section className="text-center">
+          <h1 className="text-6xl font-bold mb-6 text-gray-900">{t('Nood Academy')}</h1>
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+            {t('Unlock your potential with our expert-led courses. From fashion to e-commerce, we\'ve got your entrepreneurial journey covered.')}
+          </p>
+        </section>
 
-      <section className="bg-white shadow-2xl rounded-3xl p-8 transition-all duration-300 hover:shadow-3xl">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-          <div className="flex flex-wrap justify-center md:justify-start space-x-4">
-            <button
-              onClick={() => setSelectedType(null)}
-              className={`px-6 py-3 rounded-full transition-all duration-300 ${
-                selectedType === null 
-                  ? 'bg-primary text-white shadow-lg' 
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
-            >
-              {t('All Courses')}
-            </button>
-            <button
-              onClick={() => setSelectedType('Virtual')}
-              className={`px-6 py-3 rounded-full transition-all duration-300 ${
-                selectedType === 'Virtual'
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
-            >
-              {t('Virtual Courses')}
-            </button>
-          </div>
-          <div className="relative w-full md:w-auto">
-            <input
-              type="text"
-              placeholder={t('Search courses...')}
-              className="w-full md:w-80 pl-12 pr-10 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            {searchTerm && (
+        <section className="bg-white shadow-2xl rounded-3xl p-8 transition-all duration-300 hover:shadow-3xl">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-4">
               <button
-                onClick={() => setSearchTerm('')}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onClick={() => setSelectedType(null)}
+                className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                  selectedType === null 
+                    ? 'bg-primary text-white shadow-lg' 
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
               >
-                <X size={20} />
+                {t('All Courses')}
               </button>
-            )}
-          </div>
-        </div>
-        {filteredCourses.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-xl text-gray-600">{t('No courses found. Please try a different search.')}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCourses.map(course => (
-              <CourseCard 
-                key={course.id}
-                {...course}
-                learnMoreLink={`/academy/${course.slug}`}
+              <button
+                onClick={() => setSelectedType('Virtual')}
+                className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                  selectedType === 'Virtual'
+                    ? 'bg-primary text-white shadow-lg'
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
+              >
+                {t('Virtual Courses')}
+              </button>
+            </div>
+            <div className="relative w-full md:w-auto">
+              <input
+                type="text"
+                placeholder={t('Search courses...')}
+                className="w-full md:w-80 pl-12 pr-10 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            ))}
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X size={20} />
+                </button>
+              )}
+            </div>
           </div>
-        )}
-      </section>
+          {filteredCourses.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600">{t('No courses found. Please try a different search.')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredCourses.map(course => (
+                <div key={course.id} className="h-full">
+                  <CourseCard 
+                    {...course}
+                    learnMoreLink={`/academy/${course.slug}`}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
-      <section className="text-center py-16 bg-gradient-to-r from-primary to-secondary rounded-3xl mt-16 text-white shadow-2xl transition-all duration-300 hover:shadow-3xl">
-        <h2 className="text-4xl font-bold mb-6">{t('Not sure where to start?')}</h2>
-        <p className="text-xl mb-8 max-w-2xl mx-auto">
-          {t('Take our quick assessment to find the perfect course for your entrepreneurial journey.')}
-        </p>
-        <Link 
-          to="/assessment"
-          className="bg-white text-primary text-lg px-10 py-4 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
-        >
-          {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
-        </Link>
-      </section>
+        <section className="text-center py-16 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl mt-16 text-white shadow-2xl transition-all duration-300 hover:shadow-3xl">
+          <h2 className="text-4xl font-bold mb-6">{t('Not sure where to start?')}</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            {t('Take our quick assessment to find the perfect course for your entrepreneurial journey.')}
+          </p>
+          <Link 
+            to="/assessment"
+            className="bg-white text-primary text-lg px-10 py-4 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
+          >
+            {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
+          </Link>
+        </section>
+      </div>
     </motion.div>
   )
 }

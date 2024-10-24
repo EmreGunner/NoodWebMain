@@ -13,13 +13,11 @@ const StyledWrapper = styled.div`
  
   .parent   {
     width: 100% !important;
-    max-width: 1200px !important;
+ 
     aspect-ratio: 16 / 9 !important;
     perspective: 1000px !important;
       /* Media query to change width based on viewport */
-      @media (min-width: 1024px) {
-        width: 600px !important;
-      }
+     
   }
 
   .example-card {

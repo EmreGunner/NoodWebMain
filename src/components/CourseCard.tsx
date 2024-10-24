@@ -18,7 +18,6 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
-  id,
   name,
   coursePhoto,
   domain,
@@ -34,34 +33,32 @@ const CourseCard: React.FC<CourseCardProps> = ({
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+      className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full"
     >
-      <div className="relative">
-        <img src={coursePhoto} alt={name} className="w-full h-48 object-cover" />
-        <div className="absolute top-0 right-0 bg-primary text-white px-2 py-1 text-xs font-semibold rounded-bl-lg">
+      <div className="relative h-48">
+        <img src={coursePhoto} alt={name} className="w-full h-full object-cover" />
+        <div className="absolute top-3 right-3 bg-white/90 text-primary px-3 py-1 text-sm font-medium rounded-full">
           {courseType}
         </div>
       </div>
-      <div className="p-6">
-        <h3 className="text-xl font-bold mb-2 text-gray-800">{name}</h3>
-        <p className="text-sm text-primary font-semibold mb-2">{domain}</p>
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{name}</h3>
+        <p className="text-sm text-primary font-medium mb-2">{domain}</p>
+        <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{description}</p>
         <div className="flex items-center text-sm text-gray-500 mb-4">
           <Calendar size={16} className="mr-2" />
-          <span>{new Date(startDate).toLocaleDateString()}</span>
-          <span className="mx-2">•</span>
-          <span>{duration} {t('weeks')}</span>
+          <span>{new Date(startDate).toLocaleDateString()} • {duration} {t('weeks')}</span>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex flex-col space-y-3 mt-auto">
           <PopupButton 
             id="YOUR_ACTUAL_TYPEFORM_ID"
-            className="flex-1 bg-primary text-white text-center py-2 px-4 rounded-full hover:bg-secondary transition duration-300 text-sm font-semibold"
+            className="w-full bg-primary text-white text-center py-3 rounded-full font-medium hover:bg-primary/90 transition-all duration-300"
           >
-            {t('Apply')}
+            {t('Apply Now')}
           </PopupButton>
           <Link 
             to={learnMoreLink}
-            className="flex-1 border border-primary text-primary text-center py-2 px-4 rounded-full hover:bg-primary hover:text-white transition duration-300 text-sm font-semibold"
+            className="w-full bg-gray-100 text-primary text-center py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300"
           >
             {t('Learn More')}
           </Link>
