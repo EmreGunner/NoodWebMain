@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BookOpen, Users, Phone, FileText, Home, ChevronDown } from 'lucide-react';
+import { Menu, X, BookOpen, Users, Phone, FileText, Home, ChevronDown, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import courses from '../data/courses.json';
@@ -52,7 +52,7 @@ const Header: React.FC = () => {
 
   return (
     <motion.header
-      className="bg-white shadow-md"
+      className="bg-white shadow-md fixed top-0 left-0 w-full z-50"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -75,7 +75,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsCareerDropdownOpen(!isCareerDropdownOpen)}
                 className="text-gray-700 hover:text-primary flex items-center"
               >
-                Career <ChevronDown className="ml-1" size={16} />
+                Work <ChevronDown className="ml-1" size={16} />
               </button>
               {isCareerDropdownOpen && (
                 <div
@@ -87,12 +87,15 @@ const Header: React.FC = () => {
                   <Link to="/business-collaborations" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     For Business Collaborations
                   </Link>
-                  <Link to="/#host-course" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  <Link to="/about" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    About Us
+                  </Link>
+                  <a href="/#host-course" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     Host Your Course
-                  </Link>
-                  <Link to="/#become-coach" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  </a>
+                  <a href="/#become-coach" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     Become A Coach
-                  </Link>
+                  </a>
                 </div>
               )}
             </div>

@@ -15,6 +15,7 @@ const Careers = React.lazy(() => import('./pages/Careers'))
 const CourseDetailPage = React.lazy(() => import('./pages/CourseDetailPage'))
 const ContactUs = React.lazy(() => import('./pages/ContactUs'))
 const Consultation = React.lazy(() => import('./pages/Consultation'))
+const About = React.lazy(() => import('./pages/About')) // Import About page
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/consultation" element={<Consultation />} />
+              <Route path="/about" element={<About />} /> {/* Add About route */}
             </Routes>
           </Suspense>
         </main>
