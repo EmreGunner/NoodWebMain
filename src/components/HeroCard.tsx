@@ -184,14 +184,6 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out !important;
   }
 
-  @media (max-width: 767px) {
-    .star1 { top: -20px !important; right: -20px !important; }
-    .star2 { top: -15px !important; right: -15px !important; }
-    .star3 { top: -10px !important; right: -10px !important; }
-    .star4 { top: -5px !important; right: -5px !important; }
-    .star5 { top: 0px !important; right: 0px !important; }
-  }
-
   .star1 {
     width: 120px !important;
     transform: translateZ(125px) !important;
@@ -225,20 +217,34 @@ const StyledWrapper = styled.div`
   }
 
   .star5 {
-    width: 50px !important;
+    width: 24px !important;
     transform: translateZ(225px) !important;
     top: 10px !important;
     right: 10px !important;
     display: grid !important;
     place-content: center !important;
     transition-delay: 1.6s !important;
+    background: #c1272d !important;
+  
   }
 
   .star5 .svg {
+    fill: white !important;
+    
+  }
+  .svg {
     width: 20px !important;
     fill: white !important;
+    
   }
 
+  @media (max-width: 767px) {
+    .star1 { width: 60px !important; top: 10px !important; right: 10px !important; }
+    .star2 { width: 50px !important; top: 12px !important; right: 12px !important; }
+    .star3 { width: 40px !important; top: 14px !important; right: 14px !important; }
+    .star4 { width: 30px !important; top: 16px !important; right: 16px !important; }
+    .star5 { width: 20px !important; top: 18px !important; right: 18px !important; }
+  }
  @keyframes wave-animation {
     0% { transform: translateX(0) translateY(0); }
     50% { transform: translateX(-30px) translateY(-20px); }
@@ -336,7 +342,7 @@ const HeroCard = () => {
 
     <path
         d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-        fill="#ffffff"
+        fill="#006233"
     />
 
     <circle cx="70" cy="60" r="10" fill="#ffffff"/>
@@ -369,5 +375,6 @@ const HeroCard = () => {
 } ;
 
 export default HeroCard ;
+
 
 
