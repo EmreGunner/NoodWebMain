@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Linkedin, Instagram } from 'lucide-react';
+import MeetHeroCard from '../MeetHeroCard';
 
 const heroes = [
   {
@@ -9,6 +9,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     linkedin: '#',
     instagram: '#',
+    course: 'Digital Marketing Mastery',
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     linkedin: '#',
     instagram: '#',
+    course: 'Startup Success Strategies',
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
     instagram: 'https://www.instagram.com/nealedonaldwalsch/',
+    course: 'Spiritual Awakening Journey',
   },
   {
     id: 4,
@@ -33,6 +36,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36',
     linkedin: 'https://www.linkedin.com/in/vishen/',
     instagram: 'https://www.instagram.com/vishen/',
+    course: 'Mindvalley Mastery',
   },
   {
     id: 5,
@@ -41,6 +45,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1531369201-4f7be267b1de',
     linkedin: 'https://www.linkedin.com/in/mayemusk/',
     instagram: 'https://www.instagram.com/mayemusk/',
+    course: 'Life Optimization Blueprint',
   },
   {
     id: 6,
@@ -49,6 +54,7 @@ const heroes = [
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
     instagram: 'https://www.instagram.com/nealedonaldwalsch/',
+    course: 'Conversations with God',
   },
 ];
 
@@ -97,84 +103,22 @@ const MeetHeroes: React.FC = () => {
   return (
     <div className="bg-gray-100 py-8 sm:py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">Meet the Heroes</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">Meet the Tutors</h2>
         <div className="space-y-6 sm:space-y-8">
           <div className="overflow-hidden" ref={topRowRef}>
-            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 220}px` }}>
+            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 240}px` }}>
               {heroes.map((hero) => (
-                <div key={hero.id} className="flex-shrink-0 w-[200px] sm:w-[250px] md:w-[280px]">
-                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
-                    <div className="relative aspect-w-3 aspect-h-4">
-                      <img
-                        src={hero.image}
-                        alt={hero.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                      <div className="absolute bottom-2 left-2 right-2 text-white">
-                        <h3 className="font-bold text-base sm:text-lg mb-1">{hero.name}</h3>
-                        <p className="text-xs sm:text-sm">{hero.title}</p>
-                      </div>
-                    </div>
-                    <div className="p-2 sm:p-4 flex justify-center space-x-4">
-                      <a
-                        href={hero.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <Linkedin size={20} />
-                      </a>
-                      <a
-                        href={hero.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-pink-600 hover:text-pink-800"
-                      >
-                        <Instagram size={20} />
-                      </a>
-                    </div>
-                  </div>
+                <div key={hero.id} className="flex-shrink-0">
+                  <MeetHeroCard {...hero} />
                 </div>
               ))}
             </div>
           </div>
           <div className="overflow-hidden" ref={bottomRowRef}>
-            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 220}px` }}>
+            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 240}px` }}>
               {heroes.map((hero) => (
-                <div key={hero.id} className="flex-shrink-0 w-[200px] sm:w-[250px] md:w-[280px]">
-                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
-                    <div className="relative aspect-w-3 aspect-h-4">
-                      <img
-                        src={hero.image}
-                        alt={hero.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                      <div className="absolute bottom-2 left-2 right-2 text-white">
-                        <h3 className="font-bold text-base sm:text-lg mb-1">{hero.name}</h3>
-                        <p className="text-xs sm:text-sm">{hero.title}</p>
-                      </div>
-                    </div>
-                    <div className="p-2 sm:p-4 flex justify-center space-x-4">
-                      <a
-                        href={hero.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <Linkedin size={20} />
-                      </a>
-                      <a
-                        href={hero.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-pink-600 hover:text-pink-800"
-                      >
-                        <Instagram size={20} />
-                      </a>
-                    </div>
-                  </div>
+                <div key={hero.id} className="flex-shrink-0">
+                  <MeetHeroCard {...hero} />
                 </div>
               ))}
             </div>

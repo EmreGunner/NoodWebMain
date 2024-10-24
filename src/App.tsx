@@ -13,6 +13,8 @@ const MasterClasses = React.lazy(() => import('./pages/MasterClasses'))
 const Community = React.lazy(() => import('./pages/Community'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const CourseDetailPage = React.lazy(() => import('./pages/CourseDetailPage'))
+const ContactUs = React.lazy(() => import('./pages/ContactUs'))
+
 
 const App: React.FC = () => {
   return (
@@ -30,6 +32,7 @@ const App: React.FC = () => {
               <Route path="/masterclasses" element={<MasterClasses />} />
               <Route path="/community" element={<Community />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/contact" element={<ContactUs />} />
             </Routes>
           </Suspense>
         </main>
