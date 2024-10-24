@@ -103,7 +103,7 @@ const MeetHeroes: React.FC = () => {
   return (
     <div className="bg-gray-100 py-8 sm:py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">Meet the Tutors</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">Meet the Heroes</h2>
         <div className="space-y-6 sm:space-y-8">
           <div className="overflow-hidden" ref={topRowRef}>
             <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 240}px` }}>

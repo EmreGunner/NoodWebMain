@@ -18,8 +18,12 @@ const HomePage: React.FC = () => {
       <MeetHeroes />
       <WhySection />
       <MasterclassSection />
-      <HostCourseSection />
-      <BecomeCoachSection />
+      <div id="host-course">
+        <HostCourseSection />
+      </div>
+      <div id="become-coach">
+        <BecomeCoachSection />
+      </div>
       <ExploreWorkshopsSection />
       <ExploreBlogSection />
       <FinalCTASection />

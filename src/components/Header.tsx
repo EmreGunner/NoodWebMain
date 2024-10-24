@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, BookOpen, Users, Phone, FileText, Search, Home, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
-import courses from '../data/courses.json' // Import your courses data
-import noodLogoGreen from '/noodLogoGreen.png' // Adjust the path as necessary
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, BookOpen, Users, Phone, FileText, Home, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import courses from '../data/courses.json';
+import noodLogoGreen from '/noodLogoGreen.png';
 
 const Header: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const location = useLocation()
-  const { t, i18n } = useTranslation()
-  const [isCareerDropdownOpen, setIsCareerDropdownOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const location = useNavigate();
+  const { t, i18n } = useTranslation();
+  const [isCareerDropdownOpen, setIsCareerDropdownOpen] = useState(false);
 
-  // Handle scroll effect with a buffer
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -24,10 +23,20 @@ const Header: React.FC = () => {
       } else if (scrollTop <= 10 && isScrolled) {
         setIsScrolled(false);
       }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isScrolled])
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isScrolled]);
+
+  const handleNavigation = (path: string, hash: string) => {
+    location(path);
+    setTimeout(() => {
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 0);
+  };
 
   const navItems = [
     { to: "/", icon: Home, text: "Home" },
@@ -35,7 +44,7 @@ const Header: React.FC = () => {
     { to: "/community", icon: Users, text: "Community" },
     { to: "/contact", icon: Phone, text: "Contact Us" },
     { to: "/blog", icon: FileText, text: "Blog" },
-  ]
+  ];
 
   return (
     <motion.header
@@ -59,16 +68,13 @@ const Header: React.FC = () => {
             ))}
             <div className="relative">
               <button
-                onMouseEnter={() => setIsCareerDropdownOpen(true)}
-                onMouseLeave={() => setIsCareerDropdownOpen(false)}
+                onClick={() => setIsCareerDropdownOpen(!isCareerDropdownOpen)}
                 className="text-gray-700 hover:text-primary flex items-center"
               >
                 Career <ChevronDown className="ml-1" size={16} />
               </button>
               {isCareerDropdownOpen && (
                 <div
-                  onMouseEnter={() => setIsCareerDropdownOpen(true)}
-                  onMouseLeave={() => setIsCareerDropdownOpen(false)}
                   className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md"
                 >
                   <Link to="/careers" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
@@ -77,12 +83,18 @@ const Header: React.FC = () => {
                   <Link to="/business-collaborations" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                     For Business Collaborations
                   </Link>
-                  <Link to="/#host-your-course" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  <button
+                    onClick={() => handleNavigation('/', 'host-course')}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
                     Host Your Course
-                  </Link>
-                  <Link to="/#become-a-coach" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  </button>
+                  <button
+                    onClick={() => handleNavigation('/', 'become-coach')}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
                     Become A Coach
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
@@ -105,6 +117,15 @@ const Header: React.FC = () => {
                 </svg>
               </div>
             </div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to="/consultation" className="btn-primary text-sm px-4 py-2 rounded-full">
+                Book Consultation
+              </Link>
+            </motion.div>
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -130,7 +151,7 @@ const Header: React.FC = () => {
                     <Link 
                       to={item.to} 
                       className={`text-gray-700 dark:text-white hover:text-primary dark:hover:text-primary transition duration-300 flex items-center py-2 px-2 rounded-md
-                        ${location.pathname === item.to ? 'text-primary font-semibold bg-gray-100 dark:bg-gray-700' : ''}
+                        ${location.location.pathname === item.to ? 'text-primary font-semibold bg-gray-100 dark:bg-gray-700' : ''}
                       `}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -168,18 +189,13 @@ const Header: React.FC = () => {
                     </div>
                   )}
                 </li>
-                <li>
-                  <Link to="/consultation" className="btn-primary block text-center mt-4" onClick={() => setIsMenuOpen(false)}>
-                    Book Consultation
-                  </Link>
-                </li>
               </ul>
             </motion.nav>
           )}
         </AnimatePresence>
       </div>
     </motion.header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
