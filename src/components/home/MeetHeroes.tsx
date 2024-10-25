@@ -1,5 +1,7 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import MeetHeroCard from '../MeetHeroCard';
+import styled from 'styled-components';
 
 const heroes = [
   {
@@ -52,43 +54,75 @@ const heroes = [
   },
 ];
 
+const ScrollContainer = styled.div`
+  overflow-x: hidden;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+const ScrollContent = styled.div`
+  display: flex;
+  transition: transform 0.5s ease;
+`;
+
 const MeetHeroes: React.FC = () => {
-  const rowRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    rootMargin: '200px 0px',
+  });
 
-  const animate = useCallback(() => {
-    if (rowRef.current) {
-      setScrollPosition(prev => {
-        const newPosition = prev + 0.5;
-        return newPosition >= rowRef.current!.scrollWidth / 2 ? 0 : newPosition;
-      });
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current!.offsetLeft);
+    setScrollLeft(scrollRef.current!.scrollLeft);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current!.offsetLeft;
+    const walk = (x - startX) * 2;
+    scrollRef.current!.scrollLeft = scrollLeft - walk;
+  };
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer && inView) {
+      let animationFrameId: number;
+      let lastTimestamp = 0;
+      const fps = 60;
+      const interval = 1000 / fps;
+
+      const animate = (timestamp: number) => {
+        if (timestamp - lastTimestamp >= interval) {
+          lastTimestamp = timestamp;
+          if (!isHovered && !isDragging) {
+            scrollContainer.scrollLeft += 1;
+            if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+              scrollContainer.scrollLeft = 0;
+            }
+          }
+        }
+        animationFrameId = requestAnimationFrame(animate);
+      };
+
+      animationFrameId = requestAnimationFrame(animate);
+
+      return () => cancelAnimationFrame(animationFrameId);
     }
-  }, []);
-
-  useEffect(() => {
-    let animationFrameId: number;
-    let lastTimestamp = 0;
-    const fps = 30;
-    const interval = 1000 / fps;
-
-    const step = (timestamp: number) => {
-      if (timestamp - lastTimestamp >= interval) {
-        lastTimestamp = timestamp;
-        animate();
-      }
-      animationFrameId = requestAnimationFrame(step);
-    };
-
-    animationFrameId = requestAnimationFrame(step);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [animate]);
-
-  useEffect(() => {
-    if (rowRef.current) rowRef.current.scrollLeft = scrollPosition;
-  }, [scrollPosition]);
+  }, [inView, isHovered, isDragging]);
 
   return (
     <section className="bg-white shadow-md py-20 sm:py-32 relative overflow-hidden">
@@ -112,21 +146,30 @@ const MeetHeroes: React.FC = () => {
             </span>
           </div>
         </div>
-        <div className="mt-12 overflow-hidden" ref={rowRef}>
-          <div 
-            className="flex space-x-8" 
+        <ScrollContainer 
+          ref={scrollRef}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={() => {
+            handleMouseUp();
+            setIsHovered(false);
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseMove={handleMouseMove}
+        >
+          <ScrollContent 
             style={{ 
-              width: `${heroes.length * 320}px`,
-              willChange: 'transform'
+              width: `${heroes.length * 320 * 2}px`,
             }}
+            ref={ref}
           >
-            {heroes.map((hero) => (
-              <div key={hero.id} className="flex-shrink-0 w-[300px]">
+            {[...heroes, ...heroes].map((hero, index) => (
+              <div key={`${hero.id}-${index}`} className="flex-shrink-0 w-[300px] mx-2">
                 <MeetHeroCard {...hero} />
               </div>
             ))}
-          </div>
-        </div>
+          </ScrollContent>
+        </ScrollContainer>
       </div>
     </section>
   );

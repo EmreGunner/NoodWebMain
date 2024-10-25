@@ -14,24 +14,6 @@ const StyledWrapper = styled.div`
       0 5px 20px rgba(0, 0, 0, 0.1),
       0 1px 3px rgba(0, 0, 0, 0.05);
     transition: all 0.5s ease-in-out;
-    
-  }
-
-  .card .mail {
-    position: absolute;
-    right: 2rem;
-    top: 1.4rem;
-    background: transparent;
-    border: none;
-  }
-
-  .card .mail svg {
-    stroke: #84bb75;
-    stroke-width: 3px;
-  }
-
-  .card .mail svg:hover {
-    stroke: #4e9350;
   }
 
   .card .profile-pic {
@@ -64,7 +46,7 @@ const StyledWrapper = styled.div`
     top: 80%;
     border-radius: 29px;
     z-index: 2;
-    box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px inset;
+    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px inset;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
   }
@@ -115,11 +97,10 @@ const StyledWrapper = styled.div`
   .card .bottom .bottom-bottom .social-links-container svg {
     height: 24px;
     fill: white;
-    filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.1333333333));
+    filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.133));
     opacity: 0;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  
-    }
+  }
 
   .card:hover .bottom .bottom-bottom .social-links-container svg {
     opacity: 1;
@@ -138,11 +119,10 @@ const StyledWrapper = styled.div`
     align-self: center;
     justify-self: bottom;
     font-size: 0.8rem;
-    
     padding: 0.6rem 1rem;
-    box-shadow: rgba(165, 132, 130, 0.1333333333) 0px 5px 5px 0px;
+    box-shadow: rgba(165, 132, 130, 0.133) 0px 5px 5px 0px;
     transition: all 0.3s ease-in-out;
-    }
+  }
 
   .card .bottom .bottom-bottom .button:hover {
     background: #4e9350;
@@ -169,7 +149,7 @@ const StyledWrapper = styled.div`
     border-radius: 50%;
     z-index: 3;
     border: 7px solid #84bb75;
-    box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px;
+    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px;
     transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
   }
 
@@ -187,7 +167,7 @@ const StyledWrapper = styled.div`
     color: #84bb75;
     z-index: 4;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 1s ease-in-out; /* Slower transition */
     background-color: rgba(255, 255, 255, 0.9);
     padding: 0.7rem;
     border-radius: 15px;
