@@ -15,7 +15,10 @@ const Careers = React.lazy(() => import('./pages/Careers'))
 const CourseDetailPage = React.lazy(() => import('./pages/CourseDetailPage'))
 const ContactUs = React.lazy(() => import('./pages/ContactUs'))
 const Consultation = React.lazy(() => import('./pages/Consultation'))
-const About = React.lazy(() => import('./pages/About')) // Import About page
+const About = React.lazy(() => import('./pages/About'))
+const NoodShop = React.lazy(() => import('./pages/NoodShop'))
+const Workshops = React.lazy(() => import('./pages/Workshops'))
+const WorkshopDetail = React.lazy(() => import('./pages/WorkshopDetail'))
 
 const App: React.FC = () => {
   return (
@@ -23,7 +26,7 @@ const App: React.FC = () => {
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow">
+        <main className="flex-grow pt-16">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -35,7 +38,10 @@ const App: React.FC = () => {
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/consultation" element={<Consultation />} />
-              <Route path="/about" element={<About />} /> {/* Add About route */}
+              <Route path="/about" element={<About />} />
+              <Route path="/nood-shop" element={<NoodShop />} />
+              <Route path="/workshops" element={<Workshops />} />
+              <Route path="/workshops/:id" element={<WorkshopDetail />} />
             </Routes>
           </Suspense>
         </main>

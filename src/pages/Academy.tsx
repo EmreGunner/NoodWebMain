@@ -76,10 +76,10 @@ const Academy: React.FC = () => {
 
         <section className="bg-white shadow-2xl rounded-3xl p-8 transition-all duration-300 hover:shadow-3xl">
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start space-x-4">
+            <div className="flex flex-wrap justify-center md:justify-start space-x-0 md:space-x-4 space-y-4 md:space-y-0 w-full md:w-auto">
               <button
                 onClick={() => setSelectedType(null)}
-                className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                className={`w-full md:w-auto px-6 py-3 rounded-full transition-all duration-300 mb-4 md:mb-0 ${
                   selectedType === null 
                     ? 'bg-primary text-white shadow-lg' 
                     : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -89,7 +89,7 @@ const Academy: React.FC = () => {
               </button>
               <button
                 onClick={() => setSelectedType('Virtual')}
-                className={`px-6 py-3 rounded-full transition-all duration-300 ${
+                className={`w-full md:w-auto px-6 py-3 rounded-full transition-all duration-300 ${
                   selectedType === 'Virtual'
                     ? 'bg-primary text-white shadow-lg'
                     : 'bg-gray-200 text-gray-800 hover:bg-gray-300'

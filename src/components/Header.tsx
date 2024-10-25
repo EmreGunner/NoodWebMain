@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BookOpen, Users, Phone, FileText, Home, ChevronDown, Search } from 'lucide-react';
+import { Menu, X, BookOpen, Users, Phone, FileText, ChevronDown, Search, ShoppingBag, Briefcase } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import courses from '../data/courses.json';
@@ -29,11 +29,11 @@ const Header: React.FC = () => {
   }, [isScrolled]);
 
   const navItems = [
-    { to: "/", icon: Home, text: "Home" },
     { to: "/academy", icon: BookOpen, text: "Academy" },
     { to: "/community", icon: Users, text: "Community" },
     { to: "/contact", icon: Phone, text: "Contact Us" },
     { to: "/blog", icon: FileText, text: "Blog" },
+    { to: "/nood-shop", icon: ShoppingBag, text: "Nood Shop" },
   ];
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,8 +59,12 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Link to="/" className="flex items-center">
-            <img src={noodLogoGreen} alt="Nood Logo" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center group">
+            <img 
+              src={noodLogoGreen} 
+              alt="Nood Logo" 
+              className="w-14 h-14 object-contain"
+            />
           </Link>
 
           <nav className="hidden md:flex space-x-8">
@@ -75,6 +79,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsCareerDropdownOpen(!isCareerDropdownOpen)}
                 className="text-gray-700 hover:text-primary flex items-center"
               >
+                <Briefcase className="inline-block mr-2" size={20} />
                 Work <ChevronDown className="ml-1" size={16} />
               </button>
               {isCareerDropdownOpen && (
