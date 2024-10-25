@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react" ;
-import styled from "styled-components";
+import React from 'react';
+import { motion } from 'framer-motion';
+import styled from 'styled-components';
 import noodSvg from '../assets/nood.svg';
 
 
@@ -37,7 +38,7 @@ const StyledWrapper = styled.div`
     flex-direction: column !important;
     justify-content: center !important;
     padding: 1rem !important; // Reduced padding for mobile
-    animation: floatAnimation 6s ease-in-out infinite;
+    animation: floatAnimation 10s ease-in-out infinite;
     transform: translateZ(50px);
 
     @media (min-width: 768px) {
@@ -252,7 +253,7 @@ const StyledWrapper = styled.div`
   }
  @keyframes floatAnimation {
     0%, 100% { transform: translateZ(50px) rotateX(0deg) rotateY(0deg); }
-    50% { transform: translateZ(100px) rotateX(10deg) rotateY(10deg); }
+    50% { transform: translateZ(100px) rotateX(5deg) rotateY(5deg); }
   }
   .parent:hover .example-card {
     transform: translateZ(100px) rotateX(10deg) rotateY(10deg) !important;
@@ -297,44 +298,23 @@ const StyledWrapper = styled.div`
 
 
 const HeroCard = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
-      }
-    };
-  }, []);
-
   return (
     <StyledWrapper>
-       <div className="custom-card" ref={cardRef}>
-      <div className="parent">
-        <div className="example-card">
-        <div className="logo">
-            <span className="star star1" />
-            <span className="star star2" />
-            <span className="star star3" />
-            <span className="star star4" />
-            <span className="star star5">
-            <svg
+      <motion.div 
+        className="custom-card"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5 }}
+      >
+        <div className="parent">
+          <div className="example-card">
+            <div className="logo">
+              <span className="star star1" />
+              <span className="star star2" />
+              <span className="star star3" />
+              <span className="star star4" />
+              <span className="star star5">
+              <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     className="svg"
@@ -350,35 +330,27 @@ const HeroCard = () => {
 </svg>
 
 
-            </span>
-          </div>
-    
-          <div className="glass" />
-          <div className="content">
-            <div className="video-container">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/7zDc6364L8w?si=Qp_H355sqfLO5b2b"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
+              </span>
+            </div>
+            <div className="glass" />
+            <div className="content">
+              <div className="video-container">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/7zDc6364L8w?si=Qp_H355sqfLO5b2b"
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      </div>
+      </motion.div>
     </StyledWrapper>
-  ) ;
-} ;
+  );
+};
 
-export default HeroCard ;
-
-
-
-
-
-
-
+export default HeroCard;

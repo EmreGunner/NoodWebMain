@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 
 const VideoSection: React.FC = () => {
   return (
-    <div className="relative bg-gradient-to-br from-[#0a1f18] to-[#1a3d2f] py-24 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-[#1a3d2f] to-[#0f2a1e] py-20 overflow-hidden">
       {/* Cinematic background elements */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="absolute inset-0 bg-[url('/path/to/texture.png')] opacity-10 mix-blend-overlay"></div>
       <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-black to-transparent opacity-40"></div>
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-black to-transparent opacity-40"></div>
@@ -20,8 +20,8 @@ const VideoSection: React.FC = () => {
         }}
         transition={{ 
           repeat: Infinity, 
-          duration: 10,
-          ease: "easeInOut"
+          duration: 30,
+          ease: "linear"
         }}
       />
       <motion.div 
@@ -32,8 +32,8 @@ const VideoSection: React.FC = () => {
         }}
         transition={{ 
           repeat: Infinity, 
-          duration: 12,
-          ease: "easeInOut"
+          duration: 30,
+          ease: "linear"
         }}
       />
 
@@ -41,22 +41,28 @@ const VideoSection: React.FC = () => {
         <motion.h2 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-white text-5xl font-bold mb-16 text-center"
+          transition={{ duration: 1.5 }}
+          className="text-white text-4xl font-bold mb-12 text-center"
         >
           Welcome to Nood: Your Journey Begins Here
         </motion.h2>
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full max-w-5xl mx-auto relative"
+          transition={{ duration: 1.5 }}
+          className="w-full max-w-4xl mx-auto relative"
         >
-          <div className="bg-gradient-to-br from-[#84bb75] to-[#4e9350] rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-white opacity-10 blur-3xl rounded-full transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[800px] h-[800px]"></div>
-            <div className="absolute inset-0 bg-black opacity-20 mix-blend-overlay"></div>
-            <div className="aspect-w-16 aspect-h-9 w-full overflow-visible relative z-10">
-              <HeroCard />
+          {/* White light effect behind HeroCard */}
+          <div className="absolute inset-0 bg-white opacity-10 blur-3xl rounded-full transform scale-110"></div>
+          
+          {/* Glowing border effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#84bb75] to-[#4e9350] rounded-3xl opacity-75 blur-lg"></div>
+          
+          <div className="bg-gradient-to-br from-[#84bb75] to-[#4e9350] rounded-3xl p-1 shadow-2xl relative">
+            <div className="bg-[#0f2a1e] rounded-3xl p-4 sm:p-6">
+              <div className="aspect-w-16 aspect-h-9 w-full overflow-visible relative z-10">
+                <HeroCard />
+              </div>
             </div>
           </div>
         </motion.div>

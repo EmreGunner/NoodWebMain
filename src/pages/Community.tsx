@@ -42,7 +42,7 @@ const Community: React.FC = () => {
       variants={containerVariants}
       className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-20"
     >
-      <div className="container mx-auto px-4 py-16 space-y-24">
+      <div className="container mx-auto px-4 py-12 space-y-16">
         <motion.section className="text-center" variants={itemVariants}>
           <h1 className="text-6xl font-bold mb-6 text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
             NOOD Community

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Search, X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDebounce } from 'use-debounce'
 import CourseCard from '../components/CourseCard'
 import { motion } from 'framer-motion'
@@ -51,6 +51,7 @@ const Academy: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const filteredCourses = useMemo(() => {
     return courses.filter(course => 
@@ -59,35 +60,61 @@ const Academy: React.FC = () => {
     )
   }, [selectedType, debouncedSearchTerm])
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 50
+      }
+    }
+  }
+
+  const handleCourseClick = (slug: string) => {
+    navigate(`/academy/${slug}`)
+  }
+
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="bg-gray-50 min-h-screen"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-5"
     >
-      <div className="container mx-auto px-4 py-16 space-y-16">
-        <section className="text-center">
-          <h1 className="text-6xl font-bold mb-6 text-gray-900">{t('Nood Academy')}</h1>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            {t('Unlock your potential with our expert-led courses. From fashion to e-commerce, we\'ve got your entrepreneurial journey covered.')}
-          </p>
-        </section>
-
-        <section className="bg-white shadow-2xl rounded-3xl p-8 transition-all duration-300 hover:shadow-3xl">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <motion.section 
+          className="bg-white shadow-xl rounded-3xl p-6 transition-all duration-300 hover:shadow-2xl"
+          variants={itemVariants}
+        >
+          <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
             <div className="flex flex-wrap justify-center md:justify-start space-x-0 md:space-x-4 space-y-4 md:space-y-0 w-full md:w-auto">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedType(null)}
-                className={`w-full md:w-auto px-6 py-3 rounded-full transition-all duration-300 mb-4 md:mb-0 ${
+                className={`w-full md:w-auto px-6 py-3 rounded-full transition-all duration-300 ${
                   selectedType === null 
                     ? 'bg-primary text-white shadow-lg' 
                     : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                 }`}
               >
                 {t('All Courses')}
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedType('Virtual')}
                 className={`w-full md:w-auto px-6 py-3 rounded-full transition-all duration-300 ${
                   selectedType === 'Virtual'
@@ -96,7 +123,7 @@ const Academy: React.FC = () => {
                 }`}
               >
                 {t('Virtual Courses')}
-              </button>
+              </motion.button>
             </div>
             <div className="relative w-full md:w-auto">
               <input
@@ -122,31 +149,44 @@ const Academy: React.FC = () => {
               <p className="text-xl text-gray-600">{t('No courses found. Please try a different search.')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              variants={containerVariants}
+            >
               {filteredCourses.map(course => (
-                <div key={course.id} className="h-full">
-                  <CourseCard 
-                    {...course}
-                    learnMoreLink={`/academy/${course.slug}`}
-                  />
-                </div>
+                <motion.div 
+                  key={course.id} 
+                  variants={itemVariants}
+                  onClick={() => handleCourseClick(course.slug)}
+                  className="cursor-pointer"
+                >
+                  <CourseCard {...course} />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
-        </section>
+        </motion.section>
 
-        <section className="text-center py-16 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl mt-16 text-white shadow-2xl transition-all duration-300 hover:shadow-3xl">
-          <h2 className="text-4xl font-bold mb-6">{t('Not sure where to start?')}</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+        <motion.section 
+          className="text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl mt-12 text-white shadow-xl transition-all duration-300 hover:shadow-2xl"
+          variants={itemVariants}
+        >
+          <h2 className="text-3xl font-bold mb-4">{t('Not sure where to start?')}</h2>
+          <p className="text-xl mb-6 max-w-2xl mx-auto">
             {t('Take our quick assessment to find the perfect course for your entrepreneurial journey.')}
           </p>
-          <Link 
-            to="/assessment"
-            className="bg-white text-primary text-lg px-10 py-4 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
-          </Link>
-        </section>
+            <Link 
+              to="/assessment"
+              className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
+            >
+              {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
+            </Link>
+          </motion.div>
+        </motion.section>
       </div>
     </motion.div>
   )

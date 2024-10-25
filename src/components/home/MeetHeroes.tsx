@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import MeetHeroCard from '../MeetHeroCard';
 
 const heroes = [
@@ -61,44 +61,40 @@ const heroes = [
 const MeetHeroes: React.FC = () => {
   const topRowRef = useRef<HTMLDivElement>(null);
   const bottomRowRef = useRef<HTMLDivElement>(null);
+  const [topScrollPosition, setTopScrollPosition] = useState(0);
+  const [bottomScrollPosition, setBottomScrollPosition] = useState(0);
 
   useEffect(() => {
     const topRow = topRowRef.current;
     const bottomRow = bottomRowRef.current;
 
-    let topScrollPosition = 0;
-    let bottomScrollPosition = 0;
+    let animationFrameId: number;
 
-    const animateTopRow = () => {
-      if (topRow) {
-        topScrollPosition += 0.2;
-        if (topScrollPosition >= topRow.scrollWidth / 2) {
-          topScrollPosition = 0;
-        }
-        topRow.scrollLeft = topScrollPosition;
+    const animate = () => {
+      if (topRow && bottomRow) {
+        setTopScrollPosition(prev => {
+          const newPosition = prev + 0.2;  // Reduced speed
+          return newPosition >= topRow.scrollWidth / 2 ? 0 : newPosition;
+        });
+        setBottomScrollPosition(prev => {
+          const newPosition = prev - 0.2;  // Reduced speed
+          return newPosition <= 0 ? bottomRow.scrollWidth / 2 : newPosition;
+        });
       }
-      requestAnimationFrame(animateTopRow);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    const animateBottomRow = () => {
-      if (bottomRow) {
-        bottomScrollPosition -= 0.2;
-        if (bottomScrollPosition <= 0) {
-          bottomScrollPosition = bottomRow.scrollWidth / 2;
-        }
-        bottomRow.scrollLeft = bottomScrollPosition;
-      }
-      requestAnimationFrame(animateBottomRow);
-    };
-
-    const topAnimationId = requestAnimationFrame(animateTopRow);
-    const bottomAnimationId = requestAnimationFrame(animateBottomRow);
+    animate();
 
     return () => {
-      cancelAnimationFrame(topAnimationId);
-      cancelAnimationFrame(bottomAnimationId);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
+
+  useEffect(() => {
+    if (topRowRef.current) topRowRef.current.scrollLeft = topScrollPosition;
+    if (bottomRowRef.current) bottomRowRef.current.scrollLeft = bottomScrollPosition;
+  }, [topScrollPosition, bottomScrollPosition]);
 
   return (
     <div className="bg-gray-100 py-8 sm:py-12 md:py-16">

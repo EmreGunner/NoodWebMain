@@ -7,9 +7,8 @@ import LoadingSpinner from './components/LoadingSpinner'
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
-const Academy = React.lazy(() => import('./pages/Academy'))
+const Courses = React.lazy(() => import('./pages/Academy')) // Renamed from Academy to Courses
 const Blog = React.lazy(() => import('./pages/Blog'))
-const MasterClasses = React.lazy(() => import('./pages/MasterClasses'))
 const Community = React.lazy(() => import('./pages/Community'))
 const Careers = React.lazy(() => import('./pages/Careers'))
 const CourseDetailPage = React.lazy(() => import('./pages/CourseDetailPage'))
@@ -19,6 +18,9 @@ const About = React.lazy(() => import('./pages/About'))
 const NoodShop = React.lazy(() => import('./pages/NoodShop'))
 const Workshops = React.lazy(() => import('./pages/Workshops'))
 const WorkshopDetail = React.lazy(() => import('./pages/WorkshopDetail'))
+const MasterClasses = React.lazy(() => import('./pages/MasterClasses'))
+const BecomeCoach = React.lazy(() => import('./pages/BecomeCoach'))
+const HostCourse = React.lazy(() => import('./pages/HostCourse'))
 
 const App: React.FC = () => {
   return (
@@ -26,14 +28,13 @@ const App: React.FC = () => {
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow pt-16">
+        <main className="flex-grow pt-12">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/academy" element={<Academy />} />
-              <Route path="/academy/:slug" element={<CourseDetailPage />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/courses/:slug" element={<CourseDetailPage />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/masterclasses" element={<MasterClasses />} />
               <Route path="/community" element={<Community />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<ContactUs />} />
@@ -42,6 +43,9 @@ const App: React.FC = () => {
               <Route path="/nood-shop" element={<NoodShop />} />
               <Route path="/workshops" element={<Workshops />} />
               <Route path="/workshops/:id" element={<WorkshopDetail />} />
+              <Route path="/masterclasses" element={<MasterClasses />} />
+              <Route path="/become-coach" element={<BecomeCoach />} />
+              <Route path="/host-course" element={<HostCourse />} />
             </Routes>
           </Suspense>
         </main>
