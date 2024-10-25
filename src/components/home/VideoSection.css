@@ -1,0 +1,23 @@
+@keyframes lightBeam {
+  0%, 100% { transform: translateX(-50%); opacity: 0.1; }
+  50% { transform: translateX(50%); opacity: 0.3; }
+}
+
+.light-beam {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, #84bb75, transparent);
+  opacity: 0.2;
+  animation: lightBeam 30s linear infinite;
+}
+
+.light-beam-1 {
+  left: 25%;
+}
+
+.light-beam-2 {
+  right: 33%;
+  animation-delay: 15s;
+}

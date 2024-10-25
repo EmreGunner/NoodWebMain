@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import MeetHeroCard from '../MeetHeroCard';
 
 const heroes = [
@@ -8,7 +8,6 @@ const heroes = [
     title: 'Marketing Expert',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     linkedin: '#',
-    instagram: '#',
     course: 'Digital Marketing Mastery',
   },
   {
@@ -17,7 +16,6 @@ const heroes = [
     title: 'Tech Entrepreneur',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     linkedin: '#',
-    instagram: '#',
     course: 'Startup Success Strategies',
   },
   {
@@ -26,7 +24,6 @@ const heroes = [
     title: 'Awaken The Species',
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
-    instagram: 'https://www.instagram.com/nealedonaldwalsch/',
     course: 'Spiritual Awakening Journey',
   },
   {
@@ -35,7 +32,6 @@ const heroes = [
     title: 'Unlock Your Mind\'s Potential',
     image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36',
     linkedin: 'https://www.linkedin.com/in/vishen/',
-    instagram: 'https://www.instagram.com/vishen/',
     course: 'Mindvalley Mastery',
   },
   {
@@ -44,7 +40,6 @@ const heroes = [
     title: '5 Rules for Life',
     image: 'https://images.unsplash.com/photo-1531369201-4f7be267b1de',
     linkedin: 'https://www.linkedin.com/in/mayemusk/',
-    instagram: 'https://www.instagram.com/mayemusk/',
     course: 'Life Optimization Blueprint',
   },
   {
@@ -53,76 +48,88 @@ const heroes = [
     title: 'Awaken The Species',
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
-    instagram: 'https://www.instagram.com/nealedonaldwalsch/',
     course: 'Conversations with God',
   },
 ];
 
 const MeetHeroes: React.FC = () => {
-  const topRowRef = useRef<HTMLDivElement>(null);
-  const bottomRowRef = useRef<HTMLDivElement>(null);
-  const [topScrollPosition, setTopScrollPosition] = useState(0);
-  const [bottomScrollPosition, setBottomScrollPosition] = useState(0);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const animate = useCallback(() => {
+    if (rowRef.current) {
+      setScrollPosition(prev => {
+        const newPosition = prev + 0.5;
+        return newPosition >= rowRef.current!.scrollWidth / 2 ? 0 : newPosition;
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    const topRow = topRowRef.current;
-    const bottomRow = bottomRowRef.current;
-
     let animationFrameId: number;
+    let lastTimestamp = 0;
+    const fps = 30;
+    const interval = 1000 / fps;
 
-    const animate = () => {
-      if (topRow && bottomRow) {
-        setTopScrollPosition(prev => {
-          const newPosition = prev + 0.2;  // Reduced speed
-          return newPosition >= topRow.scrollWidth / 2 ? 0 : newPosition;
-        });
-        setBottomScrollPosition(prev => {
-          const newPosition = prev - 0.2;  // Reduced speed
-          return newPosition <= 0 ? bottomRow.scrollWidth / 2 : newPosition;
-        });
+    const step = (timestamp: number) => {
+      if (timestamp - lastTimestamp >= interval) {
+        lastTimestamp = timestamp;
+        animate();
       }
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(step);
     };
 
-    animate();
+    animationFrameId = requestAnimationFrame(step);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [animate]);
 
   useEffect(() => {
-    if (topRowRef.current) topRowRef.current.scrollLeft = topScrollPosition;
-    if (bottomRowRef.current) bottomRowRef.current.scrollLeft = bottomScrollPosition;
-  }, [topScrollPosition, bottomScrollPosition]);
+    if (rowRef.current) rowRef.current.scrollLeft = scrollPosition;
+  }, [scrollPosition]);
 
   return (
-    <div className="bg-gray-100 py-8 sm:py-12 md:py-16">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">Meet the Heroes</h2>
-        <div className="space-y-6 sm:space-y-8">
-          <div className="overflow-hidden" ref={topRowRef}>
-            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 240}px` }}>
-              {heroes.map((hero) => (
-                <div key={hero.id} className="flex-shrink-0">
-                  <MeetHeroCard {...hero} />
-                </div>
-              ))}
-            </div>
+    <section className="bg-white shadow-md py-20 sm:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50"></div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+            Meet Our Heroes
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Expert tutors dedicated to transforming lives through knowledge and inspiration.
+          </p>
+        </div>
+        <div className="relative mb-12">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-gray-300"></div>
           </div>
-          <div className="overflow-hidden" ref={bottomRowRef}>
-            <div className="flex space-x-4 sm:space-x-6" style={{ width: `${heroes.length * 240}px` }}>
-              {heroes.map((hero) => (
-                <div key={hero.id} className="flex-shrink-0">
-                  <MeetHeroCard {...hero} />
-                </div>
-              ))}
-            </div>
+          <div className="relative flex justify-center">
+            <span className="px-4 py-2 bg-white text-lg font-semibold text-primary rounded-full shadow-sm">
+              Featured Experts
+            </span>
+          </div>
+        </div>
+        <div className="mt-12 overflow-hidden" ref={rowRef}>
+          <div 
+            className="flex space-x-8" 
+            style={{ 
+              width: `${heroes.length * 320}px`,
+              willChange: 'transform'
+            }}
+          >
+            {heroes.map((hero) => (
+              <div key={hero.id} className="flex-shrink-0 w-[300px]">
+                <MeetHeroCard {...hero} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default MeetHeroes;
+export default React.memo(MeetHeroes);

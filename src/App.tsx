@@ -4,10 +4,11 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import LoadingSpinner from './components/LoadingSpinner'
+import CourseDetail from './pages/CourseDetail'
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
-const Courses = React.lazy(() => import('./pages/Academy')) // Renamed from Academy to Courses
+const Courses = React.lazy(() => import('./pages/Courses')) // Changed from Academy to Courses
 const Blog = React.lazy(() => import('./pages/Blog'))
 const Community = React.lazy(() => import('./pages/Community'))
 const Careers = React.lazy(() => import('./pages/Careers'))
@@ -28,12 +29,12 @@ const App: React.FC = () => {
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow pt-12">
+        <main className="flex-grow pt-16">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/courses" element={<Courses />} />
-              <Route path="/courses/:slug" element={<CourseDetailPage />} />
+              <Route path="/courses/:slug" element={<CourseDetail />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/community" element={<Community />} />
               <Route path="/careers" element={<Careers />} />

@@ -1,70 +1,77 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { PopupButton } from '@typeform/embed-react';
-import { useTranslation } from 'react-i18next';
-import { Calendar } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Calendar, Clock } from 'lucide-react';
 
 interface CourseCardProps {
   id: string;
   name: string;
-  coursePhoto: string;
-  domain: string;
   description: string;
-  courseType: string;
-  duration: number;
   startDate: string;
-  learnMoreLink: string;
+  duration: number;
+  coursePhoto: string;
+  slug: string;
+  courseType: string;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
+  id,
   name,
-  coursePhoto,
-  domain,
   description,
-  courseType,
-  duration,
   startDate,
-  learnMoreLink,
+  duration,
+  coursePhoto,
+  slug,
+  courseType,
 }) => {
-  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!(e.target as HTMLElement).closest('button')) {
+      navigate(`/courses/${slug}`);
+    }
+  };
+
+  const handleApply = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    // Add your apply logic here
+    console.log('Applying for course:', name);
+  };
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+    <div 
+      className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer"
+      onClick={handleCardClick}
     >
-      <div className="relative h-48">
-        <img src={coursePhoto} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute top-3 right-3 bg-white/90 text-primary px-3 py-1 text-sm font-medium rounded-full">
+      <div className="relative">
+        <img src={coursePhoto} alt={name} className="w-full h-48 object-cover" />
+        <span className="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-full text-sm">
           {courseType}
-        </div>
+        </span>
       </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{name}</h3>
-        <p className="text-sm text-primary font-medium mb-2">{domain}</p>
-        <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{description}</p>
-        <div className="flex items-center text-sm text-gray-500 mb-4">
-          <Calendar size={16} className="mr-2" />
-          <span>{new Date(startDate).toLocaleDateString()} • {duration} {t('weeks')}</span>
+      <div className="p-4">
+        <h3 className="text-xl font-semibold mb-2">{name}</h3>
+        <p className="text-gray-600 mb-4 line-clamp-2">{description}</p>
+        <div className="flex justify-between text-sm text-gray-500 mb-4">
+          <span className="flex items-center"><Calendar size={16} className="mr-1" /> {new Date(startDate).toLocaleDateString()}</span>
+          <span className="flex items-center"><Clock size={16} className="mr-1" /> {duration} weeks</span>
         </div>
-        <div className="flex flex-col space-y-3 mt-auto">
-          <PopupButton 
-            id="YOUR_ACTUAL_TYPEFORM_ID"
-            className="w-full bg-primary text-white text-center py-3 rounded-full font-medium hover:bg-primary/90 transition-all duration-300"
+        <div className="flex flex-col space-y-2">
+          <button 
+            className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 transform hover:scale-105 hover:bg-primary-dark shadow-md hover:shadow-lg"
+            onClick={handleApply}
           >
-            {t('Apply Now')}
-          </PopupButton>
+            Apply Now
+          </button>
           <Link 
-            to={learnMoreLink}
-            className="w-full bg-gray-100 text-primary text-center py-3 rounded-full font-medium hover:bg-gray-200 transition-all duration-300"
+            to={`/courses/${slug}`}
+            className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
+            onClick={(e) => e.stopPropagation()}
           >
-            {t('Learn More')}
+            Learn More
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
