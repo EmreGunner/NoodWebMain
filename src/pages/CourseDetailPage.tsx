@@ -6,8 +6,7 @@ import { motion } from 'framer-motion'
 import { PopupButton } from '@typeform/embed-react'
 import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
-
-import { courses } from './Academy'
+import { courses } from './courses'
 import './CourseDetailPage.css' // Make sure to create this CSS file
 
 interface Course {
@@ -54,10 +53,10 @@ const CourseDetailPage: React.FC = () => {
         <meta property="og:title" content={`${course.name} | Nood Academy`} />
         <meta property="og:description" content={course.description} />
         <meta property="og:image" content={course.coursePhoto} />
-        <meta property="og:url" content={`https://yourdomain.com/academy/${course.slug}`} />
+        <meta property="og:url" content={`https://yourdomain.com/courses/${course.slug}`} />
       </Helmet>
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        <Link to="/academy" className="text-primary hover:underline mb-6 inline-block">&larr; {t('Back to Courses')}</Link>
+        <Link to="/courses" className="text-primary hover:underline mb-6 inline-block">&larr; {t('Back to Courses')}</Link>
         <div className="course-detail-card bg-white shadow-2xl rounded-3xl overflow-hidden">
           <div className="course-image">
             <img src={course.coursePhoto} alt={course.name} className="w-full h-full object-cover" />

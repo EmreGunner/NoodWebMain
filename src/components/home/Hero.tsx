@@ -2,13 +2,14 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import heroStudent from '../../assets/images/herowomen.png';
 
 const Hero: React.FC = () => {
   return (
     <div className={`
       relative bg-gradient-to-br from-background to-primary/5
-      pt-5 md:pt-14 lg:pt-14 /* Explicit top padding to account for header */
-      min-h-screen /* Full height */
+       md:pt-5 lg:pt-5
+      min-h-screen
       flex items-center
     `}>
       <div className="container mx-auto px-4">
@@ -30,7 +31,7 @@ const Hero: React.FC = () => {
               whileTap={{ scale: 0.95 }}
             >
               <Link 
-                to="/academy" 
+                to="/courses" 
                 className="btn-primary text-lg py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition duration-300 inline-flex items-center justify-center mx-auto lg:mx-0"
               >
                 Explore Courses <ArrowRight className="ml-2" size={24} />
@@ -51,7 +52,7 @@ const Hero: React.FC = () => {
               ></motion.div>
               <div className="relative bg-gradient-to-br from-primary rounded-full overflow-hidden w-full h-full shadow-2xl flex items-center justify-center">
                 <img
-                  src="/ExampleTemplateNood/public/external/youngstudentwomanwearingdenimjacketeyeglassesholdi1105-9htb-700h.png"
+                  src={heroStudent}
                   alt="Professional woman"
                   className="w-full h-full object-cover object-top -translate-x-5"
                 />

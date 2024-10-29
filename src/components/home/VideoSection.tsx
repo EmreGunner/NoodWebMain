@@ -1,11 +1,11 @@
 import React from 'react';
 import HeroCard from '../HeroCard';
 import { motion } from 'framer-motion';
-import './VideoSection.css'; // Create this CSS file for the light beam animations
+import './VideoSection.css';
 
 const VideoSection: React.FC = () => {
   return (
-    <div className="relative bg-gradient-to-br from-[#1a3d2f] to-[#0f2a1e] py-20 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-[#1a3d2f] to-[#0f2a1e] py-20 overflow-hidden mt-20 sm:mt-32">
       {/* Cinematic background elements */}
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="absolute inset-0 bg-[url('/path/to/texture.png')] opacity-10 mix-blend-overlay"></div>

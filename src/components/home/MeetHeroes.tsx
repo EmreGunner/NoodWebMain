@@ -1,75 +1,9 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MeetHeroCard from '../MeetHeroCard';
 import styled from 'styled-components';
-import { useWindowSize } from '../../hooks/useWindowSize';
 
-const CarouselWrapper = styled.div`
-  contain: content;
-  position: relative;
-  overflow: hidden;
-  padding: 2rem 0;
-  margin: 0 auto;
-  max-width: 1400px;
-`;
-
-const CarouselTrack = styled.div`
-  display: flex;
-  gap: 2rem;
-  transform: translateZ(0);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-  margin: 0 auto;
-  padding: 0 calc(50% - 150px);
-  
-  @media (min-width: 640px) {
-    padding: 0 calc(50% - 300px);
-  }
-  
-  @media (min-width: 1024px) {
-    padding: 0 calc(50% - 450px);
-  }
-`;
-
-const NavigationButton = styled.button<{ direction: 'left' | 'right' }>`
-  position: absolute;
-  top: 50%;
-  ${props => props.direction === 'left' ? 'left: 1rem;' : 'right: 1rem;'}
-  transform: translateY(-50%);
-  background: white;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  z-index: 10;
-  opacity: 0.8;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: translateY(-50%);
-  }
-`;
-
-const CardWrapper = styled.div`
-  flex: 0 0 300px;
-  display: flex;
-  justify-content: center;
-`;
-
-// Define heroes data
 const heroes = [
   {
     id: 1,
@@ -119,78 +53,112 @@ const heroes = [
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
     course: 'Conversations with God',
   },
-] as const;
+];
+
+const ScrollContainer = styled.div`
+  overflow-x: hidden;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+const ScrollContent = styled.div`
+  display: flex;
+  transition: transform 0.5s ease;
+`;
+
+const NavigationButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+`;
+
+const NavigationButton = styled.button`
+  background: var(--color-primary, #84bb75);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--color-secondary, #4e9350);
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
 
 const MeetHeroes: React.FC = () => {
-  const { width } = useWindowSize();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: '100px',
+    rootMargin: '200px 0px',
   });
 
-  const visibleItems = useCallback(() => {
-    if (width < 640) return 1;
-    if (width < 1024) return 2;
-    return 3;
-  }, [width])();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const maxIndex = heroes.length - visibleItems;
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current!.offsetLeft);
+    setScrollLeft(scrollRef.current!.scrollLeft);
+  };
 
-  const scroll = useCallback((direction: 'left' | 'right') => {
-    if (!scrollRef.current) return;
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
-    const newIndex = direction === 'left' 
-      ? Math.max(currentIndex - 1, 0)
-      : Math.min(currentIndex + 1, maxIndex);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current!.offsetLeft;
+    const walk = (x - startX) * 2;
+    scrollRef.current!.scrollLeft = scrollLeft - walk;
+  };
 
-    setCurrentIndex(newIndex);
-    
-    requestAnimationFrame(() => {
-      if (scrollRef.current) {
-        const offset = newIndex * (320); // 300px card width + 20px gap
-        scrollRef.current.style.transform = `translateX(-${offset}px)`;
-      }
-    });
-  }, [currentIndex, maxIndex]);
-
-  // Automatic scroll with smooth transition
   useEffect(() => {
-    if (!inView || isHovered) return;
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer && inView) {
+      let animationFrameId: number;
+      let lastTimestamp = 0;
+      const fps = 60;
+      const interval = 1000 / fps;
 
-    const interval = setInterval(() => {
-      if (currentIndex >= maxIndex) {
-        setCurrentIndex(0);
-        if (scrollRef.current) {
-          // Smooth reset to start
-          scrollRef.current.style.transition = 'none';
-          scrollRef.current.style.transform = 'translateX(0)';
-          // Force reflow
-          scrollRef.current.offsetHeight;
-          scrollRef.current.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      const animate = (timestamp: number) => {
+        if (timestamp - lastTimestamp >= interval) {
+          lastTimestamp = timestamp;
+          if (!isHovered && !isDragging) {
+            scrollContainer.scrollLeft += 1;
+            if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+              scrollContainer.scrollLeft = 0;
+            }
+          }
         }
-      } else {
-        scroll('right');
-      }
-    }, 3000);
+        animationFrameId = requestAnimationFrame(animate);
+      };
 
-    return () => clearInterval(interval);
-  }, [currentIndex, inView, isHovered, maxIndex, scroll]);
+      animationFrameId = requestAnimationFrame(animate);
 
-  // Reset position when window is resized
-  useEffect(() => {
-    if (scrollRef.current) {
-      const offset = currentIndex * 320;
-      scrollRef.current.style.transform = `translateX(-${offset}px)`;
+      return () => cancelAnimationFrame(animationFrameId);
     }
-  }, [width, currentIndex]);
+  }, [inView, isHovered, isDragging]);
 
   return (
     <section className="bg-white shadow-md py-20 sm:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
@@ -200,38 +168,57 @@ const MeetHeroes: React.FC = () => {
             Expert tutors dedicated to transforming lives through knowledge and inspiration.
           </p>
         </div>
-
-        <CarouselWrapper>
-          <NavigationButton
-            direction="left"
-            onClick={() => scroll('left')}
-            disabled={currentIndex === 0}
-            aria-label="Previous slide"
+        <div className="relative mb-12">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-4 py-2 bg-white text-lg font-semibold text-primary rounded-full shadow-sm">
+              Featured Experts
+            </span>
+          </div>
+        </div>
+        <ScrollContainer 
+          ref={scrollRef}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={() => {
+            handleMouseUp();
+            setIsHovered(false);
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseMove={handleMouseMove}
+        >
+          <ScrollContent 
+            style={{ 
+              width: `${heroes.length * 320 * 2}px`,
+            }}
+            ref={ref}
           >
-            <ChevronLeft className="w-6 h-6" />
-          </NavigationButton>
-
-          <CarouselTrack
-            ref={scrollRef}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {heroes.map((hero) => (
-              <CardWrapper key={hero.id}>
+            {[...heroes, ...heroes].map((hero, index) => (
+              <div key={`${hero.id}-${index}`} className="flex-shrink-0 w-[300px] mx-2">
                 <MeetHeroCard {...hero} />
-              </CardWrapper>
+              </div>
             ))}
-          </CarouselTrack>
+          </ScrollContent>
+        </ScrollContainer>
 
-          <NavigationButton
-            direction="right"
-            onClick={() => scroll('right')}
-            disabled={currentIndex === maxIndex}
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-6 h-6" />
+        <NavigationButtons>
+          <NavigationButton onClick={() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollLeft -= 320;
+            }
+          }}>
+            <ChevronLeft size={24} />
           </NavigationButton>
-        </CarouselWrapper>
+          <NavigationButton onClick={() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollLeft += 320;
+            }
+          }}>
+            <ChevronRight size={24} />
+          </NavigationButton>
+        </NavigationButtons>
       </div>
     </section>
   );

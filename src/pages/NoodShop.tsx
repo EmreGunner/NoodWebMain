@@ -206,7 +206,7 @@ const NoodShop: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pt-20">
+    <div className="bg-gray-50 min-h-screen">
       <header className="bg-white shadow-sm py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
