@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { PopupButton } from '@typeform/embed-react'
 import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
-import { courses } from './courses'
+import { courses } from './Courses'
 import './CourseDetailPage.css' // Make sure to create this CSS file
 
 interface Course {
