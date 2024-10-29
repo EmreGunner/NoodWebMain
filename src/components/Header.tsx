@@ -61,22 +61,30 @@ const Header: React.FC = () => {
 
   return (
     <motion.header
-      className="bg-white shadow-md fixed top-0 left-0 w-full z-50"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      className={`
+      fixed top-0 left-5 right-0 bg-white z-50
+        
+        ${isScrolled ? 'shadow-lg' : 'shadow-sm'}
+      `}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+      <div className="container mx-auto px-4 tablet:px-2">
+        <div className="flex justify-between items-center h-12 md:h-14 lg:h-16 tablet:h-16 tablet:gap-4">
           <Link to="/" className="flex items-center group">
             <img 
               src={noodLogoGreen} 
               alt="Nood Logo" 
-              className="w-14 h-14 object-contain"
+              className="
+                w-12 h-12                    /* Base size for mobile */
+                sm:w-14 sm:h-14              /* Slightly larger for small screens */
+                md:w-16 md:h-16              /* Medium screens */
+                lg:w-16 lg:h-16              /* Large screens */
+                object-contain               /* Maintain aspect ratio */
+                min-w-[48px]                 /* Prevent logo from getting too small */
+              "
             />
           </Link>
 
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 tablet:space-x-6">
             {mainNavItems.map((item) => (
               <Link key={item.to} to={item.to} className="text-gray-700 hover:text-primary">
                 <item.icon className="inline-block mr-2" size={20} />
@@ -86,12 +94,13 @@ const Header: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
-                className="text-gray-700 hover:text-primary flex items-center"
+                className="text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium"
                 aria-haspopup="true"
                 aria-expanded={isMoreDropdownOpen}
               >
-                <MoreHorizontal className="inline-block mr-2" size={20} />
-                More <ChevronDown className="ml-1" size={16} />
+                <MoreHorizontal className="inline-block mr-2 tablet:hidden" size={20} />
+                <span>More</span>
+                <ChevronDown className="ml-1.5 tablet:ml-2 w-4 h-8" />
               </button>
               {isMoreDropdownOpen && (
                 <div
@@ -115,7 +124,7 @@ const Header: React.FC = () => {
             </div>
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 tablet:space-x-3">
             <div className="relative">
               <select
                 value={i18n.language}
@@ -135,9 +144,21 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link to="/consultation" className="btn-primary text-sm px-4 py-2 rounded-full">
-                Book Consultation
-              </Link>
+              <Link
+            to="/consultation"
+            className={`
+              flex-shrink-0
+              bg-primary text-white
+              px-2 xxs:px-3 sm:px-4
+              py-1.5 sm:py-2
+              rounded-full
+              text-xs xxs:text-sm sm:text-base
+              whitespace-nowrap
+              ml-1 sm:ml-2
+            `}
+          >
+            Book Consultation
+          </Link>
             </motion.div>
 
             <button

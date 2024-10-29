@@ -1,7 +1,10 @@
 import React, { memo } from "react";
 import styled from "styled-components";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
 
+// Move styled component definition outside component to prevent recreation
 const StyledWrapper = styled.div`
   .card {
     width: 280px;
@@ -29,12 +32,14 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
   }
 
-  .card .profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: all 0.5s ease-in-out 0s;
+  .card .profile-pic img,
+  .card .profile-pic span {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    transform: scale(1) !important; /* Initial scale to ensure full coverage */
+    transition: all 0.5s ease-in-out 0s !important;
   }
 
   .card .bottom {
@@ -153,9 +158,10 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
   }
 
-  .card:hover .profile-pic img {
-    transform: scale(1);
-    transition: all 0.5s ease-in-out 0.5s;
+  .card:hover .profile-pic img,
+  .card:hover .profile-pic span {
+    transform: scale(1) !important; /* Scale back to normal on hover */
+    transition: all 0.5s ease-in-out 0.5s !important;
   }
 
   .course-info {
@@ -209,12 +215,38 @@ interface MeetHeroCardProps {
 }
 
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
+  const handleSocialClick = React.useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <StyledWrapper>
       <div className="card">
-        <img src={noodLogo} alt="Nood Logo" className="nood-logo" loading="lazy" />
+        <LazyLoadImage
+          src={noodLogo}
+          alt="Nood Logo"
+          className="nood-logo"
+          effect="blur"
+          threshold={300}
+        />
         <div className="profile-pic">
-          <img src={image} alt={name} loading="lazy" />
+          <LazyLoadImage
+            src={image}
+            alt={name}
+            effect="blur"
+            wrapperClassName="w-full h-full"
+            className="w-full h-full object-cover"
+            threshold={300}
+            width={280}
+            height={280}
+            afterLoad={() => {
+              // Force a repaint to ensure proper scaling
+              const el = document.querySelector('.profile-pic img');
+              if (el) {
+                el.style.transform = 'scale(1.2)';
+              }
+            }}
+          />
         </div>
         <div className="course-info">
           <h3>{course}</h3>
@@ -226,7 +258,13 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
           </div>
           <div className="bottom-bottom">
             <div className="social-links-container">
-              <a href={linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <a 
+                href={linkedin} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="LinkedIn"
+                onClick={handleSocialClick}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>

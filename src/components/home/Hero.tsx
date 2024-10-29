@@ -5,7 +5,12 @@ import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative bg-gradient-to-br from-background to-primary/5 overflow-hidden min-h-screen flex items-center">
+    <div className={`
+      relative bg-gradient-to-br from-background to-primary/5
+      pt-5 md:pt-14 lg:pt-14 /* Explicit top padding to account for header */
+      min-h-screen /* Full height */
+      flex items-center
+    `}>
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center justify-between">
           <motion.div 

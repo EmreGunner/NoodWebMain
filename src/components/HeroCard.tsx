@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import noodSvg from '../assets/nood.svg';
+import YouTubeFacade from './YouTubeFacade';
 
 
 const StyledWrapper = styled.div` 
@@ -335,15 +336,10 @@ const HeroCard = () => {
             <div className="glass" />
             <div className="content">
               <div className="video-container">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/7zDc6364L8w?si=Qp_H355sqfLO5b2b"
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
+                <YouTubeFacade
+                  videoId="7zDc6364L8w"
+                  className="w-full h-full rounded-xl"
+                />
               </div>
             </div>
           </div>

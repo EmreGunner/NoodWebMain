@@ -81,6 +81,10 @@ const Courses: React.FC = () => {
     }
   }
 
+  // Add enrollment deadline
+  const enrollmentDeadline = new Date();
+  enrollmentDeadline.setDate(enrollmentDeadline.getDate() + 7);
+
   return (
     <motion.div 
       initial="hidden"
@@ -89,6 +93,17 @@ const Courses: React.FC = () => {
       className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-5"
     >
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Add enrollment deadline banner */}
+        <motion.div 
+          className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-xl shadow-sm text-center"
+          variants={itemVariants}
+        >
+          <p className="text-yellow-800">
+            <span className="font-semibold">Early Bird Special:</span> Enroll before{' '}
+            {enrollmentDeadline.toLocaleDateString()} to get 20% off! 🎉
+          </p>
+        </motion.div>
+
         <motion.section 
           className="bg-white shadow-xl rounded-3xl p-4 sm:p-6 transition-all duration-300 hover:shadow-2xl"
           variants={itemVariants}
@@ -141,7 +156,9 @@ const Courses: React.FC = () => {
           
           {filteredCourses.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-xl text-gray-600">{t('No courses found. Please try a different search.')}</p>
+              <p className="text-xl text-gray-600">
+                {t('No courses found. Please try a different search.')}
+              </p>
             </div>
           ) : (
             <motion.div 
@@ -153,11 +170,32 @@ const Courses: React.FC = () => {
                   key={course.id} 
                   variants={itemVariants}
                 >
-                  <CourseCard {...course} courseType={course.courseType} />
+                  <CourseCard {...course} />
                 </motion.div>
               ))}
             </motion.div>
           )}
+        </motion.section>
+
+        {/* Add social proof section */}
+        <motion.section 
+          className="bg-white shadow-xl rounded-3xl p-6 text-center"
+          variants={itemVariants}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <h3 className="text-3xl font-bold text-primary mb-2">5,000+</h3>
+              <p className="text-gray-600">Students Enrolled</p>
+            </div>
+            <div>
+              <h3 className="text-3xl font-bold text-primary mb-2">98%</h3>
+              <p className="text-gray-600">Completion Rate</p>
+            </div>
+            <div>
+              <h3 className="text-3xl font-bold text-primary mb-2">4.9/5</h3>
+              <p className="text-gray-600">Student Satisfaction</p>
+            </div>
+          </div>
         </motion.section>
 
         <motion.section 

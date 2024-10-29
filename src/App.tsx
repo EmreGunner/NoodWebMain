@@ -22,6 +22,7 @@ const WorkshopDetail = React.lazy(() => import('./pages/WorkshopDetail'))
 const MasterClasses = React.lazy(() => import('./pages/MasterClasses'))
 const BecomeCoach = React.lazy(() => import('./pages/BecomeCoach'))
 const HostCourse = React.lazy(() => import('./pages/HostCourse'))
+const Support = React.lazy(() => import('./pages/Support'))
 
 const App: React.FC = () => {
   return (
@@ -29,7 +30,7 @@ const App: React.FC = () => {
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow pt-16">
+        <main className="flex-grow pt-20 px-4 sm:px-6 lg:px-8">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               <Route path="/masterclasses" element={<MasterClasses />} />
               <Route path="/become-coach" element={<BecomeCoach />} />
               <Route path="/host-course" element={<HostCourse />} />
+              <Route path="/support" element={<Support />} />
             </Routes>
           </Suspense>
         </main>

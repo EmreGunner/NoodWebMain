@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'tablet': {'min': '768px', 'max': '1024px'},
+      },
       colors: {
         primary: '#84bb75',
         secondary: '#5d8a54',
@@ -73,4 +76,5 @@ export default {
       scale: ['hover', 'focus'],
     },
   },
+
 }
