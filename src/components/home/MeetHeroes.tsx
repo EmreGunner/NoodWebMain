@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 import MeetHeroCard from '../MeetHeroCard';
 
-// Move heroes data outside component to prevent re-creation
+// Reduced to 4 heroes
 const HEROES = [
   {
     id: 1,
@@ -36,109 +36,82 @@ const HEROES = [
     linkedin: 'https://www.linkedin.com/in/vishen/',
     course: 'Mindvalley Mastery',
   },
-  {
-    id: 5,
-    name: 'Maye Musk',
-    title: '5 Rules for Life',
-    image: 'https://images.unsplash.com/photo-1531369201-4f7be267b1de',
-    linkedin: 'https://www.linkedin.com/in/mayemusk/',
-    course: 'Life Optimization Blueprint',
-  },
-  {
-    id: 6,
-    name: 'Neale Donald Walsch',
-    title: 'Awaken The Species',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
-    linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
-    course: 'Conversations with God',
-  },
 ];
 
 const MeetHeroes = () => {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const dragTimeout = useRef(null);
-  const scrollTimeout = useRef(null);
-  const animationFrame = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Optimized intersection observer with reduced options
   const [ref, inView] = useInView({
     threshold: 0.1,
-    rootMargin: '100px',
+    triggerOnce: false
   });
 
-  // Optimized scroll handler using RAF and debouncing
-  const handleScroll = useCallback(() => {
-    if (!scrollRef.current || !inView) return;
-
-    const currentScroll = scrollRef.current.scrollLeft;
-    const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-
-    if (currentScroll >= maxScroll) {
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      scrollTimeout.current = setTimeout(() => {
-        scrollRef.current?.scrollTo({ left: 0, behavior: 'auto' });
-      }, 100);
-      return;
-    }
-
-    scrollRef.current.scrollLeft += 1;
-    animationFrame.current = requestAnimationFrame(handleScroll);
-  }, [inView]);
-
-  // Optimized mouse event handlers
-  const handleMouseDown = useCallback((e) => {
-    if (!scrollRef.current) return;
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  }, []);
-
-  const handleMouseMove = useCallback((e) => {
-    if (!isDragging || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  }, [isDragging, startX, scrollLeft]);
-
-  const handleDragEnd = useCallback(() => {
-    if (dragTimeout.current) clearTimeout(dragTimeout.current);
-    dragTimeout.current = setTimeout(() => {
-      setIsDragging(false);
-    }, 100);
-  }, []);
-
-  // Optimized animation control
+  // Handle resize
   useEffect(() => {
-    if (!inView || isDragging) {
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
-      }
-      return;
-    }
-
-    animationFrame.current = requestAnimationFrame(handleScroll);
-
-    return () => {
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
-      }
-      if (dragTimeout.current) {
-        clearTimeout(dragTimeout.current);
-      }
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-  }, [inView, isDragging, handleScroll]);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  // Early return if not in view
-  if (!inView) {
-    return <section ref={ref} className="bg-white py-20 sm:py-32 relative overflow-hidden" />;
-  }
+  // Mobile auto scroll animation
+  useEffect(() => {
+    if (!inView || isDragging || !isMobile) return;
+
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const nextIndex = (currentIndex + 1) % HEROES.length;
+        setCurrentIndex(nextIndex);
+        scrollRef.current.scrollTo({
+          left: nextIndex * 300,
+          behavior: 'smooth'
+        });
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [inView, isDragging, currentIndex, isMobile]);
+
+  // Desktop auto scroll animation
+  useEffect(() => {
+    if (!inView || isDragging || isMobile) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % HEROES.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [inView, isDragging, isMobile]);
+
+  // Mobile touch handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX);
+    setScrollLeft(scrollRef.current?.scrollLeft || 0);
+  }, [isMobile]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging || !scrollRef.current || !isMobile) return;
+    const x = e.touches[0].clientX;
+    const walk = (startX - x) * 2;
+    scrollRef.current.scrollLeft = scrollLeft + walk;
+  }, [isDragging, startX, scrollLeft, isMobile]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!isMobile) return;
+    setIsDragging(false);
+    if (!scrollRef.current) return;
+    const cardWidth = 300;
+    const newIndex = Math.round(scrollRef.current.scrollLeft / cardWidth);
+    setCurrentIndex(Math.max(0, Math.min(newIndex, HEROES.length - 1)));
+  }, [isMobile]);
 
   return (
     <section 
@@ -146,8 +119,8 @@ const MeetHeroes = () => {
       className="bg-white py-20 sm:py-32 relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50" />
-      <div className="relative max-w-[100vw] mx-auto">
-        <div className="text-center mb-16 px-4">
+      <div className="relative max-w-7xl mx-auto px-4">
+        <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
             Meet Our Heroes
           </h2>
@@ -156,45 +129,75 @@ const MeetHeroes = () => {
           </p>
         </div>
 
-        <div 
-          ref={scrollRef}
-          className="overflow-x-auto cursor-grab active:cursor-grabbing touch-pan-x"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            scrollBehavior: 'smooth',
-            WebkitOverflowScrolling: 'touch',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            perspective: '1000px'
-          }}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleDragEnd}
-          onMouseLeave={handleDragEnd}
-          onMouseMove={handleMouseMove}
-        >
+        {isMobile ? (
+          // Mobile view - keep exactly as before
           <div 
-            className="flex gap-6 px-2 py-4"
+            ref={scrollRef}
+            className="overflow-x-auto scrollbar-hide"
             style={{
-              transform: 'translateZ(0)',
-              willChange: 'transform',
-              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
             }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
-            {[...HEROES, ...HEROES].map((hero, index) => (
-              <div
-                key={`${hero.id}-${index}`}
-                className="flex-shrink-0 w-[300px]"
-                style={{
-                  transform: 'translateZ(0)',
-                  opacity: 1,
-                  transition: 'opacity 0.3s ease-in-out'
-                }}
-              >
-                <MeetHeroCard {...hero} />
-              </div>
-            ))}
+            <div className="flex gap-6 px-4">
+              {HEROES.map((hero, index) => (
+                <div
+                  key={hero.id}
+                  className="flex-shrink-0"
+                  style={{
+                    scrollSnapAlign: 'center',
+                    opacity: inView ? 1 : 0,
+                    transform: `translateX(${isDragging ? 0 : '0'})`,
+                    transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-out'
+                  }}
+                >
+                  <MeetHeroCard {...hero} />
+                </div>
+              ))}
+            </div>
           </div>
+        ) : (
+          // Desktop view - new implementation
+          <div className="hidden md:block">
+            <div className="grid grid-cols-4 gap-6">
+              {HEROES.map((hero, index) => (
+                <div
+                  key={hero.id}
+                  className={`transform transition-all duration-500 ${
+                    currentIndex === index 
+                      ? 'scale-105 opacity-100' 
+                      : 'scale-95 opacity-70'
+                  }`}
+                >
+                  <MeetHeroCard {...hero} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Dots indicator - visible on both mobile and desktop */}
+        <div className="flex justify-center gap-2 mt-6">
+          {HEROES.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                currentIndex === index ? 'bg-primary w-4' : 'bg-gray-300'
+              }`}
+              onClick={() => {
+                setCurrentIndex(index);
+                if (isMobile && scrollRef.current) {
+                  scrollRef.current.scrollTo({
+                    left: index * 300,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            />
+          ))}
         </div>
       </div>
     </section>

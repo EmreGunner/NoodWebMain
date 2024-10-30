@@ -181,44 +181,8 @@ const Header: React.FC = () => {
               className="md:hidden mt-4"
             >
               <ul className="flex flex-col space-y-2">
-                {mainNavItems.map((item, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={item.to} 
-                      className={`text-gray-700 hover:text-primary transition duration-300 flex items-center py-2 px-2 rounded-md
-                        ${location.pathname === item.to ? 'text-primary font-semibold bg-gray-100' : ''}
-                      `}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <item.icon className="mr-2" size={18} />
-                      {item.text}
-                    </Link>
-                  </li>
-                ))}
-                <li>
-                  <details className="group">
-                    <summary className="flex items-center py-2 px-2 text-gray-700 hover:text-primary cursor-pointer list-none">
-                      <MoreHorizontal className="mr-2" size={18} />
-                      More
-                      <ChevronDown className="ml-auto" size={16} />
-                    </summary>
-                    <ul className="pl-6 mt-2 space-y-2">
-                      {moreNavItems.map((item, index) => (
-                        <li key={index}>
-                          <Link 
-                            to={item.to} 
-                            className="block py-2 px-2 text-gray-700 hover:text-primary"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {item.text}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </li>
-                <li>
-                  <div className="relative mt-2">
+                <li className="mb-4">
+                  <div className="relative">
                     <input
                       type="text"
                       placeholder="Search courses..."
@@ -245,6 +209,44 @@ const Header: React.FC = () => {
                       ))}
                     </div>
                   )}
+                </li>
+
+                {mainNavItems.map((item, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={item.to} 
+                      className={`text-gray-700 hover:text-primary transition duration-300 flex items-center py-2 px-2 rounded-md
+                        ${location.pathname === item.to ? 'text-primary font-semibold bg-gray-100' : ''}
+                      `}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <item.icon className="mr-2" size={18} />
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
+
+                <li>
+                  <details className="group">
+                    <summary className="flex items-center py-2 px-2 text-gray-700 hover:text-primary cursor-pointer list-none">
+                      <MoreHorizontal className="mr-2" size={18} />
+                      More
+                      <ChevronDown className="ml-auto" size={16} />
+                    </summary>
+                    <ul className="pl-6 mt-2 space-y-2">
+                      {moreNavItems.map((item, index) => (
+                        <li key={index}>
+                          <Link 
+                            to={item.to} 
+                            className="block py-2 px-2 text-gray-700 hover:text-primary"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {item.text}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                 </li>
               </ul>
             </motion.nav>
