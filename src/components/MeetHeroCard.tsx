@@ -1,10 +1,10 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
-import styled, { css } from "styled-components";
+import React, { memo, useCallback, useState, useRef, useEffect } from "react";
+import styled from "styled-components";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
 
-// Move styled component definition outside component to prevent recreation
+// Keep the styled components exactly the same
 const StyledWrapper = styled.div`
   .card {
     width: 280px;
@@ -206,21 +206,45 @@ const StyledWrapper = styled.div`
   .card:hover .nood-logo {
     opacity: 1;
   }
-`;
 
-// Move styled components outside the component and memoize them
-const StyledCard = memo(styled.div`
-  // ... styles
-`);
+  /* Add responsive styles */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .card {
+      width: 260px; /* Slightly smaller for tablet */
+      height: 260px;
+    }
 
-// Use CSS variables for frequently changing values
-interface StyledProps {
-  expanded: boolean;
-}
+    .card:hover .profile-pic {
+      width: 90px;
+      height: 90px;
+    }
+  }
 
-const dynamicStyles = css<StyledProps>`
-  --card-height: ${({ expanded }) => expanded ? '400px' : '280px'};
-  height: var(--card-height);
+  /* Prevent hover effects on touch devices */
+  @media (hover: none) {
+    .card:hover {
+      transform: none;
+    }
+
+    .card:hover .bottom {
+      top: 80%;
+    }
+
+    .card:hover .profile-pic {
+      width: calc(100% - 6px);
+      height: calc(100% - 6px);
+      top: 3px;
+      left: 3px;
+      border-radius: 29px;
+      border: none;
+    }
+  }
+
+  /* Ensure proper spacing between cards */
+  @media (min-width: 768px) {
+    margin: 0 auto;
+    max-width: 280px;
+  }
 `;
 
 interface MeetHeroCardProps {
@@ -233,45 +257,117 @@ interface MeetHeroCardProps {
 
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const handleSocialClick = React.useCallback((e: React.MouseEvent) => {
+  // Debounced hover handlers to prevent rapid state changes
+  const handleMouseEnter = useCallback(() => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(true);
+    }, 50);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 50);
+  }, []);
+
+  // Prevent event bubbling
+  const handleSocialClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
 
-  const handleClick = useCallback(() => {
-    // Click handling logic
+  // Replace the callback ref with useEffect
+  useEffect(() => {
+    if (!cardRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.target instanceof HTMLDivElement) {
+            entry.target.style.willChange = entry.isIntersecting ? 'transform' : 'auto';
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
   }, []);
 
-  const cardStyle = useMemo(() => ({
-    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-  }), [isHovered]);
+  // Optimized image loading props
+  const imageProps = {
+    loading: "lazy" as const,
+    decoding: "async" as const,
+    width: 280,
+    height: 280,
+    threshold: 100,
+    effect: "opacity" as const,
+    beforeLoad: () => {
+      if (cardRef.current) {
+        cardRef.current.style.willChange = 'transform';
+      }
+    },
+    afterLoad: () => {
+      if (cardRef.current) {
+        cardRef.current.style.willChange = 'auto';
+      }
+    }
+  };
+
+  // Optimized logo loading props
+  const logoProps = {
+    loading: "lazy" as const,
+    effect: "blur" as const,
+    threshold: 300,
+  };
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <StyledWrapper>
-      <div className="card">
+    <StyledWrapper
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="card" ref={cardRef}>
         <LazyLoadImage
           src={noodLogo}
           alt="Nood Logo"
           className="nood-logo"
-          effect="blur"
-          threshold={300}
+          {...logoProps}
         />
         <div className="profile-pic">
           <LazyLoadImage
             src={image}
             alt={name}
-            width={280}
-            height={280}
-            loading="lazy"
-            decoding="async"
+            {...imageProps}
             placeholder={
               <div className="animate-pulse bg-gray-200 w-full h-full" />
             }
-            threshold={100}
-            effect="opacity"
           />
         </div>
-        <div className="course-info">
+        <div 
+          className="course-info"
+          style={{ 
+            display: isHovered ? 'block' : 'none',
+            opacity: isHovered ? 1 : 0 
+          }}
+        >
           <h3>{course}</h3>
         </div>
         <div className="bottom">
@@ -288,7 +384,13 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
                 aria-label="LinkedIn"
                 onClick={handleSocialClick}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  viewBox="0 0 24 24" 
+                  aria-hidden="true"
+                  width="24"
+                  height="24"
+                >
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
               </a>

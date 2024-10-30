@@ -40,6 +40,7 @@ const HEROES = [
 
 const MeetHeroes = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -51,45 +52,67 @@ const MeetHeroes = () => {
     triggerOnce: false
   });
 
-  // Handle resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  // Memoized next index calculation
+  const getNextIndex = useCallback((current: number) => {
+    return (current + 1) % HEROES.length;
   }, []);
 
-  // Mobile auto scroll animation
-  useEffect(() => {
-    if (!inView || isDragging || !isMobile) return;
+  // Memoized scroll handler
+  const scrollToIndex = useCallback((index: number) => {
+    if (!scrollRef.current) return;
+    
+    const scrollTo = index * (isMobile ? 300 : scrollRef.current.offsetWidth / HEROES.length);
+    scrollRef.current.scrollTo({
+      left: scrollTo,
+      behavior: 'smooth'
+    });
+  }, [isMobile]);
 
-    const interval = setInterval(() => {
-      if (scrollRef.current) {
-        const nextIndex = (currentIndex + 1) % HEROES.length;
-        setCurrentIndex(nextIndex);
-        scrollRef.current.scrollTo({
-          left: nextIndex * 300,
-          behavior: 'smooth'
-        });
+  // Combined auto scroll animation for both mobile and desktop
+  useEffect(() => {
+    if (!inView || isDragging) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
-    }, 3000);
+      return;
+    }
 
-    return () => clearInterval(interval);
-  }, [inView, isDragging, currentIndex, isMobile]);
+    const autoScroll = () => {
+      setCurrentIndex(prev => {
+        const next = getNextIndex(prev);
+        scrollToIndex(next);
+        return next;
+      });
+    };
 
-  // Desktop auto scroll animation
+    intervalRef.current = setInterval(autoScroll, 3000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [inView, isDragging, getNextIndex, scrollToIndex]);
+
+  // Resize handler with debounce
   useEffect(() => {
-    if (!inView || isDragging || isMobile) return;
+    let timeoutId: NodeJS.Timeout;
+    
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % HEROES.length);
-    }, 3000);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [inView, isDragging, isMobile]);
-
-  // Mobile touch handlers
+  // Optimized touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
     setIsDragging(true);
@@ -99,19 +122,29 @@ const MeetHeroes = () => {
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!isDragging || !scrollRef.current || !isMobile) return;
+    e.preventDefault();
     const x = e.touches[0].clientX;
     const walk = (startX - x) * 2;
-    scrollRef.current.scrollLeft = scrollLeft + walk;
+    requestAnimationFrame(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollLeft = scrollLeft + walk;
+      }
+    });
   }, [isDragging, startX, scrollLeft, isMobile]);
 
   const handleTouchEnd = useCallback(() => {
-    if (!isMobile) return;
+    if (!isMobile || !scrollRef.current) return;
     setIsDragging(false);
-    if (!scrollRef.current) return;
+    
+    const currentScroll = scrollRef.current.scrollLeft;
     const cardWidth = 300;
-    const newIndex = Math.round(scrollRef.current.scrollLeft / cardWidth);
-    setCurrentIndex(Math.max(0, Math.min(newIndex, HEROES.length - 1)));
-  }, [isMobile]);
+    const newIndex = Math.round(currentScroll / cardWidth);
+    
+    requestAnimationFrame(() => {
+      setCurrentIndex(Math.max(0, Math.min(newIndex, HEROES.length - 1)));
+      scrollToIndex(newIndex);
+    });
+  }, [isMobile, scrollToIndex]);
 
   return (
     <section 
@@ -130,7 +163,7 @@ const MeetHeroes = () => {
         </div>
 
         {isMobile ? (
-          // Mobile view - keep exactly as before
+          // Mobile view - Horizontal scroll
           <div 
             ref={scrollRef}
             className="overflow-x-auto scrollbar-hide"
@@ -160,17 +193,24 @@ const MeetHeroes = () => {
             </div>
           </div>
         ) : (
-          // Desktop view - new implementation
+          // Desktop and Tablet view with responsive grid
           <div className="hidden md:block">
-            <div className="grid grid-cols-4 gap-6">
+            <div className={`
+              grid gap-6
+              md:grid-cols-2 lg:grid-cols-4
+              md:gap-4 lg:gap-6
+              md:max-w-3xl lg:max-w-none
+              mx-auto
+              ${window.innerWidth >= 768 && window.innerWidth < 1024 ? 'justify-items-center' : ''}
+            `}>
               {HEROES.map((hero, index) => (
                 <div
                   key={hero.id}
-                  className={`transform transition-all duration-500 ${
-                    currentIndex === index 
-                      ? 'scale-105 opacity-100' 
-                      : 'scale-95 opacity-70'
-                  }`}
+                  className={`
+                    transform transition-all duration-500
+                    md:max-w-[280px] 
+                    ${currentIndex === index ? 'scale-105 opacity-100' : 'scale-95 opacity-70'}
+                  `}
                 >
                   <MeetHeroCard {...hero} />
                 </div>
@@ -179,7 +219,7 @@ const MeetHeroes = () => {
           </div>
         )}
 
-        {/* Dots indicator - visible on both mobile and desktop */}
+        {/* Dots indicator */}
         <div className="flex justify-center gap-2 mt-6">
           {HEROES.map((_, index) => (
             <button
