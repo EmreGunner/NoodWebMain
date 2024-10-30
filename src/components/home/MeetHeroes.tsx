@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import MeetHeroCard from '../MeetHeroCard';
 
@@ -38,26 +38,31 @@ const HEROES = [
   },
 ];
 
+// Memoize static functions outside component
+const getNextIndex = (current: number, length: number) => (current + 1) % length;
+
 const MeetHeroes = () => {
+  // Use useRef with proper typing
   const scrollRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  // Combine related state
+  const [state, setState] = useState({
+    isDragging: false,
+    startX: 0,
+    scrollLeft: 0,
+    currentIndex: 0
+  });
+
+  // Use layout effect for size calculations
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: false
   });
 
-  // Memoized next index calculation
-  const getNextIndex = useCallback((current: number) => {
-    return (current + 1) % HEROES.length;
-  }, []);
-
-  // Memoized scroll handler
+  // Memoize scroll handler
   const scrollToIndex = useCallback((index: number) => {
     if (!scrollRef.current) return;
     
@@ -68,80 +73,67 @@ const MeetHeroes = () => {
     });
   }, [isMobile]);
 
-  // Combined auto scroll animation for both mobile and desktop
+  // Use RAF for smooth animations
   useEffect(() => {
-    if (!inView || isDragging) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+    if (!inView || state.isDragging) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
       return;
     }
 
+    let rafId: number;
     const autoScroll = () => {
-      setCurrentIndex(prev => {
-        const next = getNextIndex(prev);
+      setState(prev => {
+        const next = getNextIndex(prev.currentIndex, HEROES.length);
         scrollToIndex(next);
-        return next;
+        return { ...prev, currentIndex: next };
       });
+      rafId = requestAnimationFrame(autoScroll);
     };
 
-    intervalRef.current = setInterval(autoScroll, 3000);
+    rafId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(rafId);
+  }, [inView, state.isDragging, scrollToIndex]);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [inView, isDragging, getNextIndex, scrollToIndex]);
-
-  // Resize handler with debounce
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
+  // Optimized resize handler
+  useLayoutEffect(() => {
     const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setIsMobile(window.innerWidth < 768);
-      }, 150);
+      setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(timeoutId);
-    };
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(document.body);
+
+    return () => resizeObserver.disconnect();
   }, []);
 
   // Optimized touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX);
-    setScrollLeft(scrollRef.current?.scrollLeft || 0);
+    setState(prev => ({ ...prev, isDragging: true, startX: e.touches[0].clientX, scrollLeft: scrollRef.current?.scrollLeft || 0 }));
   }, [isMobile]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging || !scrollRef.current || !isMobile) return;
+    if (!state.isDragging || !scrollRef.current || !isMobile) return;
     e.preventDefault();
     const x = e.touches[0].clientX;
-    const walk = (startX - x) * 2;
+    const walk = (state.startX - x) * 2;
     requestAnimationFrame(() => {
       if (scrollRef.current) {
-        scrollRef.current.scrollLeft = scrollLeft + walk;
+        scrollRef.current.scrollLeft = state.scrollLeft + walk;
       }
     });
-  }, [isDragging, startX, scrollLeft, isMobile]);
+  }, [state.isDragging, state.startX, state.scrollLeft, isMobile]);
 
   const handleTouchEnd = useCallback(() => {
     if (!isMobile || !scrollRef.current) return;
-    setIsDragging(false);
+    setState(prev => ({ ...prev, isDragging: false }));
     
     const currentScroll = scrollRef.current.scrollLeft;
     const cardWidth = 300;
     const newIndex = Math.round(currentScroll / cardWidth);
     
     requestAnimationFrame(() => {
-      setCurrentIndex(Math.max(0, Math.min(newIndex, HEROES.length - 1)));
+      setState(prev => ({ ...prev, currentIndex: Math.max(0, Math.min(newIndex, HEROES.length - 1)) }));
       scrollToIndex(newIndex);
     });
   }, [isMobile, scrollToIndex]);
@@ -183,7 +175,7 @@ const MeetHeroes = () => {
                   style={{
                     scrollSnapAlign: 'center',
                     opacity: inView ? 1 : 0,
-                    transform: `translateX(${isDragging ? 0 : '0'})`,
+                    transform: `translateX(${state.isDragging ? 0 : '0'})`,
                     transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-out'
                   }}
                 >
@@ -209,7 +201,7 @@ const MeetHeroes = () => {
                   className={`
                     transform transition-all duration-500
                     md:max-w-[280px] 
-                    ${currentIndex === index ? 'scale-105 opacity-100' : 'scale-95 opacity-70'}
+                    ${state.currentIndex === index ? 'scale-105 opacity-100' : 'scale-95 opacity-70'}
                   `}
                 >
                   <MeetHeroCard {...hero} />
@@ -225,10 +217,10 @@ const MeetHeroes = () => {
             <button
               key={index}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentIndex === index ? 'bg-primary w-4' : 'bg-gray-300'
+                state.currentIndex === index ? 'bg-primary w-4' : 'bg-gray-300'
               }`}
               onClick={() => {
-                setCurrentIndex(index);
+                setState(prev => ({ ...prev, currentIndex: index }));
                 if (isMobile && scrollRef.current) {
                   scrollRef.current.scrollTo({
                     left: index * 300,

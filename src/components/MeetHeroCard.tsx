@@ -258,7 +258,7 @@ interface MeetHeroCardProps {
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Debounced hover handlers to prevent rapid state changes
   const handleMouseEnter = useCallback(() => {

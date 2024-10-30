@@ -6,6 +6,7 @@ import ScrollToTop from './components/ScrollToTop'
 import LoadingSpinner from './components/LoadingSpinner'
 import CourseDetail from './pages/CourseDetail'
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import DocumentTitle from './components/DocumentTitle';
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -28,6 +29,7 @@ const Support = React.lazy(() => import('./pages/Support'))
 const App: React.FC = () => {
   return (
     <Router>
+      <DocumentTitle />
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header />
