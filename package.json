@@ -15,6 +15,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/react-virtualized-auto-sizer": "^1.0.4",
     "@types/react-window": "^1.8.8",
+    "@vercel/speed-insights": "^1.0.14",
     "framer-motion": "^10.18.0",
     "globals": "^15.11.0",
     "i18next": "^23.15.2",
