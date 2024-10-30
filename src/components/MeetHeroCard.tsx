@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import styled from "styled-components";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import styled, { css } from "styled-components";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
@@ -17,6 +17,8 @@ const StyledWrapper = styled.div`
       0 5px 20px rgba(0, 0, 0, 0.1),
       0 1px 3px rgba(0, 0, 0, 0.05);
     transition: all 0.5s ease-in-out;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
   }
 
   .card .profile-pic {
@@ -136,7 +138,7 @@ const StyledWrapper = styled.div`
   }
 
   .card:hover {
-    border-top-left-radius: 55px;
+    transform: translate3d(0, -5px, 0);
   }
 
   .card:hover .bottom {
@@ -206,6 +208,21 @@ const StyledWrapper = styled.div`
   }
 `;
 
+// Move styled components outside the component and memoize them
+const StyledCard = memo(styled.div`
+  // ... styles
+`);
+
+// Use CSS variables for frequently changing values
+interface StyledProps {
+  expanded: boolean;
+}
+
+const dynamicStyles = css<StyledProps>`
+  --card-height: ${({ expanded }) => expanded ? '400px' : '280px'};
+  height: var(--card-height);
+`;
+
 interface MeetHeroCardProps {
   name: string;
   title: string;
@@ -215,9 +232,19 @@ interface MeetHeroCardProps {
 }
 
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleSocialClick = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
+
+  const handleClick = useCallback(() => {
+    // Click handling logic
+  }, []);
+
+  const cardStyle = useMemo(() => ({
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+  }), [isHovered]);
 
   return (
     <StyledWrapper>
@@ -233,19 +260,15 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
           <LazyLoadImage
             src={image}
             alt={name}
-            effect="blur"
-            wrapperClassName="w-full h-full"
-            className="w-full h-full object-cover"
-            threshold={300}
             width={280}
             height={280}
-            afterLoad={() => {
-              // Force a repaint to ensure proper scaling
-              const el = document.querySelector('.profile-pic img');
-              if (el) {
-                el.style.transform = 'scale(1.2)';
-              }
-            }}
+            loading="lazy"
+            decoding="async"
+            placeholder={
+              <div className="animate-pulse bg-gray-200 w-full h-full" />
+            }
+            threshold={100}
+            effect="opacity"
           />
         </div>
         <div className="course-info">

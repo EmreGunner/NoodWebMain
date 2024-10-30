@@ -43,4 +43,18 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
+interface CarouselErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+class CarouselErrorBoundary extends React.Component<CarouselErrorBoundaryProps> {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Carousel Error:', error, errorInfo);
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
+
 export default ErrorBoundary
