@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 import MeetHeroCard from '../MeetHeroCard';
-import styled from 'styled-components';
 
-const heroes = [
+// Move heroes data outside component to prevent re-creation
+const HEROES = [
   {
     id: 1,
     name: 'Sarah Johnson',
@@ -31,7 +31,7 @@ const heroes = [
   {
     id: 4,
     name: 'Vishen',
-    title: 'Unlock Your Mind\'s Potential',
+    title: "Unlock Your Mind's Potential",
     image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36',
     linkedin: 'https://www.linkedin.com/in/vishen/',
     course: 'Mindvalley Mastery',
@@ -54,172 +54,98 @@ const heroes = [
   },
 ];
 
-const ScrollContainer = styled.div`
-  overflow-x: auto;
-  cursor: grab;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-behavior: smooth;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  
-  &:active {
-    cursor: grabbing;
-  }
-
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-`;
-
-const ScrollContent = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  padding: 1rem 0.5rem;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &::before {
-    content: '';
-    min-width: calc((100% - 300px) / 2);
-  }
-  
-  &::after {
-    content: '';
-    min-width: calc((100% - 300px) / 2);
-  }
-
-  transform: translateZ(0);
-  will-change: transform;
-`;
-
-const MeetHeroes: React.FC = () => {
-  // Optimize Intersection Observer settings
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    rootMargin: '100px',
-    triggerOnce: false, // Changed to false to handle visibility changes
-    delay: 100, // Add delay to reduce unnecessary triggers
-  });
-
-  const scrollRef = useRef<HTMLDivElement>(null);
+const MeetHeroes = () => {
+  const scrollRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const [visibleHeroes, setVisibleHeroes] = useState(heroes.slice(0, 3));
-  const animationRef = useRef<number>();
-  const lastScrollRef = useRef<number>(0);
+  const dragTimeout = useRef(null);
+  const scrollTimeout = useRef(null);
+  const animationFrame = useRef(null);
 
-  // Increased scroll speed
-  const smoothScroll = useCallback(() => {
-    if (!scrollRef.current || isHovered || isDragging) return;
+  // Optimized intersection observer with reduced options
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    rootMargin: '100px',
+  });
+
+  // Optimized scroll handler using RAF and debouncing
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current || !inView) return;
 
     const currentScroll = scrollRef.current.scrollLeft;
     const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-    const scrollStep = 1.2; // Increased scroll speed from 0.5 to 1.2
 
     if (currentScroll >= maxScroll) {
-      // Smooth reset to start with easing
-      scrollRef.current.scrollTo({
-        left: 0,
-        behavior: 'auto'
-      });
-      lastScrollRef.current = 0;
-    } else {
-      scrollRef.current.scrollLeft = currentScroll + scrollStep;
-      lastScrollRef.current = currentScroll + scrollStep;
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = setTimeout(() => {
+        scrollRef.current?.scrollTo({ left: 0, behavior: 'auto' });
+      }, 100);
+      return;
     }
 
-    if (inView) { // Only request animation frame if in view
-      animationRef.current = requestAnimationFrame(smoothScroll);
-    }
-  }, [isHovered, isDragging, inView]);
+    scrollRef.current.scrollLeft += 1;
+    animationFrame.current = requestAnimationFrame(handleScroll);
+  }, [inView]);
 
-  // Optimized animation control based on visibility
+  // Optimized mouse event handlers
+  const handleMouseDown = useCallback((e) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  }, [isDragging, startX, scrollLeft]);
+
+  const handleDragEnd = useCallback(() => {
+    if (dragTimeout.current) clearTimeout(dragTimeout.current);
+    dragTimeout.current = setTimeout(() => {
+      setIsDragging(false);
+    }, 100);
+  }, []);
+
+  // Optimized animation control
   useEffect(() => {
-    if (!inView) {
-      // Cancel animation when not in view
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+    if (!inView || isDragging) {
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
       }
       return;
     }
 
-    if (!isHovered && !isDragging) {
-      animationRef.current = requestAnimationFrame(smoothScroll);
-    }
+    animationFrame.current = requestAnimationFrame(handleScroll);
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+      }
+      if (dragTimeout.current) {
+        clearTimeout(dragTimeout.current);
+      }
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
       }
     };
-  }, [inView, isHovered, isDragging, smoothScroll]);
+  }, [inView, isDragging, handleScroll]);
 
-  // Optimized progressive loading
-  useEffect(() => {
-    if (!inView) return;
-
-    const loadMoreHeroes = () => {
-      setVisibleHeroes(prev => {
-        if (prev.length >= heroes.length) return prev;
-        return [...heroes.slice(0, prev.length + 1)];
-      });
-    };
-
-    const interval = setInterval(loadMoreHeroes, 150); // Slightly faster loading
-    return () => clearInterval(interval);
-  }, [inView]);
-
-  // Optimized drag handling
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!scrollRef.current || !inView) return; // Don't handle drag if not in view
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  }, [inView]);
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Adjusted sensitivity
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  }, [isDragging, startX, scrollLeft]);
-
-  // Optimized card rendering with visibility check
-  const visibleCards = useMemo(() => {
-    if (!inView) return null; // Don't render if not in view
-
-    return [...visibleHeroes, ...visibleHeroes].map((hero, index) => (
-      <div 
-        key={`${hero.id}-${index}`} 
-        className="flex-shrink-0"
-        style={{ 
-          width: '300px',
-          transform: 'translateZ(0)',
-          opacity: inView ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out', // Faster opacity transition
-        }}
-      >
-        <MeetHeroCard {...hero} />
-      </div>
-    ));
-  }, [visibleHeroes, inView]);
+  // Early return if not in view
+  if (!inView) {
+    return <section ref={ref} className="bg-white py-20 sm:py-32 relative overflow-hidden" />;
+  }
 
   return (
     <section 
+      ref={ref}
       className="bg-white py-20 sm:py-32 relative overflow-hidden"
-      ref={ref} // Move ref to section for better visibility detection
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50" />
       <div className="relative max-w-[100vw] mx-auto">
         <div className="text-center mb-16 px-4">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
@@ -229,24 +155,47 @@ const MeetHeroes: React.FC = () => {
             Expert tutors dedicated to transforming lives through knowledge and inspiration.
           </p>
         </div>
-        
-        {inView && ( // Only render ScrollContainer when in view
-          <ScrollContainer 
-            ref={scrollRef}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={() => {
-              handleMouseUp();
-              setIsHovered(false);
+
+        <div 
+          ref={scrollRef}
+          className="overflow-x-auto cursor-grab active:cursor-grabbing touch-pan-x"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            perspective: '1000px'
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+          onMouseMove={handleMouseMove}
+        >
+          <div 
+            className="flex gap-6 px-2 py-4"
+            style={{
+              transform: 'translateZ(0)',
+              willChange: 'transform',
+              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseMove={handleMouseMove}
           >
-            <ScrollContent>
-              {visibleCards}
-            </ScrollContent>
-          </ScrollContainer>
-        )}
+            {[...HEROES, ...HEROES].map((hero, index) => (
+              <div
+                key={`${hero.id}-${index}`}
+                className="flex-shrink-0 w-[300px]"
+                style={{
+                  transform: 'translateZ(0)',
+                  opacity: 1,
+                  transition: 'opacity 0.3s ease-in-out'
+                }}
+              >
+                <MeetHeroCard {...hero} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
