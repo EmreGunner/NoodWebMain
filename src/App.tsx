@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import LoadingSpinner from './components/LoadingSpinner'
 import CourseDetail from './pages/CourseDetail'
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -54,6 +55,7 @@ const App: React.FC = () => {
         </main>
         <Footer />
       </div>
+      <SpeedInsights />
     </Router>
   )
 }
