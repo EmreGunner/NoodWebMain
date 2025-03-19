@@ -1,252 +1,10 @@
-import React, { memo, useCallback, useState, useRef, useEffect } from "react";
-import styled from "styled-components";
+import React, { memo, useCallback, useState, useRef } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
+import '../styles/MeetHeroCard.css';
 
-// Keep the styled components exactly the same
-const StyledWrapper = styled.div`
-  .card {
-    width: 280px;
-    height: 280px;
-    background: white;
-    border-radius: 32px;
-    padding: 3px;
-    position: relative;
-    box-shadow: 
-      0 5px 20px rgba(0, 0, 0, 0.1),
-      0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: all 0.5s ease-in-out;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-  }
-
-  .card .profile-pic {
-    position: absolute;
-    width: calc(100% - 6px);
-    height: calc(100% - 6px);
-    top: 3px;
-    left: 3px;
-    border-radius: 29px;
-    z-index: 1;
-    border: 0px solid #84bb75;
-    overflow: hidden;
-    transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
-  }
-
-  .card .profile-pic img,
-  .card .profile-pic span {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    transform: scale(1) !important; /* Initial scale to ensure full coverage */
-    transition: all 0.5s ease-in-out 0s !important;
-  }
-
-  .card .bottom {
-    position: absolute;
-    bottom: 3px;
-    left: 3px;
-    right: 3px;
-    background: #84bb75;
-    top: 80%;
-    border-radius: 29px;
-    z-index: 2;
-    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px inset;
-    overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
-  }
-
-  .card .bottom .content {
-    position: absolute;
-    bottom: 0;
-    left: 1.5rem;
-    right: 1.5rem;
-    height: 160px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 3rem;
-  }
-
-  .card .bottom .content .name {
-    display: block;
-    font-size: 1.2rem;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
-  .card .bottom .content .about-me {
-    display: block;
-    font-size: 0.9rem;
-    color: white;
-    margin-bottom: 0.5rem;
-  }
-
-  .card .bottom .bottom-bottom {
-    position: absolute;
-    bottom: 0.5em;
-    left: 1.5rem;
-    right: 1.5rem;
-    display: flex;
-    align-items: bottom;
-    justify-content: space-between;
-    margin-top: auto;
-  }
-
-  .card .bottom .bottom-bottom .social-links-container {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .card .bottom .bottom-bottom .social-links-container svg {
-    height: 24px;
-    fill: white;
-    filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.133));
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  }
-
-  .card:hover .bottom .bottom-bottom .social-links-container svg {
-    opacity: 1;
-  }
-
-  .card .bottom .bottom-bottom .social-links-container svg:hover {
-    fill: #4e9350;
-    transform: scale(1.2);
-  }
-
-  .card .bottom .bottom-bottom .button {
-    background: white;
-    color: #84bb75;
-    border: none;
-    border-radius: 25px;
-    align-self: center;
-    justify-self: bottom;
-    font-size: 0.8rem;
-    padding: 0.6rem 1rem;
-    box-shadow: rgba(165, 132, 130, 0.133) 0px 5px 5px 0px;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .card .bottom .bottom-bottom .button:hover {
-    background: #4e9350;
-    color: white;
-    transform: scale(1.05);
-  }
-
-  .card:hover {
-    transform: translate3d(0, -5px, 0);
-  }
-
-  .card:hover .bottom {
-    top: 20%;
-    border-radius: 80px 29px 29px 29px;
-    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
-  }
-
-  .card:hover .profile-pic {
-    width: 100px;
-    height: 100px;
-    aspect-ratio: 1;
-    top: 10px;
-    left: 10px;
-    border-radius: 50%;
-    z-index: 3;
-    border: 7px solid #84bb75;
-    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px;
-    transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
-  }
-
-  .card:hover .profile-pic img,
-  .card:hover .profile-pic span {
-    transform: scale(1) !important; /* Scale back to normal on hover */
-    transition: all 0.5s ease-in-out 0.5s !important;
-  }
-
-  .course-info {
-    position: absolute;
-    top: 40%;
-    left: 1.5rem;
-    right: 1.5rem;
-    text-align: center;
-    color: #84bb75;
-    z-index: 4;
-    opacity: 0;
-    transition: opacity 1s ease-in-out; /* Slower transition */
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 0.7rem;
-    border-radius: 15px;
-    pointer-events: none;
-  }
-
-  .card:hover .course-info {
-    opacity: 1;
-  }
-
-  .course-info h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-
-  .card .nood-logo {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    width: 30px;
-    height: 30px;
-    z-index: 5;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-
-  .card:hover .nood-logo {
-    opacity: 1;
-  }
-
-  /* Add responsive styles */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .card {
-      width: 260px; /* Slightly smaller for tablet */
-      height: 260px;
-    }
-
-    .card:hover .profile-pic {
-      width: 90px;
-      height: 90px;
-    }
-  }
-
-  /* Prevent hover effects on touch devices */
-  @media (hover: none) {
-    .card:hover {
-      transform: none;
-    }
-
-    .card:hover .bottom {
-      top: 80%;
-    }
-
-    .card:hover .profile-pic {
-      width: calc(100% - 6px);
-      height: calc(100% - 6px);
-      top: 3px;
-      left: 3px;
-      border-radius: 29px;
-      border: none;
-    }
-  }
-
-  /* Ensure proper spacing between cards */
-  @media (min-width: 768px) {
-    margin: 0 auto;
-    max-width: 280px;
-  }
-`;
-
+// Define the props interface
 interface MeetHeroCardProps {
   name: string;
   title: string;
@@ -258,49 +16,15 @@ interface MeetHeroCardProps {
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
-  // Debounced hover handlers to prevent rapid state changes
-  const handleMouseEnter = useCallback(() => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(true);
-    }, 50);
+  
+  // Use a single handler for hover without requestAnimationFrame to maintain smooth transitions
+  const handleHover = useCallback((hovering: boolean) => {
+    setIsHovered(hovering);
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(false);
-    }, 50);
-  }, []);
-
-  // Prevent event bubbling
+  // Prevent event bubbling with a single handler
   const handleSocialClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-  }, []);
-
-  // Replace the callback ref with useEffect
-  useEffect(() => {
-    if (!cardRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.target instanceof HTMLDivElement) {
-            entry.target.style.willChange = entry.isIntersecting ? 'transform' : 'auto';
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(cardRef.current);
-    return () => observer.disconnect();
   }, []);
 
   // Optimized image loading props
@@ -311,45 +35,21 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
     height: 280,
     threshold: 100,
     effect: "opacity" as const,
-    beforeLoad: () => {
-      if (cardRef.current) {
-        cardRef.current.style.willChange = 'transform';
-      }
-    },
-    afterLoad: () => {
-      if (cardRef.current) {
-        cardRef.current.style.willChange = 'auto';
-      }
-    }
   };
-
-  // Optimized logo loading props
-  const logoProps = {
-    loading: "lazy" as const,
-    effect: "blur" as const,
-    threshold: 300,
-  };
-
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-    };
-  }, []);
 
   return (
-    <StyledWrapper
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+    <div
+      className="hero-card-wrapper"
+      onMouseEnter={() => handleHover(true)}
+      onMouseLeave={() => handleHover(false)}
     >
       <div className="card" ref={cardRef}>
         <LazyLoadImage
           src={noodLogo}
           alt="Nood Logo"
-          className="nood-logo"
-          {...logoProps}
+          className={`nood-logo ${isHovered ? 'visible' : ''}`}
+          loading="lazy"
+          effect="blur"
         />
         <div className="profile-pic">
           <LazyLoadImage
@@ -361,16 +61,12 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
             }
           />
         </div>
-        <div 
-          className="course-info"
-          style={{ 
-            display: isHovered ? 'block' : 'none',
-            opacity: isHovered ? 1 : 0 
-          }}
-        >
+        
+        <div className="course-info" style={{ opacity: isHovered ? 1 : 0 }}>
           <h3>{course}</h3>
         </div>
-        <div className="bottom">
+        
+        <div className={`bottom ${isHovered ? 'expanded' : ''}`}>
           <div className="content">
             <span className="name">{name}</span>
             <span className="about-me">{title}</span>
@@ -387,7 +83,6 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
                   viewBox="0 0 24 24" 
-                  aria-hidden="true"
                   width="24"
                   height="24"
                 >
@@ -399,7 +94,7 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
           </div>
         </div>
       </div>
-    </StyledWrapper>
+    </div>
   );
 });
 

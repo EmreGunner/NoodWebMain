@@ -1,9 +1,20 @@
-import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from 'react';
+import React, { useCallback, useState, useRef, useMemo, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import MeetHeroCard from '../MeetHeroCard';
+import '../../styles/MeetHeroCard.css';
 
-// Reduced to 4 heroes
-const HEROES = [
+// Define the Hero interface
+interface Hero {
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  linkedin: string;
+  course: string;
+}
+
+// Move heroes data outside to prevent recreation on each render
+const HEROES: Hero[] = [
   {
     id: 1,
     name: 'Sarah Johnson',
@@ -38,111 +49,115 @@ const HEROES = [
   },
 ];
 
-// Memoize static functions outside component
-const getNextIndex = (current: number, length: number) => (current + 1) % length;
+interface State {
+  currentIndex: number;
+  isDragging: boolean;
+  startX?: number;
+  scrollLeft?: number;
+}
 
-const MeetHeroes = () => {
-  // Use useRef with proper typing
+const MeetHeroes: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
-  // Combine related state
-  const [state, setState] = useState({
-    isDragging: false,
-    startX: 0,
-    scrollLeft: 0,
-    currentIndex: 0
+  const [state, setState] = useState<State>({
+    currentIndex: 0,
+    isDragging: false
   });
 
-  // Use layout effect for size calculations
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  // Calculate isMobile once on mount and when window size changes
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Handle window resize using a resize observer instead of event listeners
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check initially
+    checkMobile();
+    
+    // Set up observer
+    const resizeObserver = new ResizeObserver(() => {
+      checkMobile();
+    });
+    
+    resizeObserver.observe(document.body);
+    
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
+  // Use IntersectionObserver to detect when component is in view
   const [ref, inView] = useInView({
     threshold: 0.1,
-    triggerOnce: false
+    triggerOnce: true // Only trigger once for better performance
   });
 
-  // Memoize scroll handler
+  // Optimized scroll handler using requestAnimationFrame
   const scrollToIndex = useCallback((index: number) => {
     if (!scrollRef.current) return;
     
-    const scrollTo = index * (isMobile ? 300 : scrollRef.current.offsetWidth / HEROES.length);
-    scrollRef.current.scrollTo({
-      left: scrollTo,
-      behavior: 'smooth'
+    const cardWidth = isMobile ? 300 : scrollRef.current.offsetWidth / HEROES.length;
+    const scrollTo = index * cardWidth;
+    
+    // Use requestAnimationFrame for smoother scrolling
+    window.requestAnimationFrame(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+          left: scrollTo,
+          behavior: 'smooth'
+        });
+      }
     });
   }, [isMobile]);
 
-  // Use RAF for smooth animations
-  useEffect(() => {
-    if (!inView || state.isDragging) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      return;
-    }
-
-    let rafId: number;
-    const autoScroll = () => {
-      setState(prev => {
-        const next = getNextIndex(prev.currentIndex, HEROES.length);
-        scrollToIndex(next);
-        return { ...prev, currentIndex: next };
-      });
-      rafId = requestAnimationFrame(autoScroll);
-    };
-
-    rafId = requestAnimationFrame(autoScroll);
-    return () => cancelAnimationFrame(rafId);
-  }, [inView, state.isDragging, scrollToIndex]);
-
-  // Optimized resize handler
-  useLayoutEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(document.body);
-
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  // Optimized touch handlers
+  // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
-    setState(prev => ({ ...prev, isDragging: true, startX: e.touches[0].clientX, scrollLeft: scrollRef.current?.scrollLeft || 0 }));
+    const touch = e.touches[0];
+    setState(prev => ({ 
+      ...prev, 
+      isDragging: true, 
+      startX: touch.clientX, 
+      scrollLeft: scrollRef.current?.scrollLeft || 0 
+    }));
   }, [isMobile]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!state.isDragging || !scrollRef.current || !isMobile) return;
+    if (!state.isDragging || !scrollRef.current || !isMobile || typeof state.startX !== 'number' || typeof state.scrollLeft !== 'number') return;
     e.preventDefault();
+    
     const x = e.touches[0].clientX;
     const walk = (state.startX - x) * 2;
-    requestAnimationFrame(() => {
+    
+    // Use requestAnimationFrame for smoother scrolling
+    window.requestAnimationFrame(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollLeft = state.scrollLeft + walk;
       }
     });
-  }, [state.isDragging, state.startX, state.scrollLeft, isMobile]);
+  }, [state, isMobile]);
 
   const handleTouchEnd = useCallback(() => {
     if (!isMobile || !scrollRef.current) return;
-    setState(prev => ({ ...prev, isDragging: false }));
     
+    // Calculate which card is closest to the viewport
     const currentScroll = scrollRef.current.scrollLeft;
     const cardWidth = 300;
     const newIndex = Math.round(currentScroll / cardWidth);
     
-    requestAnimationFrame(() => {
-      setState(prev => ({ ...prev, currentIndex: Math.max(0, Math.min(newIndex, HEROES.length - 1)) }));
-      scrollToIndex(newIndex);
-    });
+    // Update state and scroll to the closest card
+    setState(prev => ({ 
+      ...prev, 
+      isDragging: false,
+      currentIndex: Math.max(0, Math.min(newIndex, HEROES.length - 1)) 
+    }));
+    
+    scrollToIndex(newIndex);
   }, [isMobile, scrollToIndex]);
 
   return (
-    <section 
-      ref={ref}
-      className="bg-white py-20 sm:py-32 relative overflow-hidden"
-    >
+    <section ref={ref} className="bg-white py-20 sm:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-100 opacity-50" />
       <div className="relative max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
@@ -155,7 +170,6 @@ const MeetHeroes = () => {
         </div>
 
         {isMobile ? (
-          // Mobile view - Horizontal scroll
           <div 
             ref={scrollRef}
             className="overflow-x-auto scrollbar-hide"
@@ -168,16 +182,11 @@ const MeetHeroes = () => {
             onTouchEnd={handleTouchEnd}
           >
             <div className="flex gap-6 px-4">
-              {HEROES.map((hero, index) => (
+              {HEROES.map((hero) => (
                 <div
                   key={hero.id}
                   className="flex-shrink-0"
-                  style={{
-                    scrollSnapAlign: 'center',
-                    opacity: inView ? 1 : 0,
-                    transform: `translateX(${state.isDragging ? 0 : '0'})`,
-                    transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-out'
-                  }}
+                  style={{ scrollSnapAlign: 'center' }}
                 >
                   <MeetHeroCard {...hero} />
                 </div>
@@ -185,52 +194,32 @@ const MeetHeroes = () => {
             </div>
           </div>
         ) : (
-          // Desktop and Tablet view with responsive grid
-          <div className="hidden md:block">
-            <div className={`
-              grid gap-6
-              md:grid-cols-2 lg:grid-cols-4
-              md:gap-4 lg:gap-6
-              md:max-w-3xl lg:max-w-none
-              mx-auto
-              ${window.innerWidth >= 768 && window.innerWidth < 1024 ? 'justify-items-center' : ''}
-            `}>
-              {HEROES.map((hero, index) => (
-                <div
-                  key={hero.id}
-                  className={`
-                    transform transition-all duration-500
-                    md:max-w-[280px] 
-                    ${state.currentIndex === index ? 'scale-105 opacity-100' : 'scale-95 opacity-70'}
-                  `}
-                >
-                  <MeetHeroCard {...hero} />
-                </div>
-              ))}
-            </div>
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {HEROES.map((hero) => (
+              <div key={hero.id} className="transform transition-all duration-500">
+                <MeetHeroCard {...hero} />
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Dots indicator */}
-        <div className="flex justify-center gap-2 mt-6">
-          {HEROES.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                state.currentIndex === index ? 'bg-primary w-4' : 'bg-gray-300'
-              }`}
-              onClick={() => {
-                setState(prev => ({ ...prev, currentIndex: index }));
-                if (isMobile && scrollRef.current) {
-                  scrollRef.current.scrollTo({
-                    left: index * 300,
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-            />
-          ))}
-        </div>
+        {/* Only render dots for mobile view */}
+        {isMobile && (
+          <div className="flex justify-center gap-2 mt-6">
+            {HEROES.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  state.currentIndex === index ? 'bg-primary w-4' : 'bg-gray-300'
+                }`}
+                onClick={() => {
+                  setState(prev => ({ ...prev, currentIndex: index }));
+                  scrollToIndex(index);
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
