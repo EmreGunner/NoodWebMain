@@ -56,7 +56,6 @@ const App: React.FC = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-
             </Routes>
           </Suspense>
         </main>
