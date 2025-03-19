@@ -7,6 +7,8 @@ import LoadingSpinner from './components/LoadingSpinner'
 import CourseDetail from './pages/CourseDetail'
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import DocumentTitle from './components/DocumentTitle';
+import TermsAndConditions from './pages/TermsAndConditions'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -52,6 +54,9 @@ const App: React.FC = () => {
               <Route path="/become-coach" element={<BecomeCoach />} />
               <Route path="/host-course" element={<HostCourse />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+
             </Routes>
           </Suspense>
         </main>

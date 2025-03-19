@@ -35,6 +35,14 @@ const Footer: React.FC = () => {
           <p>&copy; 2023 NOOD. All rights reserved.</p>
         </div>
       </div>
+      <div className="flex gap-4 justify-center text-sm text-gray-600">
+        <Link to="/privacy-policy" className="hover:text-gray-900">
+          Privacy Policy
+        </Link>
+        <Link to="/terms-and-conditions" className="hover:text-gray-900">
+          Terms & Conditions
+        </Link>
+      </div>
     </footer>
   )
 }
