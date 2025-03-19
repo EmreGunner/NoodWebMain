@@ -88,15 +88,15 @@ const ContactUs: React.FC = () => {
             <div className="space-y-6">
               <div className="flex items-center">
                 <Mail className="text-primary mr-4" size={24} />
-                <span className="text-gray-700">info@nood.com</span>
+                <span className="text-gray-700">contact@nood.ma</span>
               </div>
               <div className="flex items-center">
                 <Phone className="text-primary mr-4" size={24} />
-                <span className="text-gray-700">+1 (123) 456-7890</span>
+                <span className="text-gray-700">+212 666-654451 </span>
               </div>
               <div className="flex items-center">
                 <MapPin className="text-primary mr-4" size={24} />
-                <span className="text-gray-700">123 Nood Street, City, Country</span>
+                <span className="text-gray-700"> Rue Al Araar, Casablanca 20250</span>
               </div>
             </div>
           </motion.div>
