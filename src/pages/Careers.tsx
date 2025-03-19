@@ -8,7 +8,7 @@ const jobListings = [
     department: "Education",
     location: "Remote",
     type: "Full-time",
-    description: "We're seeking an experienced course developer to create engaging online learning materials..."
+    description: "Test Purpose Only"
   },
   {
     id: 2,
