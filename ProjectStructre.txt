@@ -1,0 +1,208 @@
+# NoodWeb Project Structure Documentation
+
+## Project Overview
+
+### Purpose and Features
+NoodWeb is a modern web application built with React and TypeScript, designed to provide a responsive and internationalized platform. The project uses Vite as the build tool and incorporates modern web development practices.
+
+### Technology Stack
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: TailwindCSS and Styled Components
+- **Routing**: React Router DOM
+- **Internationalization**: i18next
+- **Animation**: Framer Motion
+- **Performance Monitoring**: Vercel Speed Insights
+- **Code Quality**: ESLint, TypeScript
+
+### Architecture Overview
+The application follows a component-based architecture with clear separation of concerns:
+```
+src/
+├── assets/         # Static assets
+├── components/     # Reusable UI components
+├── config/         # Configuration files
+├── data/          # Data models and constants
+├── hooks/         # Custom React hooks
+├── locales/       # Internationalization files
+├── pages/         # Route-based page components
+├── styles/        # Global styles and theme
+└── types/         # TypeScript type definitions
+```
+
+## Component Responsibilities
+
+### 1. User Interface Layer
+- **Components (`/src/components/`)**
+  - Reusable UI components
+  - Component-specific styling
+  - Component-level state management
+  
+- **Pages (`/src/pages/`)**
+  - Route-specific page components
+  - Page-level layouts
+  - Integration of components
+
+### 2. Application Logic
+- **Hooks (`/src/hooks/`)**
+  - Custom React hooks for shared logic
+  - State management utilities
+  - Side-effect handling
+
+- **Configuration (`/src/config/`)**
+  - Environment-specific settings
+  - Feature flags
+  - API configurations
+
+### 3. Data Management
+- **Types (`/src/types/`)**
+  - TypeScript interfaces and types
+  - Type guards and utilities
+
+- **Data (`/src/data/`)**
+  - Data models
+  - Constants and enums
+  - Mock data for development
+
+### 4. Internationalization
+- **Locales (`/src/locales/`)**
+  - Translation files
+  - Language-specific content
+  - i18next configuration
+
+## Development Guidelines
+
+### Code Style and Standards
+1. **TypeScript Usage**
+   - Strict type checking enabled
+   - Interface-first approach
+   - Proper type annotations
+
+2. **Component Structure**
+   - Functional components with hooks
+   - Props interface definitions
+   - Component documentation
+
+3. **Naming Conventions**
+   - PascalCase for components
+   - camelCase for functions and variables
+   - UPPER_CASE for constants
+
+### Version Control
+1. **Branch Strategy**
+   - `main`: Production-ready code
+   - `develop`: Integration branch
+   - Feature branches: `feature/feature-name`
+   - Hotfix branches: `hotfix/issue-description`
+
+2. **Commit Guidelines**
+   - Conventional commits format
+   - Clear, descriptive messages
+   - Reference issue numbers
+
+### Code Review Process
+1. Pull request template usage
+2. Code review checklist
+3. Automated checks (linting, types)
+4. Peer review requirements
+
+## Deployment Guidelines
+
+### Build Process
+```bash
+# Development
+npm run dev
+
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### CI/CD Pipeline
+1. **Build Stage**
+   - Type checking
+   - Linting
+   - Unit tests
+   - Build artifact generation
+
+2. **Deployment Environments**
+   - Development
+   - Staging
+   - Production
+
+3. **Monitoring**
+   - Vercel Speed Insights integration
+   - Error tracking
+   - Performance monitoring
+
+## Testing Strategies
+
+### Unit Testing
+- Component testing
+- Hook testing
+- Utility function testing
+
+### Integration Testing
+- Page-level tests
+- API integration tests
+- Route testing
+
+### E2E Testing
+- Critical user flows
+- Cross-browser testing
+- Performance testing
+
+## Styling Guide
+
+### 1. TailwindCSS Usage
+- Utility-first approach
+- Custom theme configuration
+- Responsive design patterns
+
+### 2. Styled Components
+- Component-specific styling
+- Theme integration
+- Global style management
+
+### 3. Animation Guidelines
+- Framer Motion for complex animations
+- Performance considerations
+- Accessibility requirements
+
+## Best Practices
+
+### 1. Performance
+- Lazy loading of components and routes
+- Image optimization
+- Code splitting
+
+### 2. Accessibility
+- ARIA labels
+- Keyboard navigation
+- Screen reader support
+
+### 3. SEO
+- Meta tags management
+- Schema.org integration
+- Performance optimization
+
+## Documentation
+
+### 1. Code Documentation
+- JSDoc comments
+- Component documentation
+- Type definitions
+
+### 2. Project Documentation
+- README maintenance
+- Architecture documentation
+- API documentation
+
+### 3. Onboarding
+- Setup instructions
+- Development workflow
+- Common issues and solutions
+
+Note: This documentation should be maintained and updated as the project evolves. For specific implementation details or additional guidelines, refer to the respective documentation files in the codebase.
