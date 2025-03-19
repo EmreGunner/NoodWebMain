@@ -93,8 +93,8 @@ const PrivacyPolicy: React.FC = () => {
           <p>For privacy concerns or data requests:</p>
           <ul>
             <li>Email: <a href="mailto:contact@nood.ma">contact@nood.ma</a></li>
-            <li>Address: [Your Registered Address, Morocco]</li>
-            <li>Phone: +212 XXX-XXXXXX</li>
+            <li>Address: N°276, BD IBN TACHFINE 3EME ETAGE CASABLANCA</li>
+            <li>Phone: +212 666-654451 </li>
           </ul>
         </section>
       </div>

@@ -101,8 +101,9 @@ const TermsAndConditions: React.FC = () => {
             <p className="mb-4">For support, refunds, or legal inquiries, please contact us:</p>
             <ul className="list-disc pl-8 mb-4">
               <li>Email: <a href="mailto:contact@nood.ma" className="text-blue-500">contact@nood.ma</a></li>
-              <li>Phone: +212 XXX-XXXXXX</li>
-              <li>Address: [Your Registered Address, Morocco]</li>
+              <li>Phone: +212 666-654451 </li>
+              <li>Address: N°276, BD IBN TACHFINE 3EME ETAGE CASABLANCA
+              </li>
             </ul>
           </section>
           

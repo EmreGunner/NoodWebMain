@@ -37,7 +37,7 @@ const HEROES: Hero[] = [
     title: 'Awaken The Species',
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
     linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
-    course: 'Spiritual Awakening Journey',
+    course: 'Spiritual Awakening',
   },
   {
     id: 4,
