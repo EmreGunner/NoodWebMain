@@ -1,12 +1,13 @@
 import React from 'react';
 import { ArrowRight, Calendar, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import workshop2img from '../../assets/images/workshop2.png';
+import workshop3img from '../../assets/images/workshop3.png';
 const ExploreWorkshopsSection: React.FC = () => {
   const workshopImages = [
     "https://i.ibb.co/4ZCgk5tR/Untitled-design-4.webp",
-    "https://i.ibb.co/wFJnj7Gz/Untitled-design-7.png",
-    "https://i.ibb.co/5WZZ4z7X/Untitled-design-8.png",  // ... add more Unsplash image URLs as needed
+    {workshop2img},
+    {workshop3img},  // ... add more Unsplash image URLs as needed
   ];
 
   return (
