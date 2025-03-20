@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 
 const ExploreWorkshopsSection: React.FC = () => {
   const workshopImages = [
-    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    // ... add more Unsplash image URLs as needed
+    "https://i.ibb.co/4ZCgk5tR/Untitled-design-4.webp",
+    "https://i.ibb.co/wFJnj7Gz/Untitled-design-7.png",
+    "https://i.ibb.co/5WZZ4z7X/Untitled-design-8.png",  // ... add more Unsplash image URLs as needed
   ];
 
   return (
