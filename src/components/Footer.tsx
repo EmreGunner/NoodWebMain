@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-white/20 text-center text-sm">
-          <p>&copy; © 2022 - 2025 All prices mentioned are exclusive of VAT.
+          <p>&copy;  2022 - 2025 All prices mentioned are exclusive of VAT.
              All rights reserved.
           Tous les prix mentionnés s’entendent HTVA.
 NOOD SARL - RC: 559737 | TP: 3160177 | IF: 52699250 | ICE: 003156748000055
