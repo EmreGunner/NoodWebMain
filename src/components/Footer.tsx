@@ -16,7 +16,6 @@ const Footer: React.FC = () => {
               <li><Link to="/academy" className="hover:text-secondary transition duration-300">Academy</Link></li>
               <li><Link to="/community" className="hover:text-secondary transition duration-300">Community</Link></li>
               <li><Link to="/blog" className="hover:text-secondary transition duration-300">Blog</Link></li>
-              <li><Link to="/masterclasses" className="hover:text-secondary transition duration-300">Masterclasses</Link></li>
             </ul>
           </div>
           <div className="w-full md:w-1/4 mb-6 md:mb-0">

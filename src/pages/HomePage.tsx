@@ -3,7 +3,6 @@ import Hero from '../components/home/Hero';
 import VideoSection from '../components/home/VideoSection';
 import MeetHeroes from '../components/home/MeetHeroes';
 import WhySection from '../components/home/WhySection';
-import MasterclassSection from '../components/home/MasterclassSection';
 import HostCourseSection from '../components/home/HostCourseSection';
 import BecomeCoachSection from '../components/home/BecomeCoachSection';
 import ExploreWorkshopsSection from '../components/home/ExploreWorkshopsSection';
@@ -17,7 +16,6 @@ const HomePage: React.FC = () => {
       <VideoSection />
       <MeetHeroes />
       <WhySection />
-      <MasterclassSection />
       <div id="host-course">
         <HostCourseSection />
       </div>
