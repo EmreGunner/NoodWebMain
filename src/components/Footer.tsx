@@ -35,12 +35,12 @@ const Footer: React.FC = () => {
           <p>&copy;  2022 - 2025 All prices mentioned are exclusive of VAT.
              All rights reserved.  
              </p>
-             <br/>
           <p>Tous les prix mentionnés s’entendent HTVA.</p>
-          <br/>
+          
           <p>
             NOOD SARL - RC: 559737 | TP: 3160177 | IF: 52699250 | ICE: 003156748000055
           </p>
+          <br/>
         </div>
       </div>
       <div className="flex gap-4 justify-center text-sm text-gray-600">
