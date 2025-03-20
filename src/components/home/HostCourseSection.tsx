@@ -38,7 +38,7 @@ const HostCourseSection: React.FC = () => {
           </div>
           <div className="lg:w-1/2">
             <img 
-              src="https://i.ibb.co/SDPSZvJJ/Host-Courses.png" 
+              src="https://i.ibb.co/V0NZhhWQ/Host-ourses-3.webp" 
               alt="Host teaching online" 
               className="rounded-2xl shadow-2xl w-full h-auto object-cover transform hover:scale-105 transition duration-300"
             />

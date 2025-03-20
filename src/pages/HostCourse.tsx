@@ -44,7 +44,7 @@ const HostCourse: React.FC = () => {
               <div data-tf-live="01HQB8RH0C3WV37JX65EZ97VX4"></div>
             </div>
             <div className="lg:w-1/2 mt-8 lg:mt-0">
-              <img src="https://i.ibb.co/SDPSZvJJ/Host-Courses.png" 
+              <img src="https://i.ibb.co/V0NZhhWQ/Host-ourses-3.webp" 
                 alt="Host teaching online" 
                 className="rounded-2xl shadow-2xl w-full h-auto object-cover transform hover:scale-105 transition duration-300"
               />

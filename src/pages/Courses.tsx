@@ -18,7 +18,7 @@ export const courses = [
     domain: 'Fashion business',
     startDate: '2024-07-11',
     duration: 8,
-    coursePhoto: 'https://images.unsplash.com/photo-1537832816519-689ad163238b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    coursePhoto: 'https://i.ibb.co/m5HsJ9DW/Courses.webp',
   },
   {
     id: '2',
@@ -30,7 +30,7 @@ export const courses = [
     domain: 'Graphic Design',
     startDate: '2024-07-11',
     duration: 24,
-    coursePhoto: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    coursePhoto: 'https://i.ibb.co/hF4SttDS/3.webp',
   },
   {
     id: '3',
@@ -42,7 +42,7 @@ export const courses = [
     domain: 'E-commerce',
     startDate: '2024-07-12',
     duration: 12,
-    coursePhoto: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    coursePhoto: 'https://i.ibb.co/3mf75C6R/2.webp',
   },
 ]
 
