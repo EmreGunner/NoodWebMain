@@ -24,7 +24,6 @@ const About = React.lazy(() => import('./pages/About'))
 const NoodShop = React.lazy(() => import('./pages/NoodShop'))
 const Workshops = React.lazy(() => import('./pages/Workshops'))
 const WorkshopDetail = React.lazy(() => import('./pages/WorkshopDetail'))
-const BecomeCoach = React.lazy(() => import('./pages/BecomeCoach'))
 const HostCourse = React.lazy(() => import('./pages/HostCourse'))
 const Support = React.lazy(() => import('./pages/Support'))
 
@@ -50,7 +49,6 @@ const App: React.FC = () => {
               <Route path="/nood-shop" element={<NoodShop />} />
               <Route path="/workshops" element={<Workshops />} />
               <Route path="/workshops/:id" element={<WorkshopDetail />} />
-              <Route path="/become-coach" element={<BecomeCoach />} />
               <Route path="/host-course" element={<HostCourse />} />
               <Route path="/support" element={<Support />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />

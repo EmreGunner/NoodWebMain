@@ -19,9 +19,7 @@ const HomePage: React.FC = () => {
       <div id="host-course">
         <HostCourseSection />
       </div>
-      <div id="become-coach">
-        <BecomeCoachSection />
-      </div>
+     
       <ExploreWorkshopsSection />
       <ExploreBlogSection />
       <FinalCTASection />

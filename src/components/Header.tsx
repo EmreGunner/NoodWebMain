@@ -36,7 +36,6 @@ const Header: React.FC = () => {
 
   const moreNavItems = [
     { to: "/workshops", text: "Workshops" },
-    { to: "/become-coach", text: "Become a Coach" },
     { to: "/host-course", text: "Host Your Course" },
     { to: "/contact", text: "Contact Us" },
     { to: "/blog", text: "Blog" },
