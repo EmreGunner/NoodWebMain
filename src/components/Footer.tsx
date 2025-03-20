@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="w-full md:w-1/4 mb-6 md:mb-0">
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <p className="text-sm mb-2">Email: contact@nood.com</p>
+            <p className="text-sm mb-2">Email: contact@nood.ma</p>
             <p className="text-sm">Phone: +212 666-654451  </p>
           </div>
           <div className="w-full md:w-1/4">
