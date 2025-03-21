@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           <div className="w-full md:w-1/4 mb-6 md:mb-0">
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/academy" className="hover:text-secondary transition duration-300">Academy</Link></li>
+              <li><Link to="/courses" className="hover:text-secondary transition duration-300">Academy</Link></li>
               <li><Link to="/community" className="hover:text-secondary transition duration-300">Community</Link></li>
               <li><Link to="/blog" className="hover:text-secondary transition duration-300">Blog</Link></li>
             </ul>

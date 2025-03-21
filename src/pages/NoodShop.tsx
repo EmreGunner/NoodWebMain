@@ -3,8 +3,186 @@ import { motion } from 'framer-motion';
 import { Search, ChevronDown, X, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
+import { createPortal } from 'react-dom';
 
 const QuickViewModal = lazy(() => import('../components/QuickViewModal'));
+
+// Simple email form modal component
+const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; onClose: () => void; productName: string }) => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle escape key press
+  React.useEffect(() => {
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleEscKey);
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isOpen, onClose]);
+
+  const validateEmail = (email: string): boolean => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+    
+    setStatus('submitting');
+    
+    try {
+      // Create a hidden iframe for form submission (to bypass CORS)
+      let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
+      
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = "hidden-form-iframe";
+        iframe.name = "hidden-form-iframe";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+      
+      // Create a form element
+      const formElement = document.createElement("form");
+      formElement.method = "POST";
+      formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
+      formElement.target = "hidden-form-iframe";
+      formElement.enctype = "application/x-www-form-urlencoded";
+      formElement.style.display = "none";
+      
+      // Add form fields
+      const payload = {
+        Email: email,
+        Product: productName,
+        Status: "Interested",
+      };
+      
+      Object.entries(payload).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        formElement.appendChild(input);
+      });
+      
+      // Add form to body and submit
+      document.body.appendChild(formElement);
+      formElement.submit();
+      document.body.removeChild(formElement);
+      
+      // Show success state
+      setStatus('success');
+      setEmail('');
+      
+      // Auto close after success
+      setTimeout(() => {
+        onClose();
+        setStatus('idle');
+      }, 3000);
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus('error');
+      setErrorMessage('Failed to submit your email. Please try again.');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-60 overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-md bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col max-h-[90vh] overflow-y-auto my-8"
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="Close form"
+        >
+          <X size={20} />
+        </button>
+        
+        {status === 'success' ? (
+          <div className="text-center py-6">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+              <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h3>
+            <p className="text-gray-600">We've received your email and will send you more information about {productName}.</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold mb-2">{`Get Access to ${productName}`}</h2>
+            <p className="text-gray-600 mb-6">Enter your email to get more information about this product.</p>
+            
+            <form onSubmit={handleSubmit}>
+              {status === 'error' && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+                  {errorMessage || 'Something went wrong. Please try again.'}
+                </div>
+              )}
+              
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errorMessage) setErrorMessage('');
+                  }}
+                  placeholder="you@example.com"
+                  className="w-full p-3 text-base rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                  required
+                />
+              </div>
+              
+              <button
+                type="submit"
+                disabled={status === 'submitting'}
+                className={`w-full p-3 text-white font-medium rounded-lg text-base transition-colors ${
+                  status === 'submitting'
+                    ? 'bg-primary/70 cursor-not-allowed'
+                    : 'bg-primary hover:bg-primary/90'
+                }`}
+              >
+                {status === 'submitting' ? 'Submitting...' : 'Get Access'}
+              </button>
+              
+              <p className="mt-3 text-xs text-center text-gray-500">
+                We respect your privacy and will never share your information.
+              </p>
+            </form>
+          </>
+        )}
+      </motion.div>
+    </div>,
+    document.body
+  );
+};
 
 const categories = [
   { name: 'Templates', subcategories: ['Business', 'Creative', 'Education'] },
@@ -115,7 +293,7 @@ const allProducts: Product[] = [
   },
 ];
 
-const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) => void }> = ({ product, onQuickView }) => {
+const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) => void; onGetAccess: (product: Product) => void }> = ({ product, onQuickView, onGetAccess }) => {
   return (
     <motion.div
       className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full"
@@ -135,12 +313,20 @@ const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) 
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">{product.name}</h3>
         <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{product.description}</p>
-        <button 
-          onClick={() => onQuickView(product)}
-          className="btn-primary w-full mt-auto"
-        >
-          Learn More
-        </button>
+        <div className="space-y-2">
+          <button 
+            onClick={() => onQuickView(product)}
+            className="btn-primary w-full mt-auto"
+          >
+            Learn More
+          </button>
+          <button 
+            onClick={() => onGetAccess(product)}
+            className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
+          >
+            Get Access
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -157,6 +343,7 @@ const NoodShop: React.FC = () => {
   const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [priceFilter, setPriceFilter] = useState<'all' | 'free' | 'paid'>('all');
+  const [emailFormProduct, setEmailFormProduct] = useState<Product | null>(null);
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter(product =>
@@ -183,6 +370,10 @@ const NoodShop: React.FC = () => {
 
   const handleQuickView = (product: Product) => {
     setQuickViewProduct(product);
+  };
+
+  const handleGetAccess = (product: Product) => {
+    setEmailFormProduct(product);
   };
 
   const handleCategoryClick = (category: string) => {
@@ -336,7 +527,7 @@ const NoodShop: React.FC = () => {
                 <h2 className="text-2xl font-bold mb-4">Featured Products</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {allProducts.filter(p => p.isFeatured).map(product => (
-                    <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />
+                    <ProductCard key={product.id} product={product} onQuickView={handleQuickView} onGetAccess={handleGetAccess} />
                   ))}
                 </div>
               </section>
@@ -352,7 +543,7 @@ const NoodShop: React.FC = () => {
                   onScroll={handleScroll}
                 >
                   {filteredProducts.slice(0, visibleProducts).map(product => (
-                    <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />
+                    <ProductCard key={product.id} product={product} onQuickView={handleQuickView} onGetAccess={handleGetAccess} />
                   ))}
                 </div>
               ) : (
@@ -385,6 +576,16 @@ const NoodShop: React.FC = () => {
           />
         )}
       </Suspense>
+
+      {/* Email Form Modal */}
+      <ProductEmailForm 
+        isOpen={!!emailFormProduct} 
+        onClose={() => setEmailFormProduct(null)} 
+        productName={emailFormProduct?.name || ''}
+      />
+      
+      {/* Hidden iframe for form submission */}
+      <iframe id="hidden-form-iframe" name="hidden-form-iframe" style={{display: 'none'}} title="Hidden Form Target"></iframe>
     </div>
   );
 };
