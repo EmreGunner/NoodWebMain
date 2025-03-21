@@ -397,7 +397,7 @@ const NoodShop: React.FC = () => {
       <header className="bg-white shadow-sm py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <Link to="/tools" className="text-2xl font-bold text-primary mb-4 md:mb-0">Nood Shop</Link>
+            <Link to="/tools" className="text-2xl font-bold text-primary mb-4 md:mb-0">Nood Tools</Link>
             <form onSubmit={handleSearch} className="relative w-full md:w-auto mb-4 md:mb-0">
               <input
                 type="text"

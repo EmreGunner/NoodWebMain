@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { useForm, ValidationError } from '@formspree/react';
 
 const ContactUs: React.FC = () => {
   // Form state
@@ -11,10 +12,11 @@ const ContactUs: React.FC = () => {
     subject: '',
     message: ''
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
-
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  
+  // Formspree integration - replace 'moveelvw' with your actual form ID
+  const [formState, handleFormspreeSubmit] = useForm("moveelvw");
+  
   // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -23,8 +25,8 @@ const ContactUs: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Clear errors when typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
@@ -48,7 +50,7 @@ const ContactUs: React.FC = () => {
       newErrors.message = 'Message must be at least 10 characters';
     }
     
-    setErrors(newErrors);
+    setFormErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -60,54 +62,13 @@ const ContactUs: React.FC = () => {
       return;
     }
     
-    setStatus('submitting');
-    
-    try {
-      // Create a hidden iframe for form submission (to bypass CORS)
-      let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
-      
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.id = "hidden-form-iframe";
-        iframe.name = "hidden-form-iframe";
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-      }
-      
-      // Create a form element
-      const formElement = document.createElement("form");
-      formElement.method = "POST";
-      formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
-      formElement.target = "hidden-form-iframe";
-      formElement.enctype = "application/x-www-form-urlencoded";
-      formElement.style.display = "none";
-      
-      // Add form fields
-      const payload = {
-        Name: formData.name,
-        Email: formData.email,
-        Phone: formData.phone || "",
-        Subject: formData.subject || "Contact Form Submission",
-        Message: formData.message,
-        Status: "New Contact",
-      };
-      
-      Object.entries(payload).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = String(value);
-        formElement.appendChild(input);
-      });
-      
-      // Add form to body and submit
-      document.body.appendChild(formElement);
-      formElement.submit();
-      document.body.removeChild(formElement);
-      
-      // Show success state
-      setStatus('success');
-      
+    // Let formspree handle the submission
+    handleFormspreeSubmit(e);
+  };
+
+  // Reset form after successful submission
+  React.useEffect(() => {
+    if (formState.succeeded) {
       // Reset form after success
       setTimeout(() => {
         setFormData({
@@ -117,15 +78,9 @@ const ContactUs: React.FC = () => {
           subject: '',
           message: ''
         });
-        setStatus('idle');
       }, 3000);
-      
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setStatus('error');
-      setErrorMessage('Something went wrong. Please try again later.');
     }
-  };
+  }, [formState.succeeded]);
 
   return (
     <motion.div
@@ -160,7 +115,7 @@ const ContactUs: React.FC = () => {
           >
             <h2 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h2>
             
-            {status === 'success' ? (
+            {formState.succeeded ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -172,7 +127,7 @@ const ContactUs: React.FC = () => {
                 <h3 className="text-xl font-semibold text-green-800 mb-2">Message Received!</h3>
                 <p className="text-green-700">Thank you for reaching out. We'll get back to you as soon as possible.</p>
               </motion.div>
-            ) : status === 'error' ? (
+            ) : formState.errors ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -182,9 +137,9 @@ const ContactUs: React.FC = () => {
                   <AlertCircle size={28} className="text-red-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-red-800 mb-2">Something went wrong</h3>
-                <p className="text-red-700">{errorMessage || 'Please try again or contact us directly.'}</p>
+                <p className="text-red-700">Please try again or contact us directly.</p>
                 <button 
-                  onClick={() => setStatus('idle')}
+                  onClick={() => window.location.reload()}
                   className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
                 >
                   Try Again
@@ -204,11 +159,12 @@ const ContactUs: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className={`w-full p-3 rounded-lg border ${
-                        errors.name ? 'border-red-500' : 'border-gray-300'
+                        formErrors.name ? 'border-red-500' : 'border-gray-300'
                       } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
                       placeholder="Your name"
                     />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                    {formErrors.name && <p className="mt-1 text-sm text-red-600">{formErrors.name}</p>}
+                    <ValidationError prefix="Name" field="name" errors={formState.errors} />
                   </div>
                   
                   <div>
@@ -222,11 +178,12 @@ const ContactUs: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className={`w-full p-3 rounded-lg border ${
-                        errors.email ? 'border-red-500' : 'border-gray-300'
+                        formErrors.email ? 'border-red-500' : 'border-gray-300'
                       } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
                       placeholder="your.email@example.com"
                     />
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                    {formErrors.email && <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>}
+                    <ValidationError prefix="Email" field="email" errors={formState.errors} />
                   </div>
                 </div>
                 
@@ -273,25 +230,26 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     rows={5}
                     className={`w-full p-3 rounded-lg border ${
-                      errors.message ? 'border-red-500' : 'border-gray-300'
+                      formErrors.message ? 'border-red-500' : 'border-gray-300'
                     } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
                     placeholder="How can we help you?"
                   ></textarea>
-                  {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
+                  {formErrors.message && <p className="mt-1 text-sm text-red-600">{formErrors.message}</p>}
+                  <ValidationError prefix="Message" field="message" errors={formState.errors} />
                 </div>
                 
                 <motion.button
                   type="submit"
-                  disabled={status === 'submitting'}
-                  whileHover={{ scale: status === 'submitting' ? 1 : 1.02 }}
-                  whileTap={{ scale: status === 'submitting' ? 1 : 0.98 }}
+                  disabled={formState.submitting}
+                  whileHover={{ scale: formState.submitting ? 1 : 1.02 }}
+                  whileTap={{ scale: formState.submitting ? 1 : 0.98 }}
                   className={`w-full flex items-center justify-center p-3 rounded-full font-bold shadow-md text-base transition-all ${
-                    status === 'submitting' 
+                    formState.submitting 
                       ? 'bg-primary/70 text-white/90 cursor-not-allowed' 
                       : 'bg-primary text-white hover:bg-primary-dark'
                   }`}
                 >
-                  {status === 'submitting' ? (
+                  {formState.submitting ? (
                     <>
                       <Loader2 size={20} className="mr-2 animate-spin" />
                       Sending...
@@ -318,16 +276,15 @@ const ContactUs: React.FC = () => {
             className="lg:col-span-2 flex flex-col gap-6"
           >
             {/* Contact Information Card */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-grow">
-              <h2 className="text-2xl font-bold mb-6 text-gray-900">Contact Information</h2>
-              
-              <div className="space-y-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">Contact Information</h2>
+              <div className="space-y-4">
                 <div className="flex items-start">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
                     <Mail className="text-primary" size={20} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-1">Email Address</h3>
+                    <h3 className="text-sm font-semibold text-gray-700 mb-1">Email</h3>
                     <a href="mailto:contact@nood.ma" className="text-gray-800 hover:text-primary transition-colors">
                       contact@nood.ma
                     </a>
@@ -381,9 +338,6 @@ const ContactUs: React.FC = () => {
             </div>
           </motion.div>
         </div>
-        
-        {/* Hidden iframe for form submission */}
-        <iframe id="hidden-form-iframe" name="hidden-form-iframe" style={{display: 'none'}} title="Hidden Form Target"></iframe>
       </div>
     </motion.div>
   );
