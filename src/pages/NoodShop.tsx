@@ -1,6 +1,6 @@
 import React, { useState, useMemo, lazy, Suspense, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Search, ChevronDown, X, Filter } from 'lucide-react';
+import { Search, ChevronDown, X, Filter, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 
@@ -23,6 +23,136 @@ interface Product {
   isFree: boolean;
   isFeatured: boolean;
 }
+
+// Email subscription form component
+const ToolsSubscriptionForm = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validateEmail = (email: string): boolean => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+    
+    setStatus('submitting');
+    
+    try {
+      // Create a hidden iframe for form submission (to bypass CORS)
+      let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
+      
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = "hidden-form-iframe";
+        iframe.name = "hidden-form-iframe";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+      
+      // Create a form element
+      const formElement = document.createElement("form");
+      formElement.method = "POST";
+      formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
+      formElement.target = "hidden-form-iframe";
+      formElement.enctype = "application/x-www-form-urlencoded";
+      formElement.style.display = "none";
+      
+      // Add form fields
+      const payload = {
+        Email: email,
+        Source: "Nood Tools Subscription",
+        Status: "Subscribed",
+      };
+      
+      Object.entries(payload).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        formElement.appendChild(input);
+      });
+      
+      // Add form to body and submit
+      document.body.appendChild(formElement);
+      formElement.submit();
+      document.body.removeChild(formElement);
+      
+      // Show success state
+      setStatus('success');
+      setEmail('');
+      
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus('error');
+      setErrorMessage('Failed to subscribe. Please try again.');
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-xl shadow-md mb-8">
+      <h3 className="text-xl font-bold mb-3">Subscribe for Tool Updates</h3>
+      <p className="text-gray-600 mb-4">Get notified when we add new templates, ebooks, and tools.</p>
+      
+      {status === 'success' ? (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center">
+          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+          </svg>
+          Thank you for subscribing!
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-grow">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Mail size={18} className="text-gray-400" />
+              </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrorMessage('');
+                }}
+                placeholder="Your email address"
+                className="pl-10 w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                disabled={status === 'submitting'}
+              />
+            </div>
+            <motion.button
+              type="submit"
+              disabled={status === 'submitting'}
+              className={`px-6 py-3 rounded-lg font-medium text-white ${
+                status === 'submitting' 
+                  ? 'bg-primary/70 cursor-not-allowed' 
+                  : 'bg-primary hover:bg-primary-dark'
+              }`}
+              whileHover={status !== 'submitting' ? { scale: 1.02 } : {}}
+              whileTap={status !== 'submitting' ? { scale: 0.98 } : {}}
+            >
+              {status === 'submitting' ? 'Subscribing...' : 'Subscribe'}
+            </motion.button>
+          </div>
+          {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
+        </form>
+      )}
+    </div>
+  );
+};
 
 const allProducts: Product[] = [
   {
@@ -117,30 +247,37 @@ const allProducts: Product[] = [
 
 const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) => void }> = ({ product, onQuickView }) => {
   return (
-    <motion.div
-      className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full"
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    <motion.div 
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      whileHover={{ y: -5 }}
     >
-      <div className="relative flex-shrink-0">
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="w-full h-48 object-cover"
-          loading="lazy"
-        />
-        <div className={`absolute top-2 left-2 ${product.isFree ? 'bg-green-500' : 'bg-primary'} text-white text-xs font-bold px-2 py-1 rounded`}>
-          {product.isFree ? 'Free' : 'Paid'}
+      <Link to={`/tools/${product.slug}`}>
+        <img src={product.image} alt={product.name} className="w-full h-48 object-cover object-center" />
+      </Link>
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-2">
+          <Link to={`/tools/${product.slug}`}>
+            <h3 className="text-lg font-semibold hover:text-primary transition-colors duration-300">{product.name}</h3>
+          </Link>
+          {product.isFree ? (
+            <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Free</span>
+          ) : (
+            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Premium</span>
+          )}
         </div>
-      </div>
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg font-semibold mb-2 line-clamp-2">{product.name}</h3>
-        <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{product.description}</p>
-        <button 
-          onClick={() => onQuickView(product)}
-          className="btn-primary w-full mt-auto"
-        >
-          Learn More
-        </button>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-gray-500">{product.category} / {product.subcategory}</span>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              onQuickView(product);
+            }}
+            className="text-primary text-sm hover:text-primary-dark hover:underline transition-colors duration-300"
+          >
+            Quick View
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -150,7 +287,7 @@ const NoodShop: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-  const [visibleProducts, setVisibleProducts] = useState(12);
+  const [visibleProducts, setVisibleProducts] = useState(9);
   const productGridRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
@@ -175,11 +312,11 @@ const NoodShop: React.FC = () => {
   const handleScroll = useCallback(() => {
     if (productGridRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = productGridRef.current;
-      if (scrollTop + clientHeight >= scrollHeight - 5) {
-        setVisibleProducts(prev => prev + 12);
+      if (scrollTop + clientHeight >= scrollHeight - 100 && visibleProducts < filteredProducts.length) {
+        setVisibleProducts(prev => Math.min(prev + 6, filteredProducts.length));
       }
     }
-  }, []);
+  }, [filteredProducts.length, visibleProducts]);
 
   const handleQuickView = (product: Product) => {
     setQuickViewProduct(product);
@@ -210,11 +347,11 @@ const NoodShop: React.FC = () => {
       <header className="bg-white shadow-sm py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <Link to="/nood-shop" className="text-2xl font-bold text-primary mb-4 md:mb-0">Nood Shop</Link>
+            <Link to="/nood-shop" className="text-2xl font-bold text-primary mb-4 md:mb-0">Nood Tools</Link>
             <form onSubmit={handleSearch} className="relative w-full md:w-auto mb-4 md:mb-0">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search tools..."
                 className="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -238,56 +375,78 @@ const NoodShop: React.FC = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row">
           <aside className={`md:w-1/4 md:pr-8 ${isFilterMenuOpen ? 'block' : 'hidden md:block'}`}>
-            <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-              <h3 className="font-bold mb-2">Categories</h3>
-              {categories.map((category) => (
-                <div key={category.name} className="mb-2">
-                  <button
-                    onClick={() => handleCategoryClick(category.name)}
-                    className={`w-full text-left px-2 py-1 rounded ${
-                      selectedCategory === category.name
-                        ? 'bg-primary text-white'
-                        : 'hover:bg-gray-100'
-                    }`}
-                  >
-                    {category.name}
-                  </button>
-                  {selectedCategory === category.name && (
-                    <div className="ml-4 mt-1">
-                      {category.subcategories.map((subcategory) => (
+            <div className="sticky top-24">
+              <div className="relative mb-6">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search size={18} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                  placeholder="Search tools..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+                <h3 className="font-bold text-lg mb-3">Categories</h3>
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <div key={category.name} className="space-y-1">
+                      <button
+                        onClick={() => {
+                          setSelectedCategory(category.name);
+                          setSelectedSubcategory(null);
+                        }}
+                        className={`w-full text-left px-2 py-1 rounded flex justify-between items-center ${
+                          selectedCategory === category.name
+                            ? 'bg-primary text-white font-medium'
+                            : 'hover:bg-gray-100'
+                        }`}
+                      >
+                        <span>{category.name}</span>
+                        <ChevronDown size={16} />
+                      </button>
+                      
+                      {category.subcategories.map((subcat) => (
                         <button
-                          key={subcategory}
-                          onClick={() => handleSubcategoryClick(subcategory)}
-                          className={`w-full text-left px-2 py-1 rounded ${
-                            selectedSubcategory === subcategory
-                              ? 'bg-gray-200 text-primary'
+                          key={subcat}
+                          onClick={() => {
+                            setSelectedCategory(category.name);
+                            setSelectedSubcategory(subcat);
+                          }}
+                          className={`w-full text-left pl-6 px-2 py-1 rounded text-sm ${
+                            selectedSubcategory === subcat
+                              ? 'bg-primary/20 text-primary font-medium'
                               : 'hover:bg-gray-100'
                           }`}
                         >
-                          {subcategory}
+                          {subcat}
                         </button>
                       ))}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <h3 className="font-bold mb-2">Price</h3>
-              <div className="space-y-2">
-                {['all', 'free', 'paid'].map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setPriceFilter(option as 'all' | 'free' | 'paid')}
-                    className={`w-full text-left px-2 py-1 rounded ${
-                      priceFilter === option
-                        ? 'bg-primary text-white'
-                        : 'hover:bg-gray-100'
-                    }`}
-                  >
-                    {option === 'all' ? 'All Products' : option.charAt(0).toUpperCase() + option.slice(1)}
-                  </button>
-                ))}
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h3 className="font-bold text-lg mb-3">Price</h3>
+                <div className="space-y-1">
+                  {['all', 'free', 'paid'].map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => setPriceFilter(option as 'all' | 'free' | 'paid')}
+                      className={`w-full text-left px-2 py-1 rounded ${
+                        priceFilter === option
+                          ? 'bg-primary text-white'
+                          : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      {option === 'all' ? 'All Products' : option.charAt(0).toUpperCase() + option.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
@@ -333,7 +492,7 @@ const NoodShop: React.FC = () => {
 
             {!isFiltered && (
               <section className="mb-12">
-                <h2 className="text-2xl font-bold mb-4">Featured Products</h2>
+                <h2 className="text-2xl font-bold mb-4">Featured Tools</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {allProducts.filter(p => p.isFeatured).map(product => (
                     <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />
@@ -343,7 +502,7 @@ const NoodShop: React.FC = () => {
             )}
 
             <section>
-              <h2 className="text-2xl font-bold mb-4">{isFiltered ? 'Filtered Products' : 'All Products'}</h2>
+              <h2 className="text-2xl font-bold mb-4">{isFiltered ? 'Filtered Tools' : 'All Tools'}</h2>
               {filteredProducts.length > 0 ? (
                 <div 
                   ref={productGridRef}
@@ -357,7 +516,7 @@ const NoodShop: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-xl text-gray-600 mb-4">No products found for the current filters.</p>
+                  <p className="text-xl text-gray-600 mb-4">No tools found for the current filters.</p>
                   <p className="text-lg text-gray-500">Try adjusting your filters or search terms.</p>
                   <button 
                     onClick={() => {
@@ -385,6 +544,9 @@ const NoodShop: React.FC = () => {
           />
         )}
       </Suspense>
+      
+      {/* Hidden iframe for form submission */}
+      <iframe id="hidden-form-iframe" name="hidden-form-iframe" style={{display: 'none'}} title="Hidden Form Target"></iframe>
     </div>
   );
 };
