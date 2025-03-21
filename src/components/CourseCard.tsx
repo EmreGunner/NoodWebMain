@@ -74,6 +74,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
+  // Open application form function
+  const openApplicationForm = () => {
+    setIsApplicationFormOpen(true);
+  };
+
   return (
     <>
       <motion.div 
@@ -117,6 +122,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
               className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={openApplicationForm}
             >
               {seatsLeft <= 3 ? 'Reserve Your Seat Now!' : 'Apply Now'}
             </motion.button>

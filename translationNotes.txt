@@ -1,0 +1,196 @@
+# Translation Guidelines for NoodWeb
+
+## Current Setup
+- Using i18next with react-i18next for internationalization
+- Browser language detection through i18next-browser-languagedetector
+- Configuration in src/i18n.ts
+
+## Why Translations Might Not Work
+Common issues:
+1. Missing translation keys in language files
+2. Incorrect namespace configuration
+3. Translation files not properly loaded
+4. Language detection issues
+5. Missing fallback translations
+
+## Implementation Guide
+
+### 1. Directory Structure
+src/
+└── locales/
+├── en/
+│ ├── common.json
+│ ├── home.json
+│ └── courses.json
+├── es/
+│ ├── common.json
+│ ├── home.json
+│ └── courses.json
+└── [other languages]/
+
+
+### 2. Translation File Structure
+Example common.json:
+```json
+{
+  "navigation": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About"
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  }
+}
+```
+
+### 3. Using Translations
+
+#### Basic Usage:
+```typescript
+import { useTranslation } from 'react-i18next';
+
+function Component() {
+  const { t } = useTranslation();
+  return <h1>{t('navigation.home')}</h1>;
+}
+```
+
+#### With Variables:
+```typescript
+// In translation file
+{
+  "welcome": "Welcome, {{name}}!"
+}
+
+// In component
+t('welcome', { name: 'John' })
+```
+
+#### Pluralization:
+```typescript
+// In translation file
+{
+  "courses": "{{count}} course",
+  "courses_plural": "{{count}} courses"
+}
+
+// In component
+t('courses', { count: 2 })
+```
+
+### 4. Language Switching
+```typescript
+const { i18n } = useTranslation();
+const changeLanguage = (lng: string) => {
+  i18n.changeLanguage(lng);
+};
+```
+
+## Best Practices
+
+### DO:
+1. Use nested keys for better organization
+   - "page.section.element": "Text"
+   
+2. Include fallback translations
+   ```typescript
+   fallbackLng: 'en'
+   ```
+
+3. Lazy load translations by namespace
+   ```typescript
+   useTranslation(['common', 'home'])
+   ```
+
+4. Use TypeScript for type-safe translations
+   ```typescript
+   type TranslationKeys = {
+     'navigation.home': string;
+     'navigation.courses': string;
+   }
+   ```
+
+### DON'T:
+1. Hardcode strings in components
+2. Use dynamic translation keys
+3. Nest translations too deeply (max 3-4 levels)
+4. Forget to include all languages in fallback chain
+
+## Troubleshooting Guide
+
+### 1. Missing Translations
+Check:
+- Translation files exist in correct location
+- Keys match exactly (case-sensitive)
+- Namespace is correctly specified
+- Fallback language is configured
+
+### 2. Language Detection Issues
+Verify:
+- Language detector is properly configured
+- Browser language settings
+- Default language is set
+- Language codes match (e.g., 'en-US' vs 'en')
+
+### 3. Performance Issues
+Solutions:
+- Split translations by namespace
+- Implement lazy loading
+- Use translation caching
+- Minimize translation file size
+
+## Testing Translations
+
+### 1. Unit Testing
+```typescript
+import i18n from 'i18next';
+
+describe('Translations', () => {
+  it('should have matching keys in all languages', () => {
+    const enKeys = Object.keys(en.translation);
+    const esKeys = Object.keys(es.translation);
+    expect(enKeys).toEqual(esKeys);
+  });
+});
+```
+
+### 2. Manual Testing
+Checklist:
+- [ ] All supported languages load correctly
+- [ ] Language switching works
+- [ ] Fallback translations appear when needed
+- [ ] Special characters display correctly
+- [ ] RTL languages render properly
+
+## Maintenance
+
+### 1. Adding New Languages
+1. Create new language directory
+2. Copy structure from existing language
+3. Translate all keys
+4. Add language to configuration
+5. Test thoroughly
+
+### 2. Updating Translations
+1. Use version control for translation files
+2. Document changes in changelog
+3. Update all language files simultaneously
+4. Test after updates
+5. Consider using translation management systems
+
+## Common Pitfalls to Avoid
+1. Inconsistent key naming
+2. Missing context in translations
+3. Not handling pluralization
+4. Forgetting about RTL languages
+5. Hard-coding language-specific formatting
+
+## Tools and Resources
+1. i18next-parser: Extract translation keys
+2. i18next-scanner: Scan code for missing translations
+3. Translation management systems (TMS)
+4. Browser language detection testing tools
+
+Remember to keep this guide updated as translation requirements evolve.
