@@ -64,7 +64,6 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
           <Colon />
           <TimeUnit value={timeLeft.s} label="Seconds" />
         </div>
-        
         {onClose && (
           <button
             onClick={onClose}

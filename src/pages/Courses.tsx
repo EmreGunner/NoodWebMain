@@ -98,17 +98,9 @@ const Courses: React.FC = () => {
         {showPromo && (
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
-            animate={{ 
-              opacity: 1, 
-              y: 0,
-              transition: { duration: 0.4 }
-            }}
-            exit={{ 
-              opacity: 0, 
-              y: -20,
-              transition: { duration: 0.3 }
-            }}
-            className="fixed top-16 left-0 right-0 z-40"
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-0 left-0 right-0 z-50"
           >
             <CountdownTimer 
               targetDate={new Date('2025-03-25T12:00:00')}
