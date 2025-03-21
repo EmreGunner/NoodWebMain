@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Check, AlertCircle, Loader2 } from 'lucide-react';
-import { useForm, ValidationError } from '@formspree/react';
+import { Mail, Phone, MapPin, Send, Check, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
 
 const ContactUs: React.FC = () => {
   // Form state
@@ -12,11 +11,9 @@ const ContactUs: React.FC = () => {
     subject: '',
     message: ''
   });
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  
-  // Formspree integration - replace 'moveelvw' with your actual form ID
-  const [formState, handleFormspreeSubmit] = useForm("moveelvw");
-  
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [status, setStatus] = useState<'idle' | 'success'>('idle');
+
   // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -25,8 +22,8 @@ const ContactUs: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Clear errors when typing
-    if (formErrors[name]) {
-      setFormErrors(prev => ({ ...prev, [name]: '' }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
@@ -50,72 +47,82 @@ const ContactUs: React.FC = () => {
       newErrors.message = 'Message must be at least 10 characters';
     }
     
-    setFormErrors(newErrors);
+    setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle opening email client with form data
+  const handleSendEmail = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
       return;
     }
     
-    // Let formspree handle the submission
-    handleFormspreeSubmit(e);
-  };
+    // Prepare email content
+    const subject = encodeURIComponent(formData.subject || 'Contact from Website');
+    const body = encodeURIComponent(`
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone || 'Not provided'}
 
-  // Reset form after successful submission
-  React.useEffect(() => {
-    if (formState.succeeded) {
-      // Reset form after success
-      setTimeout(() => {
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: ''
-        });
-      }, 3000);
-    }
-  }, [formState.succeeded]);
+Message:
+${formData.message}
+    `);
+    
+    // Open email client
+    window.open(`mailto:contact@nood.ma?subject=${subject}&body=${body}`);
+    
+    // Show success message
+    setStatus('success');
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setStatus('idle');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    }, 3000);
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-gray-50 min-h-screen pt-20"
+      className="bg-gradient-to-br from-gray-50 to-white min-h-screen py-20"
     >
-      <div className="container mx-auto px-4 py-12 sm:py-16">
+      <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
         >
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
             Get in Touch
           </h1>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Have questions or want to learn more? We'd love to hear from you.
             Fill out the form below or reach out directly.
           </p>
         </motion.div>
-
+        
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
           {/* Contact Form */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-3 bg-white p-8 rounded-xl shadow-sm border border-gray-100"
+            className="lg:col-span-3 bg-white p-8 rounded-xl shadow-md border border-gray-200"
           >
             <h2 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h2>
             
-            {formState.succeeded ? (
+            {status === 'success' ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -124,29 +131,11 @@ const ContactUs: React.FC = () => {
                 <div className="inline-flex items-center justify-center bg-green-100 w-16 h-16 rounded-full mb-4">
                   <Check size={28} className="text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-green-800 mb-2">Message Received!</h3>
-                <p className="text-green-700">Thank you for reaching out. We'll get back to you as soon as possible.</p>
-              </motion.div>
-            ) : formState.errors ? (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-50 border border-red-100 rounded-lg p-6 text-center mb-6"
-              >
-                <div className="inline-flex items-center justify-center bg-red-100 w-16 h-16 rounded-full mb-4">
-                  <AlertCircle size={28} className="text-red-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-red-800 mb-2">Something went wrong</h3>
-                <p className="text-red-700">Please try again or contact us directly.</p>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-                >
-                  Try Again
-                </button>
+                <h3 className="text-xl font-semibold text-green-800 mb-2">Email Client Opened!</h3>
+                <p className="text-green-700">Your message has been prepared. Please send the email from your mail client.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSendEmail} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -159,12 +148,11 @@ const ContactUs: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className={`w-full p-3 rounded-lg border ${
-                        formErrors.name ? 'border-red-500' : 'border-gray-300'
+                        errors.name ? 'border-red-500' : 'border-gray-300'
                       } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
                       placeholder="Your name"
                     />
-                    {formErrors.name && <p className="mt-1 text-sm text-red-600">{formErrors.name}</p>}
-                    <ValidationError prefix="Name" field="name" errors={formState.errors} />
+                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                   </div>
                   
                   <div>
@@ -178,12 +166,11 @@ const ContactUs: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className={`w-full p-3 rounded-lg border ${
-                        formErrors.email ? 'border-red-500' : 'border-gray-300'
+                        errors.email ? 'border-red-500' : 'border-gray-300'
                       } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
-                      placeholder="your.email@example.com"
+                      placeholder="Your email address"
                     />
-                    {formErrors.email && <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>}
-                    <ValidationError prefix="Email" field="email" errors={formState.errors} />
+                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                   </div>
                 </div>
                 
@@ -230,38 +217,34 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     rows={5}
                     className={`w-full p-3 rounded-lg border ${
-                      formErrors.message ? 'border-red-500' : 'border-gray-300'
+                      errors.message ? 'border-red-500' : 'border-gray-300'
                     } focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors`}
                     placeholder="How can we help you?"
                   ></textarea>
-                  {formErrors.message && <p className="mt-1 text-sm text-red-600">{formErrors.message}</p>}
-                  <ValidationError prefix="Message" field="message" errors={formState.errors} />
+                  {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
                 </div>
                 
-                <motion.button
-                  type="submit"
-                  disabled={formState.submitting}
-                  whileHover={{ scale: formState.submitting ? 1 : 1.02 }}
-                  whileTap={{ scale: formState.submitting ? 1 : 0.98 }}
-                  className={`w-full flex items-center justify-center p-3 rounded-full font-bold shadow-md text-base transition-all ${
-                    formState.submitting 
-                      ? 'bg-primary/70 text-white/90 cursor-not-allowed' 
-                      : 'bg-primary text-white hover:bg-primary-dark'
-                  }`}
-                >
-                  {formState.submitting ? (
-                    <>
-                      <Loader2 size={20} className="mr-2 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message <Send size={18} className="ml-2" />
-                    </>
-                  )}
-                </motion.button>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 flex items-center justify-center p-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors duration-300 shadow-md"
+                  >
+                    <Mail className="mr-2" size={18} />
+                    Open Email Client
+                  </motion.button>
+                  
+                  <a 
+                    href="mailto:contact@nood.ma"
+                    className="flex-1 flex items-center justify-center p-3 rounded-lg bg-gray-100 text-gray-800 font-medium hover:bg-gray-200 transition-colors duration-300 border border-gray-300"
+                  >
+                    <ExternalLink className="mr-2" size={18} />
+                    Direct Email
+                  </a>
+                </div>
                 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-sm text-gray-500 text-center mt-4">
                   We respect your privacy and will never share your information.
                 </p>
               </form>
@@ -276,16 +259,16 @@ const ContactUs: React.FC = () => {
             className="lg:col-span-2 flex flex-col gap-6"
           >
             {/* Contact Information Card */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
               <h2 className="text-2xl font-bold mb-4 text-gray-900">Contact Information</h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
                     <Mail className="text-primary" size={20} />
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-700 mb-1">Email</h3>
-                    <a href="mailto:contact@nood.ma" className="text-gray-800 hover:text-primary transition-colors">
+                    <a href="mailto:contact@nood.ma" className="text-gray-800 hover:text-primary transition-colors font-medium">
                       contact@nood.ma
                     </a>
                   </div>
@@ -297,7 +280,7 @@ const ContactUs: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-700 mb-1">Phone</h3>
-                    <a href="tel:+212666654451" className="text-gray-800 hover:text-primary transition-colors">
+                    <a href="tel:+212666654451" className="text-gray-800 hover:text-primary transition-colors font-medium">
                       +212 666-654451
                     </a>
                   </div>
@@ -319,22 +302,46 @@ const ContactUs: React.FC = () => {
             </div>
             
             {/* Business Hours Card */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
               <h2 className="text-2xl font-bold mb-4 text-gray-900">Business Hours</h2>
-              <ul className="space-y-2">
-                <li className="flex justify-between">
-                  <span className="text-gray-600">Monday - Friday</span>
-                  <span className="font-medium">9:00 AM - 6:00 PM</span>
+              <ul className="space-y-3">
+                <li className="flex justify-between items-center border-b border-gray-100 pb-2">
+                  <span className="text-gray-600 font-medium">Monday - Friday</span>
+                  <span className="font-bold text-primary">9:00 AM - 6:00 PM</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="text-gray-600">Saturday</span>
-                  <span className="font-medium">10:00 AM - 2:00 PM</span>
+                <li className="flex justify-between items-center border-b border-gray-100 pb-2">
+                  <span className="text-gray-600 font-medium">Saturday</span>
+                  <span className="font-bold text-primary">10:00 AM - 2:00 PM</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="text-gray-600">Sunday</span>
-                  <span className="font-medium">Closed</span>
+                <li className="flex justify-between items-center">
+                  <span className="text-gray-600 font-medium">Sunday</span>
+                  <span className="font-bold text-red-500">Closed</span>
                 </li>
               </ul>
+            </div>
+            
+            {/* Quick Contact Card */}
+            <div className="bg-primary/5 p-6 rounded-xl shadow-sm border border-primary/10">
+              <h2 className="text-xl font-bold mb-3 text-gray-900">Need Immediate Assistance?</h2>
+              <p className="text-gray-600 mb-4">
+                For urgent inquiries, feel free to call us or send a direct email.
+              </p>
+              <div className="flex flex-col space-y-2">
+                <a 
+                  href="tel:+212666654451" 
+                  className="flex items-center justify-center p-2 bg-white text-primary border border-primary/20 rounded-lg hover:bg-primary hover:text-white transition-all duration-300"
+                >
+                  <Phone size={16} className="mr-2" />
+                  Call Us Now
+                </a>
+                <a 
+                  href="mailto:contact@nood.ma" 
+                  className="flex items-center justify-center p-2 bg-white text-primary border border-primary/20 rounded-lg hover:bg-primary hover:text-white transition-all duration-300"
+                >
+                  <Mail size={16} className="mr-2" />
+                  Email Directly
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>
