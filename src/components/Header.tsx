@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, BookOpen, Users, ShoppingBag, ChevronDown, Search, MoreHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import courses from '../data/courses.json';
 import noodLogoGreen from '/noodLogoGreen.png';
+import { mainNavItems, moreNavItems } from '../data/navigationData';
+import Logo from './Logo';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,6 +16,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState(false);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,20 +31,26 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
 
-  const mainNavItems = [
-    { to: "/courses", icon: BookOpen, text: "Courses" },
-    { to: "/community", icon: Users, text: "Community" },
-    { to: "/tools", icon: ShoppingBag, text: "Tools" },
-  ];
-
-  const moreNavItems = [
-    { to: "/workshops", text: "Workshops" },
-    { to: "/host-course", text: "Host Your Course" },
-    { to: "/contact", text: "Contact Us" },
-    { to: "/blog", text: "Blog" },
-    { to: "/about", text: "About Us" },
-    { to: "/careers", text: "Careers" },
-  ];
+  useEffect(() => {
+    setIsMenuOpen(false);
+    
+    if (detailsRef.current) {
+      detailsRef.current.open = false;
+    }
+  }, [location]);
+  
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (detailsRef.current && !detailsRef.current.contains(event.target as Node)) {
+        detailsRef.current.open = false;
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -225,7 +234,7 @@ const Header: React.FC = () => {
                 ))}
 
                 <li>
-                  <details className="group">
+                  <details ref={detailsRef} className="group">
                     <summary className="flex items-center py-2 px-2 text-gray-700 hover:text-primary cursor-pointer list-none">
                       <MoreHorizontal className="mr-2" size={18} />
                       More
@@ -236,7 +245,9 @@ const Header: React.FC = () => {
                         <li key={index}>
                           <Link 
                             to={item.to} 
-                            className="block py-2 px-2 text-gray-700 hover:text-primary"
+                            className={`block py-2 px-2 text-gray-700 hover:text-primary
+                              ${location.pathname === item.to ? 'border-l-4 border-[#ffed00]' : ''}
+                            `}
                             onClick={() => setIsMenuOpen(false)}
                           >
                             {item.text}
