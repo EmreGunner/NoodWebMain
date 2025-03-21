@@ -149,39 +149,39 @@ const Courses: React.FC = () => {
                 boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
               }}
             >
-              <div className="bg-gradient-to-r from-[#FFD700] via-[#FFED00] to-[#FFD700] px-4 py-3 flex justify-between items-center rounded-lg shadow-inner">
+              <div className="bg-gradient-to-r from-[#f9e51a] via-[#ffed4f] to-[#f9e51a] px-4 py-3 flex justify-between items-center rounded-lg shadow-md">
                 <div className="flex items-center space-x-3">
-                  <Clock className="text-gray-800 hidden sm:block" size={22} />
+                  <Clock className="text-gray-800 hidden sm:block" size={24} />
                   <div>
-                    <h3 className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</h3>
+                    <h3 className="font-bold text-gray-800 text-xl">Early Bird Special: 20% off!</h3>
                     <p className="text-gray-700 text-sm">Offer ends in:</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.days}</span>
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="countdown-box">
+                    <span className="countdown-number">{countdown.days}</span>
                     <span className="countdown-label">days</span>
                   </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.hours}</span>
+                  <span className="font-bold text-gray-800 text-xl">:</span>
+                  <div className="countdown-box">
+                    <span className="countdown-number">{countdown.hours}</span>
                     <span className="countdown-label">hours</span>
                   </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.minutes}</span>
+                  <span className="font-bold text-gray-800 text-xl">:</span>
+                  <div className="countdown-box">
+                    <span className="countdown-number">{countdown.minutes}</span>
                     <span className="countdown-label">mins</span>
                   </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.seconds}</span>
+                  <span className="font-bold text-gray-800 text-xl">:</span>
+                  <div className="countdown-box">
+                    <span className="countdown-number">{countdown.seconds}</span>
                     <span className="countdown-label">secs</span>
                   </div>
                   
                   <button 
                     onClick={() => setShowPromo(false)} 
-                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1.5 rounded-full transition-colors"
+                    className="ml-2 text-gray-800 hover:bg-black/10 p-1.5 rounded-full transition-colors"
                     aria-label="Close promotion"
                   >
                     <X size={18} />
@@ -318,31 +318,48 @@ const Courses: React.FC = () => {
   )
 }
 
-// Add these styles to your global CSS file or a styled component
-const styles = `
-.countdown-item {
+/* Add these styles to your CSS */
+.countdown-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.08);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  min-width: 2.5rem;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.05));
+  backdrop-filter: blur(2px);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  min-width: 3.25rem;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 
+              0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.countdown-value {
-  font-size: 1.25rem;
-  font-weight: bold;
+.countdown-number {
+  font-size: 1.5rem;
+  font-weight: 700;
   line-height: 1.25;
-  color: #111;
+  color: #111827;
 }
 
 .countdown-label {
-  font-size: 0.7rem;
-  color: #333;
-  letter-spacing: -0.02em;
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
-`;
+
+@media (max-width: 640px) {
+  .countdown-box {
+    min-width: 2.5rem;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .countdown-number {
+    font-size: 1.25rem;
+  }
+  
+  .countdown-label {
+    font-size: 0.65rem;
+  }
+}
 
 export default Courses
