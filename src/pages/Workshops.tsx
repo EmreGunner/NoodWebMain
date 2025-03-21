@@ -92,14 +92,14 @@ const WorkshopCard: React.FC<{ workshop: Workshop; onApplyNow: (workshop: Worksh
   
   return (
     <motion.div
-      className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full"
+      className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-100"
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
       <div className="relative flex-shrink-0">
         <img 
           src={workshop.image} 
           alt={workshop.title} 
-          className="w-full h-48 object-cover"
+          className="w-full h-40 object-cover"
           loading="lazy"
         />
         <div className="absolute top-2 left-2 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
@@ -108,8 +108,8 @@ const WorkshopCard: React.FC<{ workshop: Workshop; onApplyNow: (workshop: Worksh
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">{workshop.title}</h3>
-        <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{workshop.description}</p>
-        <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+        <p className="text-sm text-gray-600 mb-3 flex-grow line-clamp-2">{workshop.description}</p>
+        <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
           <span className="flex items-center"><Calendar size={14} className="mr-1" /> {workshop.date}</span>
           <span className="flex items-center"><Users size={14} className="mr-1" /> {workshop.capacity} spots</span>
           <span className="flex items-center"><Star size={14} className="mr-1" /> {workshop.rating}</span>
@@ -117,13 +117,13 @@ const WorkshopCard: React.FC<{ workshop: Workshop; onApplyNow: (workshop: Worksh
         <div className="space-y-2">
           <button 
             onClick={() => onApplyNow(workshop)}
-            className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
+            className="bg-primary text-white font-medium py-2 rounded-lg w-full transition-all duration-300 hover:bg-primary-dark text-sm"
           >
             Apply Now
           </button>
           <button 
             onClick={handleLearnMore}
-            className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
+            className="text-primary text-center py-1.5 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100 text-sm"
           >
             Learn More
           </button>
@@ -159,33 +159,33 @@ const Workshops: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-gray-50 min-h-screen pt-20"
+      className="bg-gray-50 min-h-screen pt-6"
     >
-      <div className="container mx-auto px-4 py-8 sm:py-16 space-y-8 sm:space-y-16">
-        <section className="text-center">
-          <h1 className="text-4xl sm:text-6xl font-bold mb-4 sm:mb-6 text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+      <div className="container mx-auto px-4 py-4 space-y-6">
+        <section className="text-center mb-4">
+          <h1 className="text-4xl font-bold mb-2 text-primary">
             Workshops & Events
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-base text-gray-700 max-w-2xl mx-auto">
             Join our interactive workshops and events to boost your skills and network with industry professionals.
           </p>
         </section>
 
-        <section className="bg-white shadow-lg rounded-xl p-6 sm:p-8 transition-all duration-300">
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+        <section className="bg-white shadow rounded-xl p-4 transition-all duration-300">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-2 sm:space-y-0 sm:space-x-4">
             <div className="relative w-full sm:w-64">
               <input
                 type="text"
                 placeholder="Search workshops..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             </div>
-            <div className="flex space-x-4">
+            <div className="flex space-x-2 w-full sm:w-auto">
               <select
-                className="p-2 border border-gray-300 rounded-md"
+                className="p-2 border border-gray-200 rounded-lg text-sm flex-grow sm:flex-grow-0"
                 onChange={(e) => setSelectedCategory(e.target.value || null)}
                 value={selectedCategory || ''}
               >
@@ -197,7 +197,7 @@ const Workshops: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredWorkshops.length > 0 ? (
               filteredWorkshops.map(workshop => (
                 <WorkshopCard 
@@ -207,15 +207,15 @@ const Workshops: React.FC = () => {
                 />
               ))
             ) : (
-              <div className="col-span-3 text-center py-8">
-                <p className="text-xl text-gray-600 mb-4">No workshops found for the current filters.</p>
-                <p className="text-lg text-gray-500">Try adjusting your filters or search terms.</p>
+              <div className="col-span-3 text-center py-6">
+                <p className="text-lg text-gray-600 mb-3">No workshops found for the current filters.</p>
+                <p className="text-base text-gray-500">Try adjusting your filters or search terms.</p>
                 <button 
                   onClick={() => {
                     setSelectedCategory(null);
                     setSearchTerm('');
                   }}
-                  className="mt-4 bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-colors duration-300"
+                  className="mt-3 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors duration-300"
                 >
                   Clear All Filters
                 </button>
@@ -224,9 +224,9 @@ const Workshops: React.FC = () => {
           </div>
         </section>
 
-        <section className="bg-gradient-to-r from-primary to-secondary rounded-xl p-6 sm:p-12 text-white text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-lg sm:text-xl mb-8">
+        <section className="bg-gradient-to-r from-primary to-secondary rounded-xl p-5 text-white text-center">
+          <h2 className="text-xl font-bold mb-2">Stay Updated</h2>
+          <p className="text-base mb-4">
             Subscribe to our newsletter to get notified about upcoming workshops and events.
           </p>
           <EmailCapture />

@@ -49,7 +49,7 @@ const HostCourse: React.FC = () => {
             </div>
             <div className="lg:w-1/2 mt-6 lg:mt-0">
               <img 
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80" 
+                src="https://i.ibb.co/V0NZhhWQ/Host-ourses-3.webp" 
                 alt="Host teaching online" 
                 className="rounded-2xl shadow-lg w-full h-auto object-cover"
               />
