@@ -16,6 +16,9 @@ const Header: React.FC = () => {
   const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState(false);
   const moreDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Calculate if we're on the home page
+  const isHomePage = location.pathname === "/";
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -81,7 +84,7 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4 tablet:px-2">
         <div className="flex justify-between items-center h-12 md:h-14 lg:h-16 tablet:h-16 tablet:gap-4">
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className={`flex items-center group ${isHomePage ? 'border-b-2 border-[#ffed00]' : ''}`}>
             <img 
               src={noodLogoGreen} 
               alt="Nood Logo" 
@@ -98,29 +101,42 @@ const Header: React.FC = () => {
 
           <nav className="hidden md:flex space-x-8 tablet:space-x-6">
             {mainNavItems.map((item) => (
-              <Link key={item.to} to={item.to} className="text-gray-700 hover:text-primary">
+              <Link 
+                key={item.to} 
+                to={item.to} 
+                className={`text-gray-700 hover:text-primary flex items-center relative pb-1 ${
+                  location.pathname === item.to ? 'font-medium' : ''
+                }`}
+              >
                 <item.icon className="inline-block mr-2" size={20} />
-                {item.text}
+                <span>{item.text}</span>
+                {location.pathname === item.to && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ffed00]"></span>
+                )}
               </Link>
             ))}
             <div 
               className="relative" 
               ref={moreDropdownRef}
-              onMouseLeave={() => setIsMoreDropdownOpen(false)}
             >
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
-                className="text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium"
+                className={`text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium relative pb-1 ${
+                  moreNavItems.some(item => location.pathname === item.to) ? 'font-medium' : ''
+                }`}
                 aria-haspopup="true"
                 aria-expanded={isMoreDropdownOpen}
               >
                 <MoreHorizontal className="inline-block mr-2 tablet:hidden" size={20} />
                 <span>More</span>
                 <ChevronDown className="ml-1.5 tablet:ml-2 w-4 h-8" />
+                {moreNavItems.some(item => location.pathname === item.to) && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ffed00]"></span>
+                )}
               </button>
               {isMoreDropdownOpen && (
                 <div
-                  className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md"
+                  className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-20"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="more-menu"
@@ -129,7 +145,9 @@ const Header: React.FC = () => {
                     <Link 
                       key={item.to} 
                       to={item.to} 
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 ${
+                        location.pathname === item.to ? 'bg-[#ffed00]/10 font-medium border-l-4 border-[#ffed00]' : ''
+                      }`}
                       role="menuitem"
                       onClick={() => setIsMoreDropdownOpen(false)}
                     >
