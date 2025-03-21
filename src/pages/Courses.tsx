@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Search, X, Filter, AlertCircle } from 'lucide-react'
+import { ArrowRight, Search, X, Filter, AlertCircle, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useDebounce } from 'use-debounce'
 import CourseCard from '../components/CourseCard'
@@ -52,6 +52,35 @@ const Courses: React.FC = () => {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const [showPromo, setShowPromo] = useState(true)
   const { t } = useTranslation()
+  const [countdown, setCountdown] = useState<{days: number, hours: number, minutes: number}>({
+    days: 0,
+    hours: 0,
+    minutes: 0
+  })
+
+  // Countdown timer logic
+  useEffect(() => {
+    const targetDate = new Date('2025-03-25T12:00:00');
+    
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+      
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        
+        setCountdown({ days, hours, minutes });
+      }
+    };
+    
+    // Calculate immediately and then set up interval
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 60000); // Update every minute
+    
+    return () => clearInterval(timer);
+  }, []);
 
   const filteredCourses = useMemo(() => {
     return courses.filter(course => 
@@ -91,55 +120,76 @@ const Courses: React.FC = () => {
   }).format(enrollmentDeadline);
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-20">
-      <AnimatePresence>
-        {showPromo && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-16 left-0 right-0 z-10 flex justify-center items-center"
-          >
+    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-16">
+      <div className="container mx-auto px-4 py-4 space-y-6">
+        {/* Early Bird Special with Countdown */}
+        <AnimatePresence>
+          {showPromo && (
             <motion.div 
-              className="bg-[#ffed00] text-gray-800 py-2 px-4 rounded-md shadow-md flex items-center justify-between w-full max-w-4xl mx-4"
+              initial={{ opacity: 0, y: -10 }}
               animate={{ 
-                backgroundColor: ['#ffed00', '#ffe100', '#ffed00'],
-                y: [0, -2, 0]
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 0.3 }
               }}
-              transition={{ 
-                backgroundColor: { duration: 2, repeat: Infinity },
-                y: { duration: 1.5, repeat: Infinity }
+              exit={{ 
+                opacity: 0, 
+                y: -10,
+                transition: { duration: 0.2 }
               }}
+              className="relative rounded-lg overflow-hidden"
             >
-              <div className="flex items-center space-x-3">
-                <AlertCircle className="text-gray-800" size={20} />
-                <p className="font-medium">
-                  <span className="font-bold">Early Bird Special:</span> Enroll before {formattedDate} to get 20% off!
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm font-medium"
-                  onClick={() => window.location.href = '/enroll'}
-                >
-                  Enroll Now
-                </motion.button>
-                <button 
-                  onClick={() => setShowPromo(false)} 
-                  className="text-gray-800 hover:bg-[#e6d500] p-1 rounded-full"
-                >
-                  <X size={16} />
-                </button>
-              </div>
+              <motion.div 
+                className="bg-[#ffed00] px-4 py-3 flex flex-col sm:flex-row items-center justify-between"
+                animate={{ 
+                  backgroundColor: ['#ffed00', '#ffe600', '#ffed00'],
+                }}
+                transition={{ 
+                  backgroundColor: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                }}
+              >
+                <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+                  <Clock className="text-gray-800 hidden sm:block" size={22} />
+                  <div>
+                    <p className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</p>
+                    <p className="text-gray-700 text-sm">Offer ends in:</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-1">
+                    <div className="countdown-box">
+                      <span className="countdown-value">{countdown.days}</span>
+                      <span className="countdown-label">days</span>
+                    </div>
+                    <span className="text-xl font-bold">:</span>
+                    <div className="countdown-box">
+                      <span className="countdown-value">{countdown.hours}</span>
+                      <span className="countdown-label">hours</span>
+                    </div>
+                    <span className="text-xl font-bold">:</span>
+                    <div className="countdown-box">
+                      <span className="countdown-value">{countdown.minutes}</span>
+                      <span className="countdown-label">mins</span>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    onClick={() => setShowPromo(false)} 
+                    className="text-gray-800 hover:bg-[#e6d500] p-1 rounded-full"
+                    aria-label="Close promotion"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </motion.div>
+              
+              {/* Add subtle pattern overlay */}
+              <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5 pointer-events-none"></div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
-      <div className="container mx-auto px-4 py-8 space-y-8">
         <motion.section 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -260,5 +310,30 @@ const Courses: React.FC = () => {
     </div>
   )
 }
+
+// Add these styles to your global CSS file or a styled component
+const styles = `
+.countdown-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  min-width: 3rem;
+}
+
+.countdown-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  line-height: 1.25;
+  color: #111;
+}
+
+.countdown-label {
+  font-size: 0.75rem;
+  color: #333;
+}
+`;
 
 export default Courses
