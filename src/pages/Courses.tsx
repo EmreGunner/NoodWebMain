@@ -108,22 +108,12 @@ const Courses: React.FC = () => {
               y: -20,
               transition: { duration: 0.3 }
             }}
-            className="fixed top-16 left-0 right-0 z-40 px-3 py-1 flex justify-center"
+            className="fixed top-16 left-0 right-0 z-40"
           >
-            <motion.div 
-              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-lg"
-              animate={{ 
-                boxShadow: ['0px 4px 12px rgba(0,0,0,0.1)', '0px 6px 16px rgba(0,0,0,0.15)', '0px 4px 12px rgba(0,0,0,0.1)'],
-              }}
-              transition={{ 
-                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-              }}
-            >
-              <CountdownTimer 
-                targetDate={new Date('2025-03-25T12:00:00')}
-                onClose={() => setShowPromo(false)}
-              />
-            </motion.div>
+            <CountdownTimer 
+              targetDate={new Date('2025-03-25T12:00:00')}
+              onClose={() => setShowPromo(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
