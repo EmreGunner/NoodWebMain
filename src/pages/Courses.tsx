@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Search, X, Filter, AlertCircle } from 'lucide-react'
+import { ArrowRight, Search, X, Filter, AlertCircle, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useDebounce } from 'use-debounce'
 import CourseCard from '../components/CourseCard'
 import { motion, AnimatePresence } from 'framer-motion'
-import CountdownTimer from '../components/CountdownTimer'
 
 // Updated courses data with SEO-friendly slugs
 export const courses = [
@@ -32,7 +31,7 @@ export const courses = [
     startDate: '2024-07-11',
     duration: 12,
     coursePhoto: 'https://i.ibb.co/hF4SttDS/3.webp',
-  },
+},
   {
     id: '3',
     slug: 'ecommerce-fundamentals',
@@ -53,6 +52,37 @@ const Courses: React.FC = () => {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const [showPromo, setShowPromo] = useState(true)
   const { t } = useTranslation()
+  const [countdown, setCountdown] = useState<{days: number, hours: number, minutes: number, seconds: number}>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+
+  // Countdown timer logic
+  useEffect(() => {
+    const targetDate = new Date('2025-03-25T12:00:00');
+    
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+      
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        
+        setCountdown({ days, hours, minutes, seconds });
+      }
+    };
+    
+    // Calculate immediately and then set up interval
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000); // Update every second
+    
+    return () => clearInterval(timer);
+  }, []);
 
   const filteredCourses = useMemo(() => {
     return courses.filter(course => 
@@ -108,12 +138,57 @@ const Courses: React.FC = () => {
               y: -20,
               transition: { duration: 0.3 }
             }}
-            className="fixed top-16 left-0 right-0 z-40"
+            className="fixed top-16 left-0 right-0 z-40 px-3 py-1 flex justify-center"
           >
-            <CountdownTimer 
-              targetDate={new Date('2025-03-25T12:00:00')}
-              onClose={() => setShowPromo(false)}
-            />
+            <motion.div 
+              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-lg"
+              animate={{ 
+                boxShadow: ['0px 4px 12px rgba(0,0,0,0.1)', '0px 6px 16px rgba(0,0,0,0.15)', '0px 4px 12px rgba(0,0,0,0.1)'],
+              }}
+              transition={{ 
+                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              <div className="bg-gradient-to-r from-[#FFD700] via-[#FFED00] to-[#FFD700] px-4 py-3 flex justify-between items-center rounded-lg shadow-inner">
+                <div className="flex items-center space-x-3">
+                  <Clock className="text-gray-800 hidden sm:block" size={22} />
+                  <div>
+                    <h3 className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</h3>
+                    <p className="text-gray-700 text-sm">Offer ends in:</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="countdown-item">
+                    <span className="countdown-value">{countdown.days}</span>
+                    <span className="countdown-label">days</span>
+                  </div>
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
+                    <span className="countdown-value">{countdown.hours}</span>
+                    <span className="countdown-label">hours</span>
+                  </div>
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
+                    <span className="countdown-value">{countdown.minutes}</span>
+                    <span className="countdown-label">mins</span>
+                  </div>
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
+                    <span className="countdown-value">{countdown.seconds}</span>
+                    <span className="countdown-label">secs</span>
+                  </div>
+                  
+                  <button 
+                    onClick={() => setShowPromo(false)} 
+                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1.5 rounded-full transition-colors"
+                    aria-label="Close promotion"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -157,58 +232,46 @@ const Courses: React.FC = () => {
                 <input
                   type="text"
                   placeholder={t('Search courses...')}
+                  className="w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border border-gray-300 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                 />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={20} />
+                  </button>
+                )}
               </div>
             </div>
-
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-            >
-              {filteredCourses.length > 0 ? (
-                filteredCourses.map(course => (
-                  <motion.div key={course.id} variants={itemVariants}>
-                    <CourseCard 
-                      key={course.id}
-                      id={course.id}
-                      slug={course.slug}
-                      name={course.name}
-                      description={course.description}
-                      image={course.coursePhoto}
-                      startDate={course.startDate}
-                      duration={course.duration}
-                      type={course.courseType}
-                      consultation={course.consultation}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <motion.div variants={itemVariants} className="col-span-full text-center py-8">
-                  <AlertCircle size={48} className="mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-xl font-bold text-gray-700 mb-2">{t('No courses found')}</h3>
-                  <p className="text-gray-500 mb-4">
-                    {t('Try adjusting your search or filter to find what you\'re looking for.')}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setSelectedType(null);
-                    }}
-                    className="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dark transition-all duration-300"
+            
+            {filteredCourses.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-600">
+                  {t('No courses found. Please try a different search.')}
+                </p>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={containerVariants}
+              >
+                {filteredCourses.map(course => (
+                  <motion.div 
+                    key={course.id} 
+                    variants={itemVariants}
                   >
-                    {t('Clear filters')}
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
+                    <CourseCard {...course} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </motion.section>
 
+          {/* Add social proof section */}
           <motion.section 
             className="bg-white shadow-xl rounded-3xl p-6 text-center"
             variants={itemVariants}
@@ -254,5 +317,32 @@ const Courses: React.FC = () => {
     </div>
   )
 }
+
+// Add these styles to your global CSS file or a styled component
+const styles = `
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.08);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  min-width: 2.5rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.countdown-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  line-height: 1.25;
+  color: #111;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  color: #333;
+  letter-spacing: -0.02em;
+}
+`;
 
 export default Courses
