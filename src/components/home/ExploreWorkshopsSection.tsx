@@ -1,13 +1,13 @@
 import React from 'react';
 import { ArrowRight, Calendar, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import workshop2img from '';
+import workshop2img from '../../assets/images/workshop2.png';
 import workshop3img from '../../assets/images/workshop3.png';
 const ExploreWorkshopsSection: React.FC = () => {
   const workshopImages = [
     "https://i.ibb.co/4ZCgk5tR/Untitled-design-4.webp",
-    "../../assets/images/workshop2.png",
-    "../../assets/images/workshop3.png"
+    workshop2img,
+    workshop3img
   ];
 
   return (
