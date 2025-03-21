@@ -58,13 +58,13 @@ const Community: React.FC = () => {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="h-full flex">
-            <Card className="p-5 md:p-6 flex flex-col items-center text-center h-full min-h-[500px] transform hover:shadow-md w-full border border-gray-100">
-              <Users className="text-primary mb-6" size={48} />
-              <h2 className="text-2xl font-bold mb-4">Join the Conversation</h2>
-              <p className="text-gray-600 mb-6 flex-grow">
+            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-100 hover:shadow-md">
+              <Users className="text-primary mb-4" size={42} />
+              <h2 className="text-2xl font-bold mb-3">Join the Conversation</h2>
+              <p className="text-gray-600 mb-5">
                 Engage with fellow entrepreneurs, share ideas, and get instant feedback on your projects.
               </p>
-              <div className="flex justify-center mt-auto pt-4">
+              <div className="flex justify-center">
                 <motion.a 
                   href="https://t.me/noodcommunity"
                   target="_blank"
@@ -73,7 +73,7 @@ const Community: React.FC = () => {
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium border border-primary text-primary hover:bg-primary/5 transition-colors"
                 >
-                  Join Telegram Community <ArrowRight className="ml-2" size={20} />
+                  Join Telegram Community <ArrowRight className="ml-1.5" size={16} />
                 </motion.a>
               </div>
             </Card>
