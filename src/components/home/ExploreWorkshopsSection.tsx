@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowRight, Calendar, Users, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import workshop2img from '../../assets/images/workshop2.png';
-import workshop3img from '../../assets/images/workshop3.png';
+import workshop2img from '../../assets/images/workshop1.png';
+import workshop3img from '../../assets/images/workshop2.png';
 const ExploreWorkshopsSection: React.FC = () => {
   const workshopImages = [
     "https://i.ibb.co/4ZCgk5tR/Untitled-design-4.webp",
