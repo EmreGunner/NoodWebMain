@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ChevronLeft, Download, User, Calendar, BookOpen, Clock, Share2 } from 'lucide-react';
+import { CheckCircle2, ChevronLeft, Download, User, Calendar, BookOpen, Clock, Share2, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 // Interface for product data
@@ -87,7 +87,62 @@ const allProducts: Product[] = [
   },
 ];
 
-// Product Email Form Component - reused from NoodShop
+// Reusable form submission utility
+const submitFormToAirtable = async (email: string, productName: string): Promise<{ success: boolean; message: string }> => {
+  try {
+    console.log('Submitting form with email:', email, 'for product:', productName);
+    
+    // Create a hidden iframe for form submission (to bypass CORS)
+    let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
+    
+    if (!iframe) {
+      console.log('Creating new iframe for form submission');
+      iframe = document.createElement("iframe");
+      iframe.id = "hidden-form-iframe";
+      iframe.name = "hidden-form-iframe";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+    
+    // Create a form element
+    const formElement = document.createElement("form");
+    formElement.method = "POST";
+    formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
+    formElement.target = "hidden-form-iframe";
+    formElement.enctype = "application/x-www-form-urlencoded";
+    formElement.style.display = "none";
+    
+    // Add form fields
+    const payload = {
+      Email: email,
+      Course: productName,
+      Product: productName,
+      Status: "Interested",
+    };
+    
+    Object.entries(payload).forEach(([key, value]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = String(value);
+      formElement.appendChild(input);
+    });
+    
+    console.log('Form payload:', payload);
+    
+    // Add form to body and submit
+    document.body.appendChild(formElement);
+    formElement.submit();
+    document.body.removeChild(formElement);
+    
+    return { success: true, message: 'Form submitted successfully!' };
+  } catch (error) {
+    console.error("Form submission error:", error);
+    return { success: false, message: 'Failed to submit form. Please try again.' };
+  }
+};
+
+// Product Email Form Component
 const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; onClose: () => void; productName: string }) => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -127,48 +182,9 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
     
     setStatus('submitting');
     
-    try {
-      // Create a hidden iframe for form submission (to bypass CORS)
-      let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
-      
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.id = "hidden-form-iframe";
-        iframe.name = "hidden-form-iframe";
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-      }
-      
-      // Create a form element
-      const formElement = document.createElement("form");
-      formElement.method = "POST";
-      formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
-      formElement.target = "hidden-form-iframe";
-      formElement.enctype = "application/x-www-form-urlencoded";
-      formElement.style.display = "none";
-      
-      // Add form fields - send product name as Course
-      const payload = {
-        Email: email,
-        Course: productName,
-        Product: productName,
-        Status: "Interested",
-      };
-      
-      Object.entries(payload).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = String(value);
-        formElement.appendChild(input);
-      });
-      
-      // Add form to body and submit
-      document.body.appendChild(formElement);
-      formElement.submit();
-      document.body.removeChild(formElement);
-      
-      // Show success state
+    const result = await submitFormToAirtable(email, productName);
+    
+    if (result.success) {
       setStatus('success');
       setEmail('');
       
@@ -177,10 +193,9 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
         onClose();
         setStatus('idle');
       }, 3000);
-    } catch (error) {
-      console.error("Form submission error:", error);
+    } else {
       setStatus('error');
-      setErrorMessage('Failed to submit your email. Please try again.');
+      setErrorMessage(result.message);
     }
   };
 
@@ -197,67 +212,71 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
       >
         <button 
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
-          aria-label="Close form"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="Close modal"
         >
-          <X size={20} />
+          <X size={24} />
         </button>
-        
+
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-bold mb-2">Get Access to {productName}</h3>
+          <p className="text-gray-600">Enter your email to receive access instructions</p>
+        </div>
+
         {status === 'success' ? (
-          <div className="text-center py-6">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-              <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-              </svg>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-6"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+              <CheckCircle2 className="w-8 h-8 text-green-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h3>
-            <p className="text-gray-600">We've received your email and will send you more information about {productName}.</p>
-          </div>
+            <h4 className="text-xl font-semibold mb-2">Thank You!</h4>
+            <p className="text-gray-600">Check your email for access details.</p>
+          </motion.div>
         ) : (
-          <>
-            <h2 className="text-xl font-bold mb-2">{`Get Access to ${productName}`}</h2>
-            <p className="text-gray-600 mb-6">Enter your email to get more information about this product.</p>
-            
-            <form onSubmit={handleSubmit}>
-              {status === 'error' && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-                  {errorMessage || 'Something went wrong. Please try again.'}
-                </div>
-              )}
-              
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errorMessage) setErrorMessage('');
-                  }}
-                  placeholder="you@example.com"
-                  className="w-full p-3 text-base rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                  required
-                />
-              </div>
-              
-              <button
-                type="submit"
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                 disabled={status === 'submitting'}
-                className={`w-full p-3 text-white font-medium rounded-lg text-base transition-colors ${
-                  status === 'submitting'
-                    ? 'bg-primary/70 cursor-not-allowed'
-                    : 'bg-primary hover:bg-primary/90'
-                }`}
-              >
-                {status === 'submitting' ? 'Submitting...' : 'Get Access'}
-              </button>
-              
-              <p className="mt-3 text-xs text-center text-gray-500">
-                We respect your privacy and will never share your information.
-              </p>
-            </form>
-          </>
+              />
+              {errorMessage && (
+                <p className="text-red-500 text-sm">{errorMessage}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className={`w-full p-3 text-white font-medium rounded-lg text-base transition-colors ${
+                status === 'submitting' 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-primary hover:bg-primary-dark'
+              }`}
+            >
+              {status === 'submitting' ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Submitting...
+                </span>
+              ) : (
+                'Get Access Now'
+              )}
+            </button>
+          </form>
         )}
       </motion.div>
     </div>,
@@ -265,90 +284,90 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
   );
 };
 
-// Main ProductDetail component
+// Main Product Detail component
 const ProductDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [isFormOpen, setIsFormOpen] = useState(false);
   
-  // Find the product based on the slug parameter
+  // Find the product with the matching slug
   const product = allProducts.find(p => p.slug === slug);
   
-  // If product not found, navigate to 404 page
   useEffect(() => {
+    // If product not found, redirect to shop page
     if (!product && slug) {
-      navigate('/not-found', { replace: true });
+      console.log(`Product with slug "${slug}" not found, redirecting to shop`);
+      navigate('/shop');
     }
+    
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
   }, [product, slug, navigate]);
+  
+  // Handle form open
+  const handleGetAccess = () => {
+    console.log('Opening form for product:', product?.name);
+    setIsFormOpen(true);
+  };
   
   if (!product) {
     return <div className="container mx-auto px-4 py-12 text-center">Loading...</div>;
   }
-  
+
   return (
-    <motion.div
+    <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pb-12"
+      className="min-h-screen bg-gray-50"
     >
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 py-12 md:py-20">
+      <div className="bg-gradient-to-r from-primary-dark to-primary text-white py-12">
         <div className="container mx-auto px-4">
           <button 
-            onClick={() => navigate('/nood-shop')}
-            className="flex items-center text-gray-600 hover:text-primary transition-colors mb-8"
+            onClick={() => navigate('/shop')}
+            className="flex items-center text-white/80 hover:text-white mb-6 transition-colors"
           >
             <ChevronLeft size={20} className="mr-1" />
-            Back to Products
+            Back to Shop
           </button>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
-              <span className={`inline-block ${product.isFree ? 'bg-green-100 text-green-800' : 'bg-primary-light text-primary'} px-3 py-1 rounded-full text-sm font-medium mb-4`}>
-                {product.category} / {product.subcategory}
-              </span>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
-              <p className="text-gray-600 text-lg mb-6">{product.description}</p>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle2 size={20} className="text-primary mr-3" />
-                  <span>Instantly download after purchase</span>
+
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="md:w-1/2 text-center md:text-left">
+                <div className="mb-4 inline-block bg-white/20 px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                  {product.category} • {product.subcategory}
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle2 size={20} className="text-primary mr-3" />
-                  <span>Full support included</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle2 size={20} className="text-primary mr-3" />
-                  <span>Regular updates and improvements</span>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">{product.name}</h1>
+                <p className="text-xl text-white/90 mb-8">{product.description}</p>
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleGetAccess}
+                    className="bg-white text-primary font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    {product.isFree ? (
+                      <div className="flex items-center justify-center">
+                        <Download size={18} className="mr-2" />
+                        <span>Download Now</span>
+                      </div>
+                    ) : (
+                      'Get Access'
+                    )}
+                  </motion.button>
                 </div>
               </div>
               
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setIsFormOpen(true)}
-                className="bg-primary text-white font-bold text-lg py-4 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 w-full md:w-auto"
-              >
-                {product.isFree ? (
-                  <div className="flex items-center justify-center">
-                    <Download size={18} className="mr-2" />
-                    <span>Download Now</span>
-                  </div>
-                ) : (
-                  'Get Access'
-                )}
-              </motion.button>
-            </div>
-            
-            <div className="rounded-2xl overflow-hidden shadow-xl">
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="w-full h-auto object-cover"
-              />
+              <div className="md:w-1/2">
+                <div className="rounded-2xl overflow-hidden shadow-2xl transform md:rotate-2 hover:rotate-0 transition-all duration-500">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -365,91 +384,77 @@ const ProductDetail: React.FC = () => {
           {[
             {
               icon: BookOpen,
-              title: "Comprehensive Documentation",
-              description: "Detailed guides and documentation to help you get started quickly."
-            },
-            {
-              icon: User,
-              title: "Expert Support",
-              description: "Get help when you need it from our team of experts."
+              title: "Comprehensive Guide",
+              description: "Detailed step-by-step instructions and best practices"
             },
             {
               icon: Calendar,
-              title: "Regular Updates",
-              description: "We continuously improve and update our products."
+              title: "Updates for Life",
+              description: "Regular updates to keep content fresh and relevant"
+            },
+            {
+              icon: User,
+              title: "Premium Support",
+              description: "Direct access to our team for questions and help"
             }
-          ].map((feature, index) => (
-            <div key={index} className="bg-white p-6 rounded-xl shadow-md">
-              <div className="bg-primary-light rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                <feature.icon size={24} className="text-primary" />
+          ].map((feature, idx) => (
+            <div key={idx} className="bg-white p-6 rounded-xl shadow-md">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <feature.icon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
       
-      {/* Details Section */}
-      <div className="bg-white py-16">
+      {/* Testimonials and CTA Section */}
+      <div className="bg-gray-100 py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold mb-6">About this Product</h2>
-              <div className="prose max-w-none">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-                <p>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-                <h3>Key Benefits</h3>
-                <ul>
-                  <li>Save time with ready-to-use templates and resources</li>
-                  <li>Professional quality that elevates your work</li>
-                  <li>Customizable to fit your specific needs</li>
-                  <li>Compatible with all major platforms and software</li>
-                </ul>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Testimonials */}
+              <div className="lg:col-span-2">
+                <h2 className="text-3xl font-bold mb-8">What Our Customers Say</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      name: "Alex Johnson",
+                      role: "Marketing Director",
+                      comment: "This product completely transformed our workflow. We've saved hours of time and improved our results dramatically."
+                    },
+                    {
+                      name: "Sarah Wilson",
+                      role: "Freelance Designer",
+                      comment: "As a freelancer, I needed something efficient and easy to use. This product exceeded my expectations in every way."
+                    }
+                  ].map((testimonial, idx) => (
+                    <div key={idx} className="bg-white p-6 rounded-xl shadow-md">
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                          {testimonial.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold">{testimonial.name}</h4>
+                          <p className="text-sm text-gray-600">{testimonial.role}</p>
+                        </div>
+                      </div>
+                      <p className="text-gray-700">"{testimonial.comment}"</p>
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="mt-8">
-                <h3 className="text-xl font-bold mb-4">Share this Product</h3>
-                <div className="flex space-x-4">
-                  <a href="#" className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors">
-                    <Share2 size={20} />
-                  </a>
-                  {/* Add more social sharing buttons as needed */}
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
+              {/* CTA Card */}
               <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-bold mb-4">Product Details</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Category:</span>
-                    <span className="font-medium">{product.category}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subcategory:</span>
-                    <span className="font-medium">{product.subcategory}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Type:</span>
-                    <span className="font-medium">{product.isFree ? 'Free' : 'Paid'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Last Updated:</span>
-                    <span className="font-medium">January 2023</span>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold mb-2">Ready to Get Started?</h3>
+                  <p className="text-gray-600 mb-6">Get instant access to this valuable resource today.</p>
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={handleGetAccess}
                     className="bg-primary text-white font-bold py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
                   >
                     {product.isFree ? (
@@ -464,18 +469,26 @@ const ProductDetail: React.FC = () => {
                 </div>
               </div>
               
-              {/* Related Products (placeholder) */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-bold mb-4">You May Also Like</h3>
-                <div className="space-y-4">
+              {/* Related Products */}
+              <div className="bg-white p-6 rounded-xl shadow-md lg:col-span-3 mt-8">
+                <h3 className="text-xl font-bold mb-6">You May Also Like</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {allProducts.filter(p => p.id !== product.id).slice(0, 3).map(relatedProduct => (
-                    <div key={relatedProduct.id} className="group" onClick={() => navigate(`/products/${relatedProduct.slug}`)}>
-                      <div className="flex items-center space-x-4 cursor-pointer">
-                        <img src={relatedProduct.image} alt={relatedProduct.name} className="w-16 h-16 rounded-lg object-cover" />
-                        <div>
-                          <h4 className="font-medium group-hover:text-primary transition-colors">{relatedProduct.name}</h4>
-                          <p className="text-sm text-gray-600">{relatedProduct.category}</p>
-                        </div>
+                    <div 
+                      key={relatedProduct.id} 
+                      className="group cursor-pointer bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+                      onClick={() => navigate(`/products/${relatedProduct.slug}`)}
+                    >
+                      <div className="h-40 overflow-hidden">
+                        <img 
+                          src={relatedProduct.image} 
+                          alt={relatedProduct.name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h4 className="font-semibold group-hover:text-primary transition-colors mb-1">{relatedProduct.name}</h4>
+                        <p className="text-sm text-gray-600 line-clamp-2">{relatedProduct.description}</p>
                       </div>
                     </div>
                   ))}
@@ -526,7 +539,7 @@ const ProductDetail: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => setIsFormOpen(true)}
+            onClick={handleGetAccess}
             className="bg-white text-primary font-bold text-xl py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {product.isFree ? 'Download For Free' : 'Get Access Now'}
