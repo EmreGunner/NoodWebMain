@@ -103,7 +103,11 @@ const Header: React.FC = () => {
                 {item.text}
               </Link>
             ))}
-            <div className="relative" ref={moreDropdownRef}>
+            <div 
+              className="relative" 
+              ref={moreDropdownRef}
+              onMouseLeave={() => setIsMoreDropdownOpen(false)}
+            >
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
                 className="text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium"
