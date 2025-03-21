@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, MessageCircle, Zap, Award, Globe, Rocket } from 'lucide-react';
 import Card from '../components/Card';
 import WaitlistForm from '../components/WaitlistForm';
 
 const Community: React.FC = () => {
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  
   const benefits = [
     { icon: Users, title: 'Networking', description: 'Connect with potential collaborators, clients, and mentors.' },
     { icon: MessageCircle, title: 'Expert Q&A', description: 'Regular sessions with industry experts to answer your questions.' },
@@ -34,6 +36,14 @@ const Community: React.FC = () => {
         stiffness: 100
       }
     }
+  };
+
+  const openWaitlistForm = () => {
+    setIsWaitlistOpen(true);
+  };
+
+  const closeWaitlistForm = () => {
+    setIsWaitlistOpen(false);
   };
 
   return (
@@ -80,8 +90,22 @@ const Community: React.FC = () => {
           </motion.div>
           
           <motion.div variants={itemVariants} className="h-full">
-            <Card className="w-full rounded-2xl shadow-sm hover:shadow transition-all overflow-hidden border border-gray-200 hover:border-primary/20">
-              <WaitlistForm />
+            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-200 rounded-2xl hover:border-primary/20 transition-all shadow-sm hover:shadow">
+              <Rocket className="text-primary mb-4" size={36} />
+              <h2 className="text-2xl font-bold mb-3">Apply for Membership</h2>
+              <p className="text-gray-600 mb-6">
+                Our exclusive community is limited to 1000 members. Apply now to secure your spot and get access to all our resources.
+              </p>
+              <div className="flex justify-center mt-2">
+                <motion.button
+                  onClick={openWaitlistForm}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
+                >
+                  Apply to Join <ArrowRight className="ml-1.5" size={16} />
+                </motion.button>
+              </div>
             </Card>
           </motion.div>
         </motion.section>
@@ -123,9 +147,7 @@ const Community: React.FC = () => {
               Join Telegram <ArrowRight className="ml-1.5" size={16} />
             </motion.a>
             <motion.button 
-              onClick={() => {
-                document.querySelector('.waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
+              onClick={openWaitlistForm}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="border border-white text-white text-sm px-5 py-2.5 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center font-medium"
@@ -135,6 +157,9 @@ const Community: React.FC = () => {
           </div>
         </motion.section>
       </div>
+
+      {/* Waitlist Form Popup */}
+      <WaitlistForm isOpen={isWaitlistOpen} onClose={closeWaitlistForm} />
     </motion.div>
   );
 };
