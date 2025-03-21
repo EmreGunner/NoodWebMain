@@ -7,70 +7,73 @@ interface CountdownTimerProps {
 }
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) => {
-  const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  const bannerRef = useRef<HTMLDivElement>(null);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+  const timerRef = useRef<HTMLDivElement>(null);
 
   // Calculate time remaining
   useEffect(() => {
-    const updateTimer = () => {
+    const calculateTimeLeft = () => {
       const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
+      const difference = Math.max(0, targetDate.getTime() - now.getTime());
       
-      if (diff > 0) {
-        setTimeLeft({
-          d: Math.floor(diff / (1000 * 60 * 60 * 24)),
-          h: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          m: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-          s: Math.floor((diff % (1000 * 60)) / 1000)
-        });
-      }
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        mins: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+        secs: Math.floor((difference % (1000 * 60)) / 1000)
+      });
     };
     
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
   }, [targetDate]);
 
   // Fade effect on scroll
   useEffect(() => {
     const handleScroll = () => {
-      if (!bannerRef.current) return;
+      if (!timerRef.current) return;
       const scrollY = window.scrollY;
-      const opacity = 1 - Math.min(scrollY / 200, 1);
-      bannerRef.current.style.opacity = Math.max(0, opacity).toString();
+      const opacity = 1 - Math.min(scrollY / 150, 1);
+      timerRef.current.style.opacity = opacity.toString();
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <div
-      ref={bannerRef}
-      className="w-full bg-[#ffed00] px-4 py-3 flex items-center justify-between text-sm transition-opacity shadow-sm"
-    >
-      <div className="flex items-center space-x-2">
-        <span className="font-semibold text-gray-800 text-[0.95rem]">🎁 Early Bird Special - 20% Off!</span>
-        <span className="hidden sm:inline text-gray-700">| Ends in:</span>
-      </div>
+  // Format with leading zero
+  const padNumber = (num: number) => num.toString().padStart(2, '0');
 
-      <div className="flex items-center space-x-2">
-        <div className="flex space-x-2.5 items-baseline">
-          <TimeUnit value={timeLeft.d} label="Days" />
-          <Colon />
-          <TimeUnit value={timeLeft.h} label="Hours" />
-          <Colon />
-          <TimeUnit value={timeLeft.m} label="Minutes" />
-          <Colon />
-          <TimeUnit value={timeLeft.s} label="Seconds" />
+  return (
+    <div 
+      ref={timerRef}
+      className="w-full bg-[#ffed00] py-2.5 flex items-center justify-between transition-opacity duration-300 border-b border-[#e6d600]"
+    >
+      <div className="flex items-center px-4">
+        <span className="font-bold text-gray-800">🎁 Early Bird Special - 20% Off!</span>
+        <span className="mx-2 text-gray-700 hidden sm:inline">|</span>
+        <span className="text-gray-700 hidden sm:inline">Ends in:</span>
+      </div>
+      
+      <div className="flex items-center pr-2">
+        <div className="flex items-center">
+          <TimeUnit value={timeLeft.days} label="DAYS" />
+          <span className="px-1 text-gray-700 font-bold">:</span>
+          <TimeUnit value={timeLeft.hours} label="HOURS" />
+          <span className="px-1 text-gray-700 font-bold">:</span>
+          <TimeUnit value={timeLeft.mins} label="MINUTES" />
+          <span className="px-1 text-gray-700 font-bold">:</span>
+          <TimeUnit value={timeLeft.secs} label="SECONDS" />
         </div>
+        
         {onClose && (
-          <button
+          <button 
             onClick={onClose}
-            className="ml-2 text-gray-700 hover:text-gray-900 p-2 rounded-full hover:bg-yellow-500/20 transition-colors"
+            className="ml-3 text-gray-700 hover:bg-[#e6d600] p-1.5 rounded-full transition-colors"
             aria-label="Close promotion"
           >
-            <X size={16} strokeWidth={2.5} />
+            <X size={16} />
           </button>
         )}
       </div>
@@ -78,17 +81,16 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
   );
 };
 
+// Separate component for each time unit to match the screenshot exactly
 const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
-  <div className="flex flex-col items-center bg-yellow-100/50 px-2 py-1 rounded-md">
-    <span className="font-bold text-gray-800 text-base tracking-tight">
-      {value.toString().padStart(2, '0')}
-    </span>
-    <span className="text-xs text-gray-600 mt-[-2px] uppercase tracking-tight">{label}</span>
+  <div className="flex flex-col items-center mx-0.5 sm:mx-1">
+    <div className="bg-white/90 rounded px-2 py-1 w-12 sm:w-16 text-center shadow-sm">
+      <span className="font-bold text-gray-800 text-sm sm:text-base">
+        {value.toString().padStart(2, '0')}
+      </span>
+    </div>
+    <span className="text-[9px] sm:text-[10px] text-gray-700 mt-0.5 font-medium">{label}</span>
   </div>
-);
-
-const Colon = () => (
-  <span className="text-gray-600 text-sm mb-1">:</span>
 );
 
 export default CountdownTimer; 
