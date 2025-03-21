@@ -338,7 +338,7 @@ const ProductDetail: React.FC = () => {
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-8">
           <button 
-            onClick={() => navigate('/shop')}
+            onClick={() => navigate('/tools')}
             className="flex items-center text-gray-600 hover:text-primary mb-6 transition-colors"
           >
             <ChevronLeft size={18} className="mr-1" />
