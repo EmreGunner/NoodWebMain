@@ -54,24 +54,27 @@ const Community: React.FC = () => {
         </motion.section>
 
         <motion.section className="grid grid-cols-1 md:grid-cols-2 gap-8" variants={containerVariants}>
-          <motion.div variants={itemVariants}>
-            <Card className="p-8 flex flex-col items-center text-center h-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <motion.div variants={itemVariants} className="h-full">
+            <Card className="p-8 flex flex-col items-center text-center h-full transform transition-all duration-300 hover:shadow-xl">
               <Users className="text-primary mb-4" size={48} />
               <h2 className="text-2xl font-bold mb-4">Join the Conversation</h2>
               <p className="text-gray-600 mb-6 flex-grow">
                 Engage with fellow entrepreneurs, share ideas, and get instant feedback on your projects.
               </p>
-              <motion.button 
+              <motion.a 
+                href="https://t.me/noodcommunity"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="btn-primary inline-flex items-center px-6 py-3 rounded-full text-lg"
               >
                 Join Telegram Community <ArrowRight className="ml-2" size={20} />
-              </motion.button>
+              </motion.a>
             </Card>
           </motion.div>
-          <motion.div variants={itemVariants}>
-            <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <motion.div variants={itemVariants} className="h-full flex">
+            <Card className="w-full flex-1 transform transition-all duration-300 hover:shadow-xl overflow-visible">
               <WaitlistForm />
             </Card>
           </motion.div>
@@ -100,13 +103,16 @@ const Community: React.FC = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Take the first step towards building your digital side hustle with the support of our community.
           </p>
-          <motion.button 
+          <motion.a 
+            href="https://t.me/noodcommunity"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-colors duration-300 inline-flex items-center font-semibold"
           >
             Join NOOD Community <ArrowRight className="ml-2" size={20} />
-          </motion.button>
+          </motion.a>
         </motion.section>
       </div>
     </motion.div>
