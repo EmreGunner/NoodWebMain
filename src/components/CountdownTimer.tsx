@@ -42,54 +42,53 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Format with leading zero
-  const padNumber = (num: number) => num.toString().padStart(2, '0');
-
   return (
     <div 
       ref={timerRef}
-      className="w-full bg-[#ffed00] py-2.5 flex items-center justify-between transition-opacity duration-300 border-b border-[#e6d600]"
+      className="w-full bg-gradient-to-r from-[#ffed00] to-[#ffe700] py-3 border-b border-[#e6d600] shadow-[var(--shadow-subtle)] transition-opacity duration-300"
     >
-      <div className="flex items-center px-4">
-        <span className="font-bold text-gray-800">🎁 Early Bird Special - 20% Off!</span>
-        <span className="mx-2 text-gray-700 hidden sm:inline">|</span>
-        <span className="text-gray-700 hidden sm:inline">Ends in:</span>
-      </div>
-      
-      <div className="flex items-center pr-2">
+      <div className="content-container flex items-center justify-between">
         <div className="flex items-center">
-          <TimeUnit value={timeLeft.days} label="DAYS" />
-          <span className="px-1 text-gray-700 font-bold">:</span>
-          <TimeUnit value={timeLeft.hours} label="HOURS" />
-          <span className="px-1 text-gray-700 font-bold">:</span>
-          <TimeUnit value={timeLeft.mins} label="MINUTES" />
-          <span className="px-1 text-gray-700 font-bold">:</span>
-          <TimeUnit value={timeLeft.secs} label="SECONDS" />
+          <span className="font-bold text-gray-800 text-sm sm:text-base">🎁 Early Bird Special - 20% Off!</span>
+          <span className="mx-2 text-gray-700 hidden sm:inline">|</span>
+          <span className="text-gray-700 text-sm hidden sm:inline">Ends in:</span>
         </div>
         
-        {onClose && (
-          <button 
-            onClick={onClose}
-            className="ml-3 text-gray-700 hover:bg-[#e6d600] p-1.5 rounded-full transition-colors"
-            aria-label="Close promotion"
-          >
-            <X size={16} />
-          </button>
-        )}
+        <div className="flex items-center">
+          <div className="flex items-center">
+            <TimeUnit value={timeLeft.days} label="DAYS" />
+            <span className="px-1 text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.hours} label="HOURS" />
+            <span className="px-1 text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.mins} label="MINUTES" />
+            <span className="px-1 text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.secs} label="SECONDS" />
+          </div>
+          
+          {onClose && (
+            <button 
+              onClick={onClose}
+              className="ml-3 text-gray-700 hover:bg-[#e6d600] p-1.5 rounded-full transition-colors"
+              aria-label="Close promotion"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-// Separate component for each time unit to match the screenshot exactly
+// Separate component for each time unit
 const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
   <div className="flex flex-col items-center mx-0.5 sm:mx-1">
-    <div className="bg-white/90 rounded px-2 py-1 w-12 sm:w-16 text-center shadow-sm">
+    <div className="bg-white rounded px-1.5 py-0.5 w-10 sm:w-14 text-center shadow-[var(--shadow-subtle)] border border-white/80">
       <span className="font-bold text-gray-800 text-sm sm:text-base">
         {value.toString().padStart(2, '0')}
       </span>
     </div>
-    <span className="text-[9px] sm:text-[10px] text-gray-700 mt-0.5 font-medium">{label}</span>
+    <span className="text-[8px] sm:text-[9px] text-gray-700 mt-0.5 font-medium">{label}</span>
   </div>
 );
 
