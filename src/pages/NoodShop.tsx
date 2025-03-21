@@ -260,17 +260,6 @@ const allProducts: Product[] = [
     isFeatured: false,
   },
   {
-    id: '6',
-    slug: 'ui-ux-design-course',
-    name: 'UI/UX Design Masterclass',
-    description: 'Master the art of creating beautiful and functional user interfaces.',
-    category: 'Ebooks',
-    subcategory: 'Design',
-    image: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    isFree: false,
-    isFeatured: true,
-  },
-  {
     id: '7',
     slug: 'digital-marketing-toolkit',
     name: 'Digital Marketing Toolkit',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ChevronLeft, Download, User, Calendar, BookOpen, Clock, Share2, X } from 'lucide-react';
+import { CheckCircle2, ChevronLeft, Download, User, Calendar, BookOpen, Clock, Share2, X, ExternalLink } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 // Interface for product data
@@ -61,42 +61,48 @@ const allProducts: Product[] = [
     subcategory: 'Creative',
     image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     isFree: true,
-    isFeatured: false,
-  },
-  {
-    id: '5',
-    slug: 'digital-marketing-toolkit',
-    name: 'Digital Marketing Toolkit',
-    description: 'Complete set of tools and resources for your digital marketing campaigns.',
-    category: 'Templates',
-    subcategory: 'Business',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    isFree: false,
     isFeatured: true,
   },
   {
-    id: '6',
-    slug: 'photo-editing-presets',
-    name: 'Professional Photo Editing Presets',
-    description: 'Enhance your photography with these professional Lightroom presets.',
-    category: 'Software',
-    subcategory: 'Design',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    isFree: false,
+    id: '5',
+    slug: 'personal-finance-tracker',
+    name: 'Personal Finance Tracker',
+    description: 'Take control of your finances with this easy-to-use Excel template.',
+    category: 'Templates',
+    subcategory: 'Business',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    isFree: true,
     isFeatured: false,
   },
 ];
 
-// Reusable form submission utility
-const submitFormToAirtable = async (email: string, productName: string): Promise<{ success: boolean; message: string }> => {
+// Share utility function
+const shareProduct = (product: Product) => {
+  if (navigator.share) {
+    navigator.share({
+      title: product.name,
+      text: product.description,
+      url: window.location.href
+    })
+    .then(() => console.log('Shared successfully'))
+    .catch((error) => console.log('Share error:', error));
+  } else {
+    // Fallback for browsers that don't support the Web Share API
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => alert('Link copied to clipboard!'))
+      .catch(err => console.error('Failed to copy link:', err));
+  }
+};
+
+// Form submission utility
+const submitFormToAirtable = async (email: string, productName: string) => {
   try {
-    console.log('Submitting form with email:', email, 'for product:', productName);
+    console.log(`Submitting form for ${productName} with email: ${email}`);
     
     // Create a hidden iframe for form submission (to bypass CORS)
     let iframe = document.getElementById("hidden-form-iframe") as HTMLIFrameElement;
     
     if (!iframe) {
-      console.log('Creating new iframe for form submission');
       iframe = document.createElement("iframe");
       iframe.id = "hidden-form-iframe";
       iframe.name = "hidden-form-iframe";
@@ -127,8 +133,6 @@ const submitFormToAirtable = async (email: string, productName: string): Promise
       input.value = String(value);
       formElement.appendChild(input);
     });
-    
-    console.log('Form payload:', payload);
     
     // Add form to body and submit
     document.body.appendChild(formElement);
@@ -202,39 +206,36 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        className="bg-white rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative"
-        onClick={(e) => e.stopPropagation()}
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-60 overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-md bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col max-h-[90vh] overflow-y-auto my-8"
       >
-        <button
+        <button 
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
-          aria-label="Close"
+          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="Close form"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
         
         {status === 'success' ? (
-          <div className="py-6 text-center">
-            <div className="flex justify-center mb-4">
-              <div className="bg-green-100 rounded-full p-2">
-                <CheckCircle2 className="text-green-500" size={32} />
-              </div>
+          <div className="text-center py-6">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+              <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
-            <p className="text-gray-600 mb-0">
-              We've sent you an email with access details for:<br />
-              <span className="font-semibold">{productName}</span>
-            </p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h3>
+            <p className="text-gray-600">We've received your email and will send you more information about {productName}.</p>
           </div>
         ) : (
           <>
-            <h3 className="text-2xl font-bold mb-4">Get Access to</h3>
-            <h4 className="text-xl font-semibold mb-6 text-primary">{productName}</h4>
+            <h2 className="text-xl font-bold mb-2">{`Get Access to ${productName}`}</h2>
+            <p className="text-gray-600 mb-6">Enter your email to get more information about this product.</p>
             
             <form onSubmit={handleSubmit}>
               {status === 'error' && (
@@ -312,6 +313,12 @@ const ProductDetail: React.FC = () => {
     setIsFormOpen(true);
   };
 
+  const handleShare = () => {
+    if (product) {
+      shareProduct(product);
+    }
+  };
+
   if (isLoading) {
     return <div className="container mx-auto py-12 px-4 text-center">Loading...</div>;
   }
@@ -328,19 +335,29 @@ const ProductDetail: React.FC = () => {
       className="bg-gray-50 min-h-screen pb-12"
     >
       {/* Hero Section */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="container mx-auto px-4 py-8">
           <button 
             onClick={() => navigate('/shop')}
             className="flex items-center text-gray-600 hover:text-primary mb-6 transition-colors"
           >
-            <ChevronLeft size={20} className="mr-1" />
+            <ChevronLeft size={18} className="mr-1" />
             <span>Back to Shop</span>
           </button>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
+              <div className="flex justify-between items-start mb-2">
+                <h1 className="text-3xl md:text-4xl font-bold">{product.name}</h1>
+                <button 
+                  onClick={handleShare}
+                  className="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  aria-label="Share"
+                  title="Share this product"
+                >
+                  <Share2 size={18} />
+                </button>
+              </div>
               <p className="text-lg text-gray-700 mb-6">{product.description}</p>
               
               <div className="flex flex-wrap gap-4 mb-8">
@@ -358,21 +375,14 @@ const ProductDetail: React.FC = () => {
                 </span>
               </div>
               
-              <div className="space-y-3">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleGetAccess}
-                  className="bg-primary text-white font-bold py-3 px-8 rounded-full w-full md:w-auto text-center transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
-                >
-                  {product.isFree ? 'Download For Free' : 'Get Access Now'}
-                </motion.button>
-                
-                <div className="flex items-center text-gray-500 text-sm mt-4">
-                  <Share2 size={16} className="mr-2" />
-                  <span>Share this resource</span>
-                </div>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleGetAccess}
+                className="bg-primary text-white font-bold py-3 px-8 rounded-full w-full sm:w-auto text-center transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
+              >
+                {product.isFree ? 'Download For Free' : 'Get Access Now'}
+              </motion.button>
             </div>
             
             <div className="rounded-xl overflow-hidden shadow-lg">
@@ -391,7 +401,7 @@ const ProductDetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8">
             {/* What's Included */}
-            <div className="bg-white p-8 rounded-xl shadow-md mb-8">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 mb-8">
               <h2 className="text-2xl font-bold mb-6">What's Included</h2>
               <div className="space-y-4">
                 {[
@@ -411,7 +421,7 @@ const ProductDetail: React.FC = () => {
             </div>
             
             {/* How to Use */}
-            <div className="bg-white p-8 rounded-xl shadow-md">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
               <h2 className="text-2xl font-bold mb-6">How to Use This Resource</h2>
               <div className="space-y-6">
                 <p>
@@ -430,26 +440,41 @@ const ProductDetail: React.FC = () => {
           
           <div className="lg:col-span-4">
             {/* CTA */}
-            <div className="bg-gradient-to-br from-primary to-primary-dark text-white p-6 rounded-xl shadow-md mb-8">
-              <h3 className="text-xl font-bold mb-4">Ready to get started?</h3>
-              <p className="mb-6">Get instant access to this valuable resource and take your business to the next level.</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleGetAccess}
-                className="bg-white text-primary font-bold py-3 rounded-full w-full transition-all duration-300 hover:shadow-lg"
-              >
-                {product.isFree ? 'Download Now' : 'Get Access'}
-              </motion.button>
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+              <div className="bg-primary/5 p-4 rounded-lg mb-4">
+                <h3 className="text-xl font-bold mb-2 text-primary">Get Started Today</h3>
+                <p className="text-gray-700 mb-4">Unlock this valuable resource and elevate your business strategy.</p>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleGetAccess}
+                  className="bg-primary text-white font-bold py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark"
+                >
+                  {product.isFree ? 'Download Now' : 'Get Access'}
+                </motion.button>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                <div className="flex items-center text-gray-600">
+                  <ExternalLink size={15} className="mr-2" />
+                  <span className="text-sm">Share with colleagues</span>
+                </div>
+                <button 
+                  onClick={handleShare}
+                  className="text-primary hover:text-primary-dark font-medium text-sm"
+                >
+                  Share Now
+                </button>
+              </div>
             </div>
             
             {/* Related Products */}
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
               <h3 className="text-xl font-bold mb-4">You May Also Like</h3>
               <div className="space-y-4">
                 {allProducts.filter(p => p.id !== product.id).slice(0, 3).map(relatedProduct => (
-                  <div key={relatedProduct.id} className="group" onClick={() => navigate(`/products/${relatedProduct.slug}`)}>
-                    <div className="flex items-center space-x-4 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div key={relatedProduct.id} className="group cursor-pointer" onClick={() => navigate(`/products/${relatedProduct.slug}`)}>
+                    <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-50 transition-colors">
                       <img src={relatedProduct.image} alt={relatedProduct.name} className="w-16 h-16 rounded-lg object-cover" />
                       <div>
                         <h4 className="font-medium group-hover:text-primary transition-colors">{relatedProduct.name}</h4>
@@ -468,7 +493,7 @@ const ProductDetail: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-6">
+          <div className="space-y-6 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
             {[
               {
                 q: "How will I receive the product?",
@@ -487,28 +512,12 @@ const ProductDetail: React.FC = () => {
                 a: "Yes, we provide email support for all our products. Premium products also include priority support."
               }
             ].map((faq, idx) => (
-              <div key={idx} className="border-b border-gray-200 pb-6">
+              <div key={idx} className={idx !== 0 ? "border-t border-gray-100 pt-6" : ""}>
                 <h3 className="text-xl font-semibold mb-3">{faq.q}</h3>
                 <p className="text-gray-700">{faq.a}</p>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-      
-      {/* Bottom CTA */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark py-16">
-        <div className="container mx-auto px-4 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to take your business to the next level?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">Get instant access to this valuable resource and start seeing results right away.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleGetAccess}
-            className="bg-white text-primary font-bold text-xl py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            {product.isFree ? 'Download For Free' : 'Get Access Now'}
-          </motion.button>
         </div>
       </div>
       
