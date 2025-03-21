@@ -52,10 +52,11 @@ const Courses: React.FC = () => {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const [showPromo, setShowPromo] = useState(true)
   const { t } = useTranslation()
-  const [countdown, setCountdown] = useState<{days: number, hours: number, minutes: number}>({
+  const [countdown, setCountdown] = useState<{days: number, hours: number, minutes: number, seconds: number}>({
     days: 0,
     hours: 0,
-    minutes: 0
+    minutes: 0,
+    seconds: 0
   })
 
   // Countdown timer logic
@@ -70,14 +71,15 @@ const Courses: React.FC = () => {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         
-        setCountdown({ days, hours, minutes });
+        setCountdown({ days, hours, minutes, seconds });
       }
     };
     
     // Calculate immediately and then set up interval
     calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 60000); // Update every minute
+    const timer = setInterval(calculateTimeLeft, 1000); // Update every second
     
     return () => clearInterval(timer);
   }, []);
@@ -139,45 +141,50 @@ const Courses: React.FC = () => {
             className="fixed top-16 left-0 right-0 z-40 px-3 py-1 flex justify-center"
           >
             <motion.div 
-              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-md"
+              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-lg"
               animate={{ 
-                boxShadow: ['0px 2px 8px rgba(0,0,0,0.1)', '0px 4px 12px rgba(0,0,0,0.15)', '0px 2px 8px rgba(0,0,0,0.1)'],
+                boxShadow: ['0px 4px 12px rgba(0,0,0,0.1)', '0px 6px 16px rgba(0,0,0,0.15)', '0px 4px 12px rgba(0,0,0,0.1)'],
               }}
               transition={{ 
-                boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
               }}
             >
-              <div className="bg-gradient-to-r from-[#ffed00] via-[#fff200] to-[#ffed00] bg-opacity-90 backdrop-blur-sm px-4 py-2 flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <Clock className="text-gray-800 hidden sm:block" size={20} />
+              <div className="bg-gradient-to-r from-[#FFD700] via-[#FFED00] to-[#FFD700] px-4 py-3 flex justify-between items-center rounded-lg shadow-inner">
+                <div className="flex items-center space-x-3">
+                  <Clock className="text-gray-800 hidden sm:block" size={22} />
                   <div>
-                    <h3 className="font-bold text-gray-800">Early Bird Special: 20% off!</h3>
-                    <p className="text-gray-700 text-xs sm:text-sm">Offer ends in:</p>
+                    <h3 className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</h3>
+                    <p className="text-gray-700 text-sm">Offer ends in:</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="countdown-box">
+                  <div className="countdown-item">
                     <span className="countdown-value">{countdown.days}</span>
                     <span className="countdown-label">days</span>
                   </div>
-                  <span className="font-bold">:</span>
-                  <div className="countdown-box">
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
                     <span className="countdown-value">{countdown.hours}</span>
                     <span className="countdown-label">hours</span>
                   </div>
-                  <span className="font-bold">:</span>
-                  <div className="countdown-box">
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
                     <span className="countdown-value">{countdown.minutes}</span>
                     <span className="countdown-label">mins</span>
+                  </div>
+                  <span className="font-bold text-gray-800">:</span>
+                  <div className="countdown-item">
+                    <span className="countdown-value">{countdown.seconds}</span>
+                    <span className="countdown-label">secs</span>
                   </div>
                   
                   <button 
                     onClick={() => setShowPromo(false)} 
-                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1 rounded-full transition-colors"
+                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1.5 rounded-full transition-colors"
                     aria-label="Close promotion"
                   >
-                    <X size={16} />
+                    <X size={18} />
                   </button>
                 </div>
               </div>
@@ -313,14 +320,15 @@ const Courses: React.FC = () => {
 
 // Add these styles to your global CSS file or a styled component
 const styles = `
-.countdown-box {
+.countdown-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0.75rem;
+  background-color: rgba(0, 0, 0, 0.08);
+  padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
-  min-width: 3rem;
+  min-width: 2.5rem;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .countdown-value {
@@ -331,8 +339,9 @@ const styles = `
 }
 
 .countdown-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #333;
+  letter-spacing: -0.02em;
 }
 `;
 
