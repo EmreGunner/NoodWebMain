@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { AlertCircle } from "lucide-react";
 
 export default function WaitlistForm() {
   const [formData, setFormData] = useState({
@@ -121,13 +122,14 @@ export default function WaitlistForm() {
   };
 
   return (
-    <div className="font-sans w-full mx-auto bg-white rounded-2xl shadow p-6 md:p-8 h-full">
-      <div className="text-center mb-2">
-        <h2 className="text-3xl md:text-4xl font-bold text-black mb-1">
-          Join the <span className="text-primary">Nood</span> Community
+    <div className="waitlist-form font-sans w-full mx-auto bg-white rounded-2xl shadow-md p-6 md:p-8 min-h-[600px] flex flex-col overflow-visible">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3 md:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+          Join the Nood Community
         </h2>
         
-        <div className="bg-red-50 text-red-700 py-1.5 px-3 rounded-full inline-block font-medium text-sm mb-4 border border-red-100">
+        <div className="bg-red-100 text-red-700 py-2 px-4 rounded-full inline-flex items-center font-medium text-sm md:text-base mb-4 border border-red-200 animate-pulse">
+          <AlertCircle className="inline mr-2 h-4 w-4" />
           Limited to only 1000 members. Secure your spot now!
         </div>
       </div>
@@ -138,9 +140,9 @@ export default function WaitlistForm() {
         </div>
       )}
       
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8 my-4 flex-grow">
         <div className="flex flex-col">
-          <label htmlFor="email" className="text-left text-sm font-medium text-gray-800 mb-1.5">
+          <label htmlFor="email" className="text-left text-sm font-medium text-gray-800 mb-2">
             Email <span className="text-red-500">*</span>
           </label>
           <input
@@ -151,7 +153,7 @@ export default function WaitlistForm() {
             onChange={handleInputChange}
             placeholder="youremail@example.com"
             required
-            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200 ${
               errors.email ? "border-2 border-red-300 bg-red-50" : "border border-gray-300"
             }`}
           />
@@ -161,7 +163,7 @@ export default function WaitlistForm() {
         </div>
         
         <div className="flex flex-col">
-          <label htmlFor="instagram" className="text-left text-sm font-medium text-gray-800 mb-1.5">
+          <label htmlFor="instagram" className="text-left text-sm font-medium text-gray-800 mb-2">
             Instagram Handle
           </label>
           <div className="flex">
@@ -175,13 +177,13 @@ export default function WaitlistForm() {
               value={formData.instagram}
               onChange={handleInputChange}
               placeholder="username"
-              className="flex-1 p-3.5 text-base border border-gray-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="flex-1 p-3.5 text-base border border-gray-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200"
             />
           </div>
         </div>
         
         <div className="flex flex-col">
-          <div className="flex justify-between items-center mb-1.5">
+          <div className="flex justify-between items-center mb-2">
             <label htmlFor="projectDescription" className="text-left text-sm font-medium text-gray-800">
               Why do you want to join? <span className="text-red-500">*</span>
             </label>
@@ -196,7 +198,7 @@ export default function WaitlistForm() {
             required
             maxLength={MAX_CHARS}
             rows={4}
-            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200 ${
               errors.projectDescription ? "border-2 border-red-300 bg-red-50" : "border border-gray-300"
             }`}
           />
@@ -205,28 +207,30 @@ export default function WaitlistForm() {
           )}
         </div>
         
-        <motion.button
-          type="submit"
-          disabled={status === "submitting"}
-          whileHover={{ scale: status === "submitting" ? 1 : 1.02 }}
-          whileTap={{ scale: status === "submitting" ? 1 : 0.98 }}
-          className={`w-full p-4 text-white font-semibold rounded-xl text-lg shadow-md transition-all duration-200 mt-6 ${
-            status === "submitting" 
-              ? "bg-primary/70 cursor-not-allowed" 
-              : "bg-primary hover:bg-primary/90"
-          }`}
-        >
-          {status === "submitting" ? "Processing..." : "Apply to Join"}
-        </motion.button>
-        
-        <p className="mt-2 text-xs text-center text-gray-500">
-          We respect your privacy and will never share your information.
-        </p>
+        <div className="mt-auto pt-4">
+          <motion.button
+            type="submit"
+            disabled={status === "submitting"}
+            whileHover={{ scale: status === "submitting" ? 1 : 1.02, translateY: status === "submitting" ? 0 : -2 }}
+            whileTap={{ scale: status === "submitting" ? 1 : 0.98 }}
+            className={`w-full p-4 text-white font-semibold rounded-xl text-lg shadow-md transition-all duration-200 ${
+              status === "submitting" 
+                ? "bg-primary/70 cursor-not-allowed" 
+                : "bg-primary hover:bg-primary/90"
+            }`}
+          >
+            {status === "submitting" ? "Processing..." : "Apply to Join"}
+          </motion.button>
+          
+          <p className="mt-3 text-xs text-center text-gray-500">
+            We respect your privacy and will never share your information.
+          </p>
+        </div>
       </form>
 
       {/* Success Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -234,12 +238,12 @@ export default function WaitlistForm() {
           >
             <button 
               onClick={closePopup}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
               ✕
             </button>
             <div className="text-center">
-              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-green-100">
                 <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
@@ -250,7 +254,7 @@ export default function WaitlistForm() {
               </p>
               <motion.button
                 onClick={closePopup}
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.03, translateY: -2 }}
                 whileTap={{ scale: 0.97 }}
                 className="w-full p-3.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all font-semibold shadow-md"
               >
