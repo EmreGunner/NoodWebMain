@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, Eye } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ApplyNowButton } from './ApplyNowButton';
 
 interface CourseCardProps {
   id: string;
@@ -28,6 +29,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   const [viewers, setViewers] = useState(Math.floor(Math.random() * 20) + 5);
   const [seatsLeft, setSeatsLeft] = useState(Math.floor(Math.random() * 5) + 1);
   const [timeLeft, setTimeLeft] = useState('');
+  const isFashionBusinessCourse = name === 'Fashion Business Masterclass';
 
   // Calculate time left until course starts
   useEffect(() => {
@@ -101,13 +103,20 @@ const CourseCard: React.FC<CourseCardProps> = ({
         </div>
 
         <div className="space-y-2">
-          <motion.button 
-            className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {seatsLeft <= 3 ? 'Reserve Your Seat Now!' : 'Apply Now'}
-          </motion.button>
+          {isFashionBusinessCourse ? (
+            <ApplyNowButton 
+              buttonText={seatsLeft <= 3 ? 'Reserve Your Seat Now!' : 'Apply Now'} 
+              className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
+            />
+          ) : (
+            <motion.button 
+              className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {seatsLeft <= 3 ? 'Reserve Your Seat Now!' : 'Apply Now'}
+            </motion.button>
+          )}
           
           <Link 
             to={`/courses/${slug}`}
