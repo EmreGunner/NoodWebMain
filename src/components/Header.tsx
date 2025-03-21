@@ -5,8 +5,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import courses from '../data/courses.json';
 import noodLogoGreen from '/noodLogoGreen.png';
-import { mainNavItems, moreNavItems } from '../data/navigationData';
 import Logo from './Logo';
+
+// Define navigation items inline since the external file isn't available
+const mainNavItems = [
+  { text: 'Home', to: '/', icon: Home },
+  { text: 'Courses', to: '/courses', icon: BookOpen },
+  { text: 'Community', to: '/community', icon: Users },
+  { text: 'Shop', to: '/shop', icon: ShoppingBag },
+];
+
+const moreNavItems = [
+  { text: 'About Us', to: '/about', icon: Info },
+  { text: 'Contact', to: '/contact', icon: Phone },
+  { text: 'Careers', to: '/careers', icon: Users },
+  { text: 'Blog', to: '/blog', icon: BookOpen },
+];
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
