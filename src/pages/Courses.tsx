@@ -120,192 +120,192 @@ const Courses: React.FC = () => {
   }).format(enrollmentDeadline);
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-16">
-      <div className="container mx-auto px-4 py-4 space-y-6">
-        {/* Early Bird Special with Countdown */}
-        <AnimatePresence>
-          {showPromo && (
+    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
+      {/* Fixed position Early Bird Banner */}
+      <AnimatePresence>
+        {showPromo && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0,
+              transition: { duration: 0.4 }
+            }}
+            exit={{ 
+              opacity: 0, 
+              y: -20,
+              transition: { duration: 0.3 }
+            }}
+            className="fixed top-16 left-0 right-0 z-40 px-3 py-1 flex justify-center"
+          >
             <motion.div 
-              initial={{ opacity: 0, y: -10 }}
+              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-md"
               animate={{ 
-                opacity: 1, 
-                y: 0,
-                transition: { duration: 0.3 }
+                boxShadow: ['0px 2px 8px rgba(0,0,0,0.1)', '0px 4px 12px rgba(0,0,0,0.15)', '0px 2px 8px rgba(0,0,0,0.1)'],
               }}
-              exit={{ 
-                opacity: 0, 
-                y: -10,
-                transition: { duration: 0.2 }
+              transition={{ 
+                boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
               }}
-              className="relative rounded-lg overflow-hidden"
             >
-              <motion.div 
-                className="bg-[#ffed00] px-4 py-3 flex flex-col sm:flex-row items-center justify-between"
-                animate={{ 
-                  backgroundColor: ['#ffed00', '#ffe600', '#ffed00'],
-                }}
-                transition={{ 
-                  backgroundColor: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                }}
-              >
-                <div className="flex items-center space-x-3 mb-2 sm:mb-0">
-                  <Clock className="text-gray-800 hidden sm:block" size={22} />
+              <div className="bg-gradient-to-r from-[#ffed00] via-[#fff200] to-[#ffed00] bg-opacity-90 backdrop-blur-sm px-4 py-2 flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <Clock className="text-gray-800 hidden sm:block" size={20} />
                   <div>
-                    <p className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</p>
-                    <p className="text-gray-700 text-sm">Offer ends in:</p>
+                    <h3 className="font-bold text-gray-800">Early Bird Special: 20% off!</h3>
+                    <p className="text-gray-700 text-xs sm:text-sm">Offer ends in:</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-1">
-                    <div className="countdown-box">
-                      <span className="countdown-value">{countdown.days}</span>
-                      <span className="countdown-label">days</span>
-                    </div>
-                    <span className="text-xl font-bold">:</span>
-                    <div className="countdown-box">
-                      <span className="countdown-value">{countdown.hours}</span>
-                      <span className="countdown-label">hours</span>
-                    </div>
-                    <span className="text-xl font-bold">:</span>
-                    <div className="countdown-box">
-                      <span className="countdown-value">{countdown.minutes}</span>
-                      <span className="countdown-label">mins</span>
-                    </div>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="countdown-box">
+                    <span className="countdown-value">{countdown.days}</span>
+                    <span className="countdown-label">days</span>
+                  </div>
+                  <span className="font-bold">:</span>
+                  <div className="countdown-box">
+                    <span className="countdown-value">{countdown.hours}</span>
+                    <span className="countdown-label">hours</span>
+                  </div>
+                  <span className="font-bold">:</span>
+                  <div className="countdown-box">
+                    <span className="countdown-value">{countdown.minutes}</span>
+                    <span className="countdown-label">mins</span>
                   </div>
                   
                   <button 
                     onClick={() => setShowPromo(false)} 
-                    className="text-gray-800 hover:bg-[#e6d500] p-1 rounded-full"
+                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1 rounded-full transition-colors"
                     aria-label="Close promotion"
                   >
-                    <X size={18} />
+                    <X size={16} />
                   </button>
                 </div>
-              </motion.div>
-              
-              {/* Add subtle pattern overlay */}
-              <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5 pointer-events-none"></div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="bg-white shadow-xl rounded-3xl p-4 sm:p-6 transition-all duration-300 hover:shadow-2xl"
-        >
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-            <div className="flex items-center space-x-2 w-full sm:w-auto">
-              <button
-                onClick={() => setSelectedType(null)}
-                className={`px-4 py-2 rounded-full transition-all duration-300 flex-grow sm:flex-grow-0 text-sm sm:text-base ${
-                  selectedType === null 
-                    ? 'bg-primary text-white shadow-md' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {t('All')}
-              </button>
-              <button
-                onClick={() => setSelectedType('Virtual')}
-                className={`px-4 py-2 rounded-full transition-all duration-300 flex-grow sm:flex-grow-0 text-sm sm:text-base ${
-                  selectedType === 'Virtual'
-                    ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {t('Virtual')}
-              </button>
-              <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all duration-300">
-                <Filter size={20} className="text-gray-600" />
-              </button>
-            </div>
-            <div className="relative w-full sm:w-64">
-              <input
-                type="text"
-                placeholder={t('Search courses...')}
-                className="w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <X size={20} />
-                </button>
-              )}
-            </div>
-          </div>
-          
-          {filteredCourses.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-gray-600">
-                {t('No courses found. Please try a different search.')}
-              </p>
-            </div>
-          ) : (
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={containerVariants}
-            >
-              {filteredCourses.map(course => (
-                <motion.div 
-                  key={course.id} 
-                  variants={itemVariants}
-                >
-                  <CourseCard {...course} />
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </motion.section>
-
-        {/* Add social proof section */}
-        <motion.section 
-          className="bg-white shadow-xl rounded-3xl p-6 text-center"
-          variants={itemVariants}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div>
-              <h3 className="text-3xl font-bold text-primary mb-2">5,000+</h3>
-              <p className="text-gray-600">Students Enrolled</p>
-            </div>
-            <div>
-              <h3 className="text-3xl font-bold text-primary mb-2">98%</h3>
-              <p className="text-gray-600">Completion Rate</p>
-            </div>
-            <div>
-              <h3 className="text-3xl font-bold text-primary mb-2">4.9/5</h3>
-              <p className="text-gray-600">Student Satisfaction</p>
-            </div>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          className="text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl mt-12 text-white shadow-xl transition-all duration-300 hover:shadow-2xl"
-          variants={itemVariants}
-        >
-          <h2 className="text-3xl font-bold mb-4">{t('Not sure where to start?')}</h2>
-          <p className="text-xl mb-6 max-w-2xl mx-auto">
-            {t('Take our quick assessment to find the perfect course for your entrepreneurial journey.')}
-          </p>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link 
-              to="/assessment"
-              className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
-            >
-              {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
-            </Link>
           </motion.div>
-        </motion.section>
+        )}
+      </AnimatePresence>
+      
+      {/* Keep existing padding to maintain space for fixed banner */}
+      <div className="pt-16 pb-4">
+        <div className="container mx-auto px-4 space-y-6">
+          <motion.section 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white shadow-xl rounded-3xl p-4 sm:p-6 transition-all duration-300 hover:shadow-2xl"
+          >
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <button
+                  onClick={() => setSelectedType(null)}
+                  className={`px-4 py-2 rounded-full transition-all duration-300 flex-grow sm:flex-grow-0 text-sm sm:text-base ${
+                    selectedType === null 
+                      ? 'bg-primary text-white shadow-md' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {t('All')}
+                </button>
+                <button
+                  onClick={() => setSelectedType('Virtual')}
+                  className={`px-4 py-2 rounded-full transition-all duration-300 flex-grow sm:flex-grow-0 text-sm sm:text-base ${
+                    selectedType === 'Virtual'
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {t('Virtual')}
+                </button>
+                <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all duration-300">
+                  <Filter size={20} className="text-gray-600" />
+                </button>
+              </div>
+              <div className="relative w-full sm:w-64">
+                <input
+                  type="text"
+                  placeholder={t('Search courses...')}
+                  className="w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={20} />
+                  </button>
+                )}
+              </div>
+            </div>
+            
+            {filteredCourses.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-600">
+                  {t('No courses found. Please try a different search.')}
+                </p>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={containerVariants}
+              >
+                {filteredCourses.map(course => (
+                  <motion.div 
+                    key={course.id} 
+                    variants={itemVariants}
+                  >
+                    <CourseCard {...course} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </motion.section>
+
+          {/* Add social proof section */}
+          <motion.section 
+            className="bg-white shadow-xl rounded-3xl p-6 text-center"
+            variants={itemVariants}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div>
+                <h3 className="text-3xl font-bold text-primary mb-2">5,000+</h3>
+                <p className="text-gray-600">Students Enrolled</p>
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-primary mb-2">98%</h3>
+                <p className="text-gray-600">Completion Rate</p>
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-primary mb-2">4.9/5</h3>
+                <p className="text-gray-600">Student Satisfaction</p>
+              </div>
+            </div>
+          </motion.section>
+
+          <motion.section 
+            className="text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl mt-12 text-white shadow-xl transition-all duration-300 hover:shadow-2xl"
+            variants={itemVariants}
+          >
+            <h2 className="text-3xl font-bold mb-4">{t('Not sure where to start?')}</h2>
+            <p className="text-xl mb-6 max-w-2xl mx-auto">
+              {t('Take our quick assessment to find the perfect course for your entrepreneurial journey.')}
+            </p>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link 
+                to="/assessment"
+                className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg hover:shadow-xl"
+              >
+                {t('Start Assessment')} <ArrowRight className="ml-2" size={20} />
+              </Link>
+            </motion.div>
+          </motion.section>
+        </div>
       </div>
     </div>
   )
