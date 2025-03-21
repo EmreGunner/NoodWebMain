@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Users, MessageCircle, Zap, Award, Globe, Rocket } from 'lucide-react';
 import Card from '../components/Card';
 import WaitlistForm from '../components/WaitlistForm';
-import qrImage from '../../assets/images/qrimage.png'; // Import the QR code image
+import qrImage from '../../assets/images/qrimage.png'; // Fix the import path
 
 const Community: React.FC = () => {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
