@@ -122,27 +122,27 @@ export default function WaitlistForm() {
   };
 
   return (
-    <div className="waitlist-form font-sans w-full mx-auto bg-white rounded-2xl shadow-md p-6 md:p-8 min-h-[600px] flex flex-col overflow-visible">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3 md:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+    <div className="waitlist-form w-full bg-white p-6 md:p-8 flex flex-col">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900">
           Join the Nood Community
         </h2>
         
-        <div className="bg-red-100 text-red-700 py-2 px-4 rounded-full inline-flex items-center font-medium text-sm md:text-base mb-4 border border-red-200 animate-pulse">
+        <div className="bg-red-50 text-red-600 py-2 px-4 rounded-lg inline-flex items-center font-medium text-sm md:text-base mb-4">
           <AlertCircle className="inline mr-2 h-4 w-4" />
           Limited to only 1000 members. Secure your spot now!
         </div>
       </div>
       
       {status === "error" && !Object.keys(errors).length && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-xl mb-6 border border-red-200 text-center">
+        <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-center">
           Couldn't add you to the list. Please try again.
         </div>
       )}
       
-      <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8 my-4 flex-grow">
+      <form onSubmit={handleSubmit} className="space-y-5 flex-grow">
         <div className="flex flex-col">
-          <label htmlFor="email" className="text-left text-sm font-medium text-gray-800 mb-2">
+          <label htmlFor="email" className="text-left text-sm font-medium text-gray-700 mb-1.5">
             Email <span className="text-red-500">*</span>
           </label>
           <input
@@ -153,8 +153,8 @@ export default function WaitlistForm() {
             onChange={handleInputChange}
             placeholder="youremail@example.com"
             required
-            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200 ${
-              errors.email ? "border-2 border-red-300 bg-red-50" : "border border-gray-300"
+            className={`w-full p-3 text-base rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${
+              errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
             }`}
           />
           {errors.email && (
@@ -163,11 +163,11 @@ export default function WaitlistForm() {
         </div>
         
         <div className="flex flex-col">
-          <label htmlFor="instagram" className="text-left text-sm font-medium text-gray-800 mb-2">
+          <label htmlFor="instagram" className="text-left text-sm font-medium text-gray-700 mb-1.5">
             Instagram Handle
           </label>
           <div className="flex">
-            <span className="inline-flex items-center px-4 bg-gray-50 text-gray-500 text-sm border border-r-0 border-gray-300 rounded-l-xl">
+            <span className="inline-flex items-center px-3 bg-gray-50 text-gray-500 text-sm border border-r-0 border-gray-300 rounded-l-lg">
               @
             </span>
             <input
@@ -177,14 +177,14 @@ export default function WaitlistForm() {
               value={formData.instagram}
               onChange={handleInputChange}
               placeholder="username"
-              className="flex-1 p-3.5 text-base border border-gray-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200"
+              className="flex-1 p-3 text-base border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
           </div>
         </div>
         
         <div className="flex flex-col">
-          <div className="flex justify-between items-center mb-2">
-            <label htmlFor="projectDescription" className="text-left text-sm font-medium text-gray-800">
+          <div className="flex justify-between items-center mb-1.5">
+            <label htmlFor="projectDescription" className="text-left text-sm font-medium text-gray-700">
               Why do you want to join? <span className="text-red-500">*</span>
             </label>
             <span className="text-xs text-gray-500">{charCount}/{MAX_CHARS}</span>
@@ -198,8 +198,8 @@ export default function WaitlistForm() {
             required
             maxLength={MAX_CHARS}
             rows={4}
-            className={`w-full p-3.5 text-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-transparent hover:border-gray-400 transition-all duration-200 ${
-              errors.projectDescription ? "border-2 border-red-300 bg-red-50" : "border border-gray-300"
+            className={`w-full p-3 text-base rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors ${
+              errors.projectDescription ? "border-red-300 bg-red-50" : "border-gray-300"
             }`}
           />
           {errors.projectDescription && (
@@ -207,13 +207,13 @@ export default function WaitlistForm() {
           )}
         </div>
         
-        <div className="mt-auto pt-4">
+        <div className="mt-5">
           <motion.button
             type="submit"
             disabled={status === "submitting"}
-            whileHover={{ scale: status === "submitting" ? 1 : 1.02, translateY: status === "submitting" ? 0 : -2 }}
-            whileTap={{ scale: status === "submitting" ? 1 : 0.98 }}
-            className={`w-full p-4 text-white font-semibold rounded-xl text-lg shadow-md transition-all duration-200 ${
+            whileHover={{ scale: status === "submitting" ? 1 : 1.01 }}
+            whileTap={{ scale: status === "submitting" ? 1 : 0.99 }}
+            className={`w-full p-3 text-white font-medium rounded-lg text-base transition-colors ${
               status === "submitting" 
                 ? "bg-primary/70 cursor-not-allowed" 
                 : "bg-primary hover:bg-primary/90"
@@ -230,33 +230,33 @@ export default function WaitlistForm() {
 
       {/* Success Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl p-8 max-w-md w-full relative shadow-xl"
+            className="bg-white rounded-xl p-6 max-w-md w-full relative shadow-lg"
           >
             <button 
               onClick={closePopup}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
             >
               ✕
             </button>
             <div className="text-center">
-              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-green-100">
-                <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-green-100">
+                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">Application Received!</h3>
-              <p className="text-gray-700 mb-6">
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Application Received!</h3>
+              <p className="text-gray-700 mb-5">
                 Thanks for applying to the Nood community! We'll review your application and be in touch soon.
               </p>
               <motion.button
                 onClick={closePopup}
-                whileHover={{ scale: 1.03, translateY: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full p-3.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all font-semibold shadow-md"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full p-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
               >
                 Close
               </motion.button>

@@ -57,14 +57,14 @@ const Community: React.FC = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch" 
           variants={containerVariants}
         >
-          <motion.div variants={itemVariants} className="h-full flex">
-            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-100 hover:shadow-md">
-              <Users className="text-primary mb-4" size={42} />
+          <motion.div variants={itemVariants} className="h-full">
+            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-200 rounded-2xl hover:border-primary/20 transition-all shadow-sm hover:shadow">
+              <Users className="text-primary mb-4" size={36} />
               <h2 className="text-2xl font-bold mb-3">Join the Conversation</h2>
-              <p className="text-gray-600 mb-5">
+              <p className="text-gray-600 mb-6">
                 Engage with fellow entrepreneurs, share ideas, and get instant feedback on your projects.
               </p>
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-2">
                 <motion.a 
                   href="https://t.me/noodcommunity"
                   target="_blank"
@@ -79,8 +79,8 @@ const Community: React.FC = () => {
             </Card>
           </motion.div>
           
-          <motion.div variants={itemVariants} className="h-full flex">
-            <Card className="w-full flex-1 transform transition-all duration-300 hover:shadow-xl overflow-visible p-0">
+          <motion.div variants={itemVariants} className="h-full">
+            <Card className="w-full rounded-2xl shadow-sm hover:shadow transition-all overflow-hidden border border-gray-200 hover:border-primary/20">
               <WaitlistForm />
             </Card>
           </motion.div>
@@ -91,9 +91,9 @@ const Community: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {benefits.map((benefit, index) => (
               <motion.div key={index} variants={itemVariants}>
-                <Card className="p-4 h-full transition-all border border-gray-100 hover:border-primary/20">
+                <Card className="p-4 h-full transition-all border border-gray-200 rounded-xl hover:border-primary/20 shadow-sm hover:shadow">
                   <div className="flex items-center mb-3">
-                    <benefit.icon className="text-primary mr-2" size={20} />
+                    <benefit.icon className="text-primary mr-2 flex-shrink-0" size={20} />
                     <h3 className="text-lg font-medium">{benefit.title}</h3>
                   </div>
                   <p className="text-gray-600 text-sm">{benefit.description}</p>
