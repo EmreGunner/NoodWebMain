@@ -10,6 +10,7 @@ import DocumentTitle from './components/DocumentTitle';
 import TermsAndConditions from './pages/TermsAndConditions'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import NotFound from './pages/NotFound'
+import ProductDetail from './pages/ProductDetail'
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -53,6 +54,7 @@ const App: React.FC = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/products/:slug" element={<ProductDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

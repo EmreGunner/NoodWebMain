@@ -1,7 +1,7 @@
 import React, { useState, useMemo, lazy, Suspense, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ChevronDown, X, Filter } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { createPortal } from 'react-dom';
 
@@ -295,6 +295,12 @@ const allProducts: Product[] = [
 ];
 
 const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) => void; onGetAccess: (product: Product) => void }> = ({ product, onQuickView, onGetAccess }) => {
+  const navigate = useNavigate();
+  
+  const handleLearnMore = () => {
+    navigate(`/products/${product.slug}`);
+  };
+  
   return (
     <motion.div
       className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full"
@@ -322,7 +328,7 @@ const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) 
             Get Access
           </button>
           <button 
-            onClick={() => onQuickView(product)}
+            onClick={handleLearnMore}
             className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
           >
             Learn More
