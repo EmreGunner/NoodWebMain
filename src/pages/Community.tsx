@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Users, MessageCircle, Zap, Award, Globe, Rocket } from 'lucide-react';
 import Card from '../components/Card';
 import WaitlistForm from '../components/WaitlistForm';
+import qrImage from '/qrimage.png'; // Import the QR code image
 
 const Community: React.FC = () => {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
@@ -53,106 +54,122 @@ const Community: React.FC = () => {
       variants={containerVariants}
       className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-16"
     >
-      <div className="container mx-auto px-4 md:px-6 py-6 md:py-10 space-y-8 md:space-y-12">
-        <motion.section className="text-center" variants={itemVariants}>
-          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900">
+      <div className="container mx-auto px-4 md:px-6 py-8 md:py-12 space-y-12 md:space-y-16">
+        {/* Header Section - Made bigger */}
+        <motion.section className="text-center py-6" variants={itemVariants}>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-5 text-gray-900">
             NOOD <span className="text-primary">Community</span>
           </h1>
-          <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
             Connect, learn, and grow with like-minded entrepreneurs.
           </p>
         </motion.section>
 
+        {/* Main Cards Section - Enlarged and enhanced */}
         <motion.section 
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch" 
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-stretch" 
           variants={containerVariants}
         >
+          {/* WhatsApp Join Card */}
           <motion.div variants={itemVariants} className="h-full">
-            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-200 rounded-2xl hover:border-primary/20 transition-all shadow-sm hover:shadow">
-              <Users className="text-primary mb-4" size={36} />
-              <h2 className="text-2xl font-bold mb-3">Join the Conversation</h2>
-              <p className="text-gray-600 mb-6">
+            <Card className="p-6 md:p-8 flex flex-col items-center text-center w-full border-2 border-gray-200 rounded-2xl hover:border-primary/30 transition-all shadow-md hover:shadow-lg">
+              <Users className="text-primary mb-5" size={48} />
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Join the Conversation</h2>
+              <p className="text-gray-700 text-lg mb-6">
                 Engage with fellow entrepreneurs, share ideas, and get instant feedback on your projects.
               </p>
-              <div className="flex justify-center mt-2">
+              
+              {/* QR Code Image */}
+              <div className="mb-5 p-3 bg-white rounded-xl shadow-sm">
+                <img 
+                  src={qrImage} 
+                  alt="WhatsApp Community QR Code" 
+                  className="w-48 h-48 object-contain mx-auto"
+                />
+              </div>
+
+              <div className="flex justify-center mt-4">
                 <motion.a 
-                  href="https://t.me/noodcommunity"
+                  href="https://whatsapp.com/channel/example" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium border border-primary text-primary hover:bg-primary/5 transition-colors"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg text-lg font-medium bg-green-500 text-white hover:bg-green-600 transition-colors shadow-md"
                 >
-                  Join Telegram Community <ArrowRight className="ml-1.5" size={16} />
+                  Join WhatsApp Channel <ArrowRight className="ml-2" size={20} />
                 </motion.a>
               </div>
             </Card>
           </motion.div>
           
+          {/* Membership Application Card */}
           <motion.div variants={itemVariants} className="h-full">
-            <Card className="p-5 md:p-6 flex flex-col items-center text-center w-full border border-gray-200 rounded-2xl hover:border-primary/20 transition-all shadow-sm hover:shadow">
-              <Rocket className="text-primary mb-4" size={36} />
-              <h2 className="text-2xl font-bold mb-3">Apply for Membership</h2>
-              <p className="text-gray-600 mb-6">
+            <Card className="p-6 md:p-8 flex flex-col items-center text-center w-full border-2 border-gray-200 rounded-2xl hover:border-primary/30 transition-all shadow-md hover:shadow-lg">
+              <Rocket className="text-primary mb-5" size={48} />
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Apply for Membership</h2>
+              <p className="text-gray-700 text-lg mb-6">
                 Our exclusive community is limited to 1000 members. Apply now to secure your spot and get access to all our resources.
               </p>
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-auto">
                 <motion.button
                   onClick={openWaitlistForm}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg text-lg font-bold bg-primary text-white hover:bg-primary/90 transition-colors shadow-md"
                 >
-                  Apply to Join <ArrowRight className="ml-1.5" size={16} />
+                  Apply To Join Community <ArrowRight className="ml-2" size={20} />
                 </motion.button>
               </div>
             </Card>
           </motion.div>
         </motion.section>
 
-        <motion.section variants={containerVariants} className="py-2">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-center">Community Benefits</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {/* Benefits Section - Enhanced */}
+        <motion.section variants={containerVariants} className="py-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-10 text-center">Community Benefits</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {benefits.map((benefit, index) => (
               <motion.div key={index} variants={itemVariants}>
-                <Card className="p-4 h-full transition-all border border-gray-200 rounded-xl hover:border-primary/20 shadow-sm hover:shadow">
-                  <div className="flex items-center mb-3">
-                    <benefit.icon className="text-primary mr-2 flex-shrink-0" size={20} />
-                    <h3 className="text-lg font-medium">{benefit.title}</h3>
+                <Card className="p-5 md:p-6 h-full transition-all border-2 border-gray-200 rounded-xl hover:border-primary/30 shadow-md hover:shadow-lg">
+                  <div className="flex items-center mb-4">
+                    <benefit.icon className="text-primary mr-3 flex-shrink-0" size={28} />
+                    <h3 className="text-xl font-bold">{benefit.title}</h3>
                   </div>
-                  <p className="text-gray-600 text-sm">{benefit.description}</p>
+                  <p className="text-gray-700 text-base">{benefit.description}</p>
                 </Card>
               </motion.div>
             ))}
           </div>
         </motion.section>
 
+        {/* Final CTA Section - Enhanced */}
         <motion.section 
           variants={itemVariants}
-          className="bg-primary rounded-lg text-white p-6 md:p-8 text-center hover:shadow-md"
+          className="bg-primary rounded-xl text-white p-8 md:p-10 text-center shadow-lg hover:shadow-xl"
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Join Our Community?</h2>
-          <p className="text-lg md:text-xl mb-6 md:mb-8 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-5">Ready to Join Our Community?</h2>
+          <p className="text-xl mb-8 md:mb-10 max-w-3xl mx-auto">
             Take the first step towards building your digital side hustle with the support of our community.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a 
-              href="https://t.me/noodcommunity"
+              href="https://whatsapp.com/channel/example"
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-white text-primary text-sm px-5 py-2.5 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="bg-white text-primary text-lg px-8 py-4 rounded-lg transition-colors inline-flex items-center justify-center font-bold shadow-md"
             >
-              Join Telegram <ArrowRight className="ml-1.5" size={16} />
+              Join WhatsApp Channel <ArrowRight className="ml-2" size={20} />
             </motion.a>
             <motion.button 
               onClick={openWaitlistForm}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="border border-white text-white text-sm px-5 py-2.5 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center font-medium"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="bg-transparent border-2 border-white text-white text-lg px-8 py-4 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center font-bold shadow-md"
             >
-              Apply Now <ArrowRight className="ml-1.5" size={16} />
+              Apply To Join Community <ArrowRight className="ml-2" size={20} />
             </motion.button>
           </div>
         </motion.section>
