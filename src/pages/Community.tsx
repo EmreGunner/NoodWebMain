@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, MessageCircle, Zap, Award, Globe, Rocket } from 'lucide-react';
 import Card from '../components/Card';
+import WaitlistForm from '../components/WaitlistForm';
 
 const Community: React.FC = () => {
   const benefits = [
@@ -70,19 +71,8 @@ const Community: React.FC = () => {
             </Card>
           </motion.div>
           <motion.div variants={itemVariants}>
-            <Card className="p-8 flex flex-col items-center text-center h-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <MessageCircle className="text-primary mb-4" size={48} />
-              <h2 className="text-2xl font-bold mb-4">Sub-Communities</h2>
-              <p className="text-gray-600 mb-6 flex-grow">
-                Explore specialized groups for Graphic Design, E-commerce, Trading, and Content Creation.
-              </p>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-secondary inline-flex items-center px-6 py-3 rounded-full text-lg"
-              >
-                Explore Sub-Communities <ArrowRight className="ml-2" size={20} />
-              </motion.button>
+            <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <WaitlistForm />
             </Card>
           </motion.div>
         </motion.section>
