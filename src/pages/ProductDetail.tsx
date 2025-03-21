@@ -302,7 +302,7 @@ const ProductDetail: React.FC = () => {
     } else {
       console.error('Product not found for slug:', slug);
       // Redirect to 404 or shop page if product not found
-      navigate('/shop');
+      navigate('/tools');
     }
     
     setIsLoading(false);

@@ -31,7 +31,7 @@ const Header: React.FC = () => {
   const mainNavItems = [
     { to: "/courses", icon: BookOpen, text: "Courses" },
     { to: "/community", icon: Users, text: "Community" },
-    { to: "/nood-shop", icon: ShoppingBag, text: "Tools" },
+    { to: "/tools", icon: ShoppingBag, text: "Tools" },
   ];
 
   const moreNavItems = [
