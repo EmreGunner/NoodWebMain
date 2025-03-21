@@ -47,31 +47,31 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
   return (
     <div
       ref={bannerRef}
-      className="w-full bg-[#ffed00] px-4 py-2 flex items-center justify-between text-sm transition-opacity"
+      className="w-full bg-[#ffed00] px-4 py-3 flex items-center justify-between text-sm transition-opacity shadow-sm"
     >
       <div className="flex items-center space-x-2">
-        <span className="font-semibold text-gray-800">🎁 Early Bird Special - 20% Off!</span>
+        <span className="font-semibold text-gray-800 text-[0.95rem]">🎁 Early Bird Special - 20% Off!</span>
         <span className="hidden sm:inline text-gray-700">| Ends in:</span>
       </div>
 
       <div className="flex items-center space-x-2">
-        <div className="flex space-x-1.5">
-          <TimeUnit value={timeLeft.d} label="D" />
-          <span>:</span>
-          <TimeUnit value={timeLeft.h} label="H" />
-          <span>:</span>
-          <TimeUnit value={timeLeft.m} label="M" />
-          <span>:</span>
-          <TimeUnit value={timeLeft.s} label="S" />
+        <div className="flex space-x-2.5 items-baseline">
+          <TimeUnit value={timeLeft.d} label="Days" />
+          <Colon />
+          <TimeUnit value={timeLeft.h} label="Hours" />
+          <Colon />
+          <TimeUnit value={timeLeft.m} label="Minutes" />
+          <Colon />
+          <TimeUnit value={timeLeft.s} label="Seconds" />
         </div>
         
         {onClose && (
           <button
             onClick={onClose}
-            className="ml-2 text-gray-700 hover:text-gray-900 p-1.5 rounded-full hover:bg-yellow-500/20 transition-colors"
+            className="ml-2 text-gray-700 hover:text-gray-900 p-2 rounded-full hover:bg-yellow-500/20 transition-colors"
             aria-label="Close promotion"
           >
-            <X size={14} strokeWidth={2.5} />
+            <X size={16} strokeWidth={2.5} />
           </button>
         )}
       </div>
@@ -80,12 +80,16 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
 };
 
 const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
-  <div className="flex flex-col items-center min-w-[28px]">
-    <span className="font-bold text-gray-800 text-[13px]">
+  <div className="flex flex-col items-center bg-yellow-100/50 px-2 py-1 rounded-md">
+    <span className="font-bold text-gray-800 text-base tracking-tight">
       {value.toString().padStart(2, '0')}
     </span>
-    <span className="text-[10px] text-gray-600 -mt-0.5">{label}</span>
+    <span className="text-xs text-gray-600 mt-[-2px] uppercase tracking-tight">{label}</span>
   </div>
+);
+
+const Colon = () => (
+  <span className="text-gray-600 text-sm mb-1">:</span>
 );
 
 export default CountdownTimer; 
