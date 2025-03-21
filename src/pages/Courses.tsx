@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useDebounce } from 'use-debounce'
 import CourseCard from '../components/CourseCard'
 import { motion, AnimatePresence } from 'framer-motion'
+import CountdownTimer from '../components/CountdownTimer'
 
 // Updated courses data with SEO-friendly slugs
 export const courses = [
@@ -138,57 +139,12 @@ const Courses: React.FC = () => {
               y: -20,
               transition: { duration: 0.3 }
             }}
-            className="fixed top-16 left-0 right-0 z-40 px-3 py-1 flex justify-center"
+            className="fixed top-16 left-0 right-0 z-40"
           >
-            <motion.div 
-              className="max-w-screen-xl w-full rounded-xl overflow-hidden shadow-lg"
-              animate={{ 
-                boxShadow: ['0px 4px 12px rgba(0,0,0,0.1)', '0px 6px 16px rgba(0,0,0,0.15)', '0px 4px 12px rgba(0,0,0,0.1)'],
-              }}
-              transition={{ 
-                boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-              }}
-            >
-              <div className="bg-gradient-to-r from-[#FFD700] via-[#FFED00] to-[#FFD700] px-4 py-3 flex justify-between items-center rounded-lg shadow-inner">
-                <div className="flex items-center space-x-3">
-                  <Clock className="text-gray-800 hidden sm:block" size={22} />
-                  <div>
-                    <h3 className="font-bold text-gray-800 text-lg">Early Bird Special: 20% off!</h3>
-                    <p className="text-gray-700 text-sm">Offer ends in:</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.days}</span>
-                    <span className="countdown-label">days</span>
-                  </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.hours}</span>
-                    <span className="countdown-label">hours</span>
-                  </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.minutes}</span>
-                    <span className="countdown-label">mins</span>
-                  </div>
-                  <span className="font-bold text-gray-800">:</span>
-                  <div className="countdown-item">
-                    <span className="countdown-value">{countdown.seconds}</span>
-                    <span className="countdown-label">secs</span>
-                  </div>
-                  
-                  <button 
-                    onClick={() => setShowPromo(false)} 
-                    className="ml-2 text-gray-800 hover:bg-[rgba(0,0,0,0.1)] p-1.5 rounded-full transition-colors"
-                    aria-label="Close promotion"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+            <CountdownTimer 
+              targetDate={new Date('2025-03-25T12:00:00')}
+              onClose={() => setShowPromo(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
