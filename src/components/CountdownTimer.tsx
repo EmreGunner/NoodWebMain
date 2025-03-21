@@ -55,20 +55,20 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
         </div>
         
         <div className="flex items-center">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-2">
             <TimeUnit value={timeLeft.days} label="DAYS" />
-            <span className="px-1 text-gray-700 font-bold">:</span>
-            <TimeUnit value={timeLeft.hours} label="HOURS" />
-            <span className="px-1 text-gray-700 font-bold">:</span>
-            <TimeUnit value={timeLeft.mins} label="MINUTES" />
-            <span className="px-1 text-gray-700 font-bold">:</span>
-            <TimeUnit value={timeLeft.secs} label="SECONDS" />
+            <span className="text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.hours} label="HRS" />
+            <span className="text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.mins} label="MIN" />
+            <span className="text-gray-700 font-bold">:</span>
+            <TimeUnit value={timeLeft.secs} label="SEC" />
           </div>
           
           {onClose && (
             <button 
               onClick={onClose}
-              className="ml-3 text-gray-700 hover:bg-[#e6d600] p-1.5 rounded-full transition-colors"
+              className="ml-4 text-gray-700 hover:bg-[#e6d600] p-1.5 rounded-full transition-colors"
               aria-label="Close promotion"
             >
               <X size={16} />
@@ -82,13 +82,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
 
 // Separate component for each time unit
 const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
-  <div className="flex flex-col items-center mx-0.5 sm:mx-1">
-    <div className="bg-white rounded px-1.5 py-0.5 w-10 sm:w-14 text-center shadow-[var(--shadow-subtle)] border border-white/80">
-      <span className="font-bold text-gray-800 text-sm sm:text-base">
+  <div className="flex flex-col items-center">
+    <div className="countdown-box">
+      <span className="countdown-value">
         {value.toString().padStart(2, '0')}
       </span>
+      <span className="countdown-label">{label}</span>
     </div>
-    <span className="text-[8px] sm:text-[9px] text-gray-700 mt-0.5 font-medium">{label}</span>
   </div>
 );
 
