@@ -9,7 +9,7 @@
   --section-spacing: clamp(2rem, 5vw, 4rem);
 
   /* Brand Colors */
-  --color-primary: #84bb75;
+  --color-primary: #16a34a;
   --color-secondary: #4e9350;
   --color-dark: #1a3d2f;
   --color-light: #f5f9f4;
@@ -151,15 +151,15 @@ html {
   
   .hero-pattern {
     background-color: #f9fafb;
-    background-image: radial-gradient(#84bb75 0.5px, transparent 0.5px), 
-                      radial-gradient(#84bb75 0.5px, #f9fafb 0.5px);
+    background-image: radial-gradient(#16a34a 0.5px, transparent 0.5px), 
+                      radial-gradient(#16a34a 0.5px, #f9fafb 0.5px);
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
     opacity: 0.2;
   }
   
   .gradient-bg {
-    background: linear-gradient(135deg, #84bb75 0%, #5d8a54 100%);
+    background: linear-gradient(135deg, #16a34a 0%, #5d8a54 100%);
   }
   
   

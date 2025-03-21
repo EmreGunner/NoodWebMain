@@ -30,9 +30,9 @@ const VideoSection: React.FC = () => {
           className="w-full max-w-4xl mx-auto relative"
         >
           {/* Glowing border effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#84bb75] to-[#4e9350] rounded-3xl opacity-75 blur-lg"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#16a34a] to-[#4e9350] rounded-3xl opacity-75 blur-lg"></div>
           
-          <div className="bg-gradient-to-br from-[#84bb75] to-[#4e9350] rounded-3xl p-1 shadow-2xl relative">
+          <div className="bg-gradient-to-br from-[#16a34a] to-[#4e9350] rounded-3xl p-1 shadow-2xl relative">
             <div className="bg-[#0f2a1e] rounded-3xl p-4 sm:p-6">
               <div className="aspect-w-16 aspect-h-9 w-full overflow-visible relative z-10">
                 <HeroCard />
