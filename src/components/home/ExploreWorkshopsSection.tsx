@@ -7,7 +7,7 @@ const ExploreWorkshopsSection: React.FC = () => {
   const workshopImages = [
     "https://i.ibb.co/4ZCgk5tR/Untitled-design-4.webp",
     {workshop2img},
-    {workshop3img},  // ... add more Unsplash image URLs as needed
+    {workshop3img}  // ... add more Unsplash image URLs as needed
   ];
 
   return (
