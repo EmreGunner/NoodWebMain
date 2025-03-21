@@ -67,9 +67,10 @@ const ProductEmailForm = ({ isOpen, onClose, productName }: { isOpen: boolean; o
       formElement.enctype = "application/x-www-form-urlencoded";
       formElement.style.display = "none";
       
-      // Add form fields
+      // Add form fields - send product name as Course
       const payload = {
         Email: email,
+        Course: productName,
         Product: productName,
         Status: "Interested",
       };
@@ -315,16 +316,16 @@ const ProductCard: React.FC<{ product: Product; onQuickView: (product: Product) 
         <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3">{product.description}</p>
         <div className="space-y-2">
           <button 
-            onClick={() => onQuickView(product)}
-            className="btn-primary w-full mt-auto"
-          >
-            Learn More
-          </button>
-          <button 
             onClick={() => onGetAccess(product)}
-            className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
+            className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
           >
             Get Access
+          </button>
+          <button 
+            onClick={() => onQuickView(product)}
+            className="text-primary text-center py-2 rounded-lg w-full block transition-all duration-300 hover:bg-gray-100"
+          >
+            Learn More
           </button>
         </div>
       </div>
