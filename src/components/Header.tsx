@@ -14,6 +14,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState(false);
+  const moreDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +28,19 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (moreDropdownRef.current && !moreDropdownRef.current.contains(event.target as Node)) {
+        setIsMoreDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const mainNavItems = [
     { to: "/courses", icon: BookOpen, text: "Courses" },
@@ -89,7 +103,7 @@ const Header: React.FC = () => {
                 {item.text}
               </Link>
             ))}
-            <div className="relative">
+            <div className="relative" ref={moreDropdownRef}>
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
                 className="text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium"
@@ -113,6 +127,7 @@ const Header: React.FC = () => {
                       to={item.to} 
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       role="menuitem"
+                      onClick={() => setIsMoreDropdownOpen(false)}
                     >
                       {item.text}
                     </Link>
