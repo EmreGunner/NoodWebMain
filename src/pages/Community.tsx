@@ -43,13 +43,13 @@ const Community: React.FC = () => {
       variants={containerVariants}
       className="bg-gradient-to-b from-gray-50 to-white min-h-screen pt-16"
     >
-      <div className="container mx-auto px-4 md:px-6 py-8 md:py-12 space-y-12 md:space-y-16">
+      <div className="container mx-auto px-4 md:px-6 py-6 md:py-10 space-y-8 md:space-y-12">
         <motion.section className="text-center" variants={itemVariants}>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-            NOOD Community
+          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900">
+            NOOD <span className="text-primary">Community</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
-            Join our thriving community of entrepreneurs. Connect, learn, and grow with like-minded individuals focused on building successful digital businesses.
+          <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto">
+            Connect, learn, and grow with like-minded entrepreneurs.
           </p>
         </motion.section>
 
@@ -58,7 +58,7 @@ const Community: React.FC = () => {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="h-full flex">
-            <Card className="p-6 md:p-8 flex flex-col items-center text-center h-full min-h-[600px] transform transition-all duration-300 hover:shadow-xl w-full">
+            <Card className="p-5 md:p-6 flex flex-col items-center text-center h-full min-h-[500px] transform hover:shadow-md w-full border border-gray-100">
               <Users className="text-primary mb-6" size={48} />
               <h2 className="text-2xl font-bold mb-4">Join the Conversation</h2>
               <p className="text-gray-600 mb-6 flex-grow">
@@ -69,9 +69,9 @@ const Community: React.FC = () => {
                   href="https://t.me/noodcommunity"
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05, translateY: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-secondary inline-flex items-center px-6 py-3 rounded-xl text-base md:text-lg border-2 border-primary text-primary hover:bg-primary/5 font-medium shadow-sm transition-all duration-200"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium border border-primary text-primary hover:bg-primary/5 transition-colors"
                 >
                   Join Telegram Community <ArrowRight className="ml-2" size={20} />
                 </motion.a>
@@ -86,15 +86,17 @@ const Community: React.FC = () => {
           </motion.div>
         </motion.section>
 
-        <motion.section variants={containerVariants} className="py-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center">Community Benefits</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <motion.section variants={containerVariants} className="py-2">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-center">Community Benefits</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {benefits.map((benefit, index) => (
               <motion.div key={index} variants={itemVariants}>
-                <Card className="p-6 h-full transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
-                  <benefit.icon className="text-primary mb-4" size={32} />
-                  <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
-                  <p className="text-gray-600">{benefit.description}</p>
+                <Card className="p-4 h-full transition-all border border-gray-100 hover:border-primary/20">
+                  <div className="flex items-center mb-3">
+                    <benefit.icon className="text-primary mr-2" size={20} />
+                    <h3 className="text-lg font-medium">{benefit.title}</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm">{benefit.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -103,32 +105,32 @@ const Community: React.FC = () => {
 
         <motion.section 
           variants={itemVariants}
-          className="bg-gradient-to-r from-primary to-secondary rounded-2xl text-white p-8 md:p-12 text-center transform transition-all duration-300 hover:shadow-xl"
+          className="bg-primary rounded-lg text-white p-6 md:p-8 text-center hover:shadow-md"
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Join Our Community?</h2>
           <p className="text-lg md:text-xl mb-6 md:mb-8 max-w-2xl mx-auto">
             Take the first step towards building your digital side hustle with the support of our community.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <motion.a 
               href="https://t.me/noodcommunity"
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.03, translateY: -2 }}
-              whileTap={{ scale: 0.97 }}
-              className="bg-white text-primary text-base md:text-lg px-6 py-3 rounded-xl hover:bg-gray-50 transition-all duration-200 inline-flex items-center justify-center font-semibold shadow-md"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white text-primary text-sm px-5 py-2.5 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
             >
-              Join Telegram <ArrowRight className="ml-2" size={20} />
+              Join Telegram <ArrowRight className="ml-1.5" size={16} />
             </motion.a>
             <motion.button 
               onClick={() => {
                 document.querySelector('.waitlist-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }}
-              whileHover={{ scale: 1.03, translateY: -2 }}
-              whileTap={{ scale: 0.97 }}
-              className="border-2 border-white text-white text-base md:text-lg px-6 py-3 rounded-xl hover:bg-white/10 transition-all duration-200 inline-flex items-center justify-center font-semibold"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="border border-white text-white text-sm px-5 py-2.5 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center font-medium"
             >
-              Apply for Membership <ArrowRight className="ml-2" size={20} />
+              Apply Now <ArrowRight className="ml-1.5" size={16} />
             </motion.button>
           </div>
         </motion.section>
