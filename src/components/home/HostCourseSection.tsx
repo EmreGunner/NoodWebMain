@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Video, Users, DollarSign } from 'lucide-react';
+import { motion } from 'framer-motion';
+import CourseApplicationForm from '../CourseApplicationForm';
 
 const HostCourseSection: React.FC = () => {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "//embed.typeform.com/next/embed.js";
-    script.async = true;
-    document.body.appendChild(script);
+  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false);
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const openApplicationForm = () => {
+    setIsApplicationFormOpen(true);
+  };
 
   return (
     <div className="container mx-auto px-4 py-24">
@@ -34,7 +31,16 @@ const HostCourseSection: React.FC = () => {
                 </div>
               ))}
             </div>
-            <div data-tf-live="01HQB8RH0C3WV37JX65EZ97VX4"></div>
+            
+            {/* Replace TypeForm with consistent button */}
+            <motion.button 
+              className="bg-primary text-white font-bold text-lg py-3 rounded-full w-full md:w-auto px-8 transition-all duration-300 hover:bg-primary-dark shadow-md hover:shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={openApplicationForm}
+            >
+              Apply to Host a Course
+            </motion.button>
           </div>
           <div className="lg:w-1/2">
             <img 
@@ -45,6 +51,13 @@ const HostCourseSection: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Application Form Modal */}
+      <CourseApplicationForm 
+        isOpen={isApplicationFormOpen}
+        onClose={() => setIsApplicationFormOpen(false)}
+        courseName="Host a Course"
+      />
     </div>
   );
 };
