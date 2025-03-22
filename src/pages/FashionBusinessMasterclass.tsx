@@ -23,7 +23,7 @@ const FashionBusinessMasterclass: React.FC = () => {
     duration: 8,
     coursePhoto: '/path/to/fashion-business-image.jpg',
     price: 60,
-    instructor: 'Sara Johnson',
+    instructor: 'Laila samat',
     level: 'Intermediate',
     language: 'English & Arabic'
   }
