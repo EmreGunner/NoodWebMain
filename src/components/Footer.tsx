@@ -71,21 +71,9 @@ const Footer: React.FC = () => {
               Follow Us
             </h3>
             <div className="flex space-x-3">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.instagram.com/asmae_aboubigi" target="_blank" rel="noopener noreferrer" 
                 className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors duration-300">
                 <Instagram size={20} />
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors duration-300">
-                <Facebook size={20} />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors duration-300">
-                <Twitter size={20} />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors duration-300">
-                <Linkedin size={20} />
               </a>
             </div>
             <p className="text-sm text-gray-300">
