@@ -43,7 +43,7 @@ const HEROES: Hero[] = [
     id: 4,
     name: 'Vishen',
     title: "Unlock Your Mind's Potential",
-    image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36',
+    image: 'https://i.postimg.cc/cJgtzjNM/People-1.webp',
     linkedin: 'https://www.linkedin.com/in/vishen/',
     course: 'Mindvalley Mastery',
   },
