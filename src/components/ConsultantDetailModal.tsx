@@ -118,14 +118,16 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
           
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
-            <button 
-              data-cal-link={consultant.calLink}
-              data-cal-namespace="30min"
-              data-cal-config='{"layout":"month_view"}'
+            <a 
+              href={consultant.id === '3' 
+                ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
+                : `https://cal.com/${consultant.calLink}`}
+              target="_blank" 
+              rel="noopener noreferrer"
               className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
             >
               Book a Time <Calendar className="ml-2" size={18} />
-            </button>
+            </a>
           </div>
         </div>
       </motion.div>

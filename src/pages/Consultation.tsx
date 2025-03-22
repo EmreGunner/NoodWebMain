@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ArrowRight, Search, X, Filter, Calendar, Star } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDebounce } from 'use-debounce'
-import { getCalApi } from "@calcom/embed-react"
+
 
 // Lazy load the modal component
 const ConsultantDetailModal = lazy(() => import('../components/ConsultantDetailModal'))
@@ -100,14 +100,6 @@ interface ConsultantCardProps {
 }
 
 const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore }) => {
-  // Initialize Cal.com properly
-  useEffect(() => {
-    (async function() {
-      const cal = await getCalApi({"namespace": "30min"});
-      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
-    })();
-  }, []);
-
   return (
     <motion.div 
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300"
@@ -154,14 +146,16 @@ const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore
           >
             Learn More
           </button>
-          <button 
-            data-cal-link={consultant.calLink}
-            data-cal-namespace="30min"
-            data-cal-config='{"layout":"month_view"}'
+          <a 
+            href={consultant.id === '3' 
+              ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
+              : `https://cal.com/${consultant.calLink}`}
+            target="_blank" 
+            rel="noopener noreferrer"
             className="flex-1 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
           >
             Book a Time <Calendar className="ml-1" size={14} />
-          </button>
+          </a>
         </div>
       </div>
     </motion.div>
