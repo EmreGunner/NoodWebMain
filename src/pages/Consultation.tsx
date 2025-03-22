@@ -289,7 +289,7 @@ const Consultation: React.FC = () => {
           <div className="flex flex-wrap gap-4">
             <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
               <Clock size={16} className="mr-1 text-primary" />
-              30-min sessions
+              1 hour sessions
             </span>
             <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
               <User size={16} className="mr-1 text-primary" />
@@ -297,7 +297,7 @@ const Consultation: React.FC = () => {
             </span>
             <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
               <MapPin size={16} className="mr-1 text-primary" />
-              Online (Zoom)
+              Online (Google Meet)
             </span>
           </div>
         </div>

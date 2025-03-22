@@ -37,7 +37,7 @@ const workshops: Workshop[] = [
     instructor: 'Sarah Johnson',
     duration: '3 hours',
     prerequisites: 'Basic marketing knowledge',
-    location: 'Online (Zoom)',
+    location: 'Online (Google Meet)',
     whatYouWillLearn: [
       'SEO optimization techniques',
       'Social media marketing strategies',

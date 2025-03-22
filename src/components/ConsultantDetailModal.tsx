@@ -224,7 +224,7 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
                         <h3 className="font-semibold mb-2">Format</h3>
                         <p className="flex items-center">
                           <MapPin size={18} className="mr-2 text-primary" />
-                          Online (Zoom)
+                          Online (Google Meet)
                         </p>
                       </div>
                       
