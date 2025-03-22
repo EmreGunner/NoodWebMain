@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, Star, Check, Calendar } from 'lucide-react'
+import { getCalApi } from "@calcom/embed-react"
 
 interface ConsultantDetailModalProps {
   consultant: {
@@ -35,6 +36,14 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
       window.removeEventListener("keydown", handleEscKey);
     };
   }, [onClose]);
+
+  // Initialize Cal.com when the modal is opened
+  useEffect(() => {
+    (async function() {
+      const cal = await getCalApi({"namespace": "30min"});
+      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
+    })();
+  }, []);
 
   return (
     <motion.div 
@@ -109,14 +118,14 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
           
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
-            <a 
-              href={`https://cal.com/${consultant.calLink}`}
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button 
+              data-cal-link={consultant.calLink}
+              data-cal-namespace="30min"
+              data-cal-config='{"layout":"month_view"}'
               className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
             >
               Book a Time <Calendar className="ml-2" size={18} />
-            </a>
+            </button>
           </div>
         </div>
       </motion.div>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ArrowRight, Search, X, Filter, Calendar, Star } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDebounce } from 'use-debounce'
+import { getCalApi } from "@calcom/embed-react"
 
 // Lazy load the modal component
 const ConsultantDetailModal = lazy(() => import('../components/ConsultantDetailModal'))
@@ -66,7 +67,7 @@ const consultants: Consultant[] = [
     bio: "Emre helps businesses leverage artificial intelligence to streamline marketing operations and create personalized outreach campaigns. He specializes in implementing AI automation systems that increase efficiency while maintaining authentic customer connections.",
     rating: 4.9,
     reviewCount: 76,
-    calLink: "emre-yilmaz-t8ydsj/30min", // Fixed to remove the special character
+    calLink: "emre-yilmaz-t8ydsj/30min",
     image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp',
     specialty: 'Technology',
   },
@@ -99,6 +100,14 @@ interface ConsultantCardProps {
 }
 
 const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore }) => {
+  // Initialize Cal.com properly
+  useEffect(() => {
+    (async function() {
+      const cal = await getCalApi({"namespace": "30min"});
+      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
+    })();
+  }, []);
+
   return (
     <motion.div 
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300"
@@ -145,14 +154,14 @@ const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore
           >
             Learn More
           </button>
-          <a 
-            href={`https://cal.com/${consultant.calLink}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            data-cal-link={consultant.calLink}
+            data-cal-namespace="30min"
+            data-cal-config='{"layout":"month_view"}'
             className="flex-1 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
           >
             Book a Time <Calendar className="ml-1" size={14} />
-          </a>
+          </button>
         </div>
       </div>
     </motion.div>
@@ -166,6 +175,14 @@ const Consultation: React.FC = () => {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null)
   const [selectedConsultant, setSelectedConsultant] = useState<string | null>(null)
+  
+  // Initialize Cal.com in the main component as well
+  useEffect(() => {
+    (async function() {
+      const cal = await getCalApi({"namespace": "30min"});
+      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
+    })();
+  }, []);
   
   // Specialties for filtering
   const specialties = useMemo(() => {
