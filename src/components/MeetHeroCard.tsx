@@ -1,8 +1,9 @@
-import React, { memo, useCallback, useState, useRef, useEffect } from "react";
+import React, { memo, useCallback, useState, useRef } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
 import '../styles/MeetHeroCard.css';
+import { Link } from 'react-router-dom';
 
 // Define the props interface
 interface MeetHeroCardProps {
@@ -13,32 +14,29 @@ interface MeetHeroCardProps {
   course: string;
 }
 
+// Course URL mapping
+const COURSE_URLS: Record<string, string> = {
+  'Fashion Business': '/courses/fashion-business-masterclass',
+  'E-commerce Mastery': '/courses/ecommerce-fundamentals',
+  'UGC Creation': '/courses/ugc-creation-masterclass',
+};
+
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  
-  // Check if we're on mobile once on mount
-  useEffect(() => {
-    setIsMobile(window.matchMedia('(hover: none)').matches);
-  }, []);
   
   // Use a single handler for hover without requestAnimationFrame to maintain smooth transitions
   const handleHover = useCallback((hovering: boolean) => {
     setIsHovered(hovering);
   }, []);
 
-  // Handle touch for mobile
-  const handleTouch = useCallback(() => {
-    if (isMobile) {
-      setIsHovered(prev => !prev);
-    }
-  }, [isMobile]);
-  
   // Prevent event bubbling with a single handler
   const handleSocialClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
+
+  // Course URL fallback with default
+  const courseUrl = COURSE_URLS[course] || '/courses';
 
   // Optimized image loading props
   const imageProps = {
@@ -52,10 +50,10 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
 
   return (
     <div
-      className={`hero-card-wrapper ${isMobile ? 'mobile' : ''}`}
+      className="hero-card-wrapper"
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
-      onClick={handleTouch}
+      onClick={() => setIsHovered(!isHovered)}
     >
       <div className="card" ref={cardRef}>
         <LazyLoadImage
@@ -104,7 +102,13 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
                 </svg>
               </a>
             </div>
-            <button className="button">See Course</button>
+            <Link 
+              to={courseUrl}
+              className="button"
+              onClick={handleSocialClick}
+            >
+              See Course
+            </Link>
           </div>
         </div>
       </div>
@@ -115,3 +119,22 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
 MeetHeroCard.displayName = 'MeetHeroCard';
 
 export default MeetHeroCard;
+
+/* Mobile-specific fixes */
+@media (max-width: 767px) {
+  .hero-card-wrapper .card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .hero-card-wrapper .card .bottom {
+    transition: top 0.3s ease-in-out;
+  }
+  
+  .hero-card-wrapper .card .profile-pic {
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .hero-card-wrapper .card .bottom.expanded {
+    top: 65%;
+  }
+}
