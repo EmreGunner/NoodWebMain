@@ -19,7 +19,7 @@ const HEROES: Hero[] = [
     id: 1,
     name: 'Sarah Johnson',
     title: 'Marketing Expert',
-    image: 'https://i.postimg.cc/NGpG143g/People.png',
+    image: 'https://i.postimg.cc/KjqZxGPK/People-2.png',
     linkedin: '#',
     course: 'Digital Marketing Mastery',
   },
@@ -28,7 +28,7 @@ const HEROES: Hero[] = [
     name: 'Neale Donald Walsch',
     title: 'Awaken The Species',
     image: 'https://i.postimg.cc/sxDVkQhd/People-1.png',
-    linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/',
+    linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/', 
     course: 'Spiritual Awakening',
   },
   {
@@ -154,7 +154,7 @@ const MeetHeroes: React.FC = () => {
       <div className="relative max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-            Meet Our Heroes
+            Meet Our Trainers
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Expert tutors dedicated to transforming lives through knowledge and inspiration.
