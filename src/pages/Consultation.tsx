@@ -7,8 +7,23 @@ import { useDebounce } from 'use-debounce'
 // Lazy load the modal component
 const ConsultantDetailModal = lazy(() => import('../components/ConsultantDetailModal'))
 
-// Consultant data
-const consultants = [
+// Define proper types for the consultant data
+interface Consultant {
+  id: string;
+  slug: string;
+  name: string;
+  title: string;
+  expertise: string[];
+  bio: string;
+  rating: number;
+  reviewCount: number;
+  calLink: string;
+  image: string;
+  specialty: string;
+}
+
+// Consultant data with updated image paths
+const consultants: Consultant[] = [
   {
     id: '1',
     slug: 'asmae-aboubigi',
@@ -19,7 +34,7 @@ const consultants = [
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: '/images/consultants/asmae-aboubigi.jpg',
+    image: '/images/ConsultationEcommerce.png',
     specialty: 'E-commerce',
   },
   {
@@ -32,7 +47,7 @@ const consultants = [
     rating: 4.8,
     reviewCount: 93,
     calLink: "mehdi-karim/30min",
-    image: '/images/consultants/mehdi-karim.jpg',
+    image: '/images/ConsultationUGC.png',
     specialty: 'Content Creation',
   },
   {
@@ -50,16 +65,16 @@ const consultants = [
   },
   {
     id: '4',
-    slug: 'youssef-benali',
-    name: 'Youssef Benali',
-    title: 'Digital Marketing Expert',
-    expertise: ['SEO & SEM', 'Analytics', 'Marketing Automation'],
-    bio: "Youssef helps businesses optimize their digital presence and marketing strategies. With a data-driven approach, he specializes in creating measurable results through SEO, paid advertising, and marketing automation.",
+    slug: 'ahmed-boutahir',
+    name: 'Ahmed Boutahir',
+    title: 'AI Integration Specialist',
+    expertise: ['AI Implementation', 'Process Automation', 'Tech Strategy'],
+    bio: "Ahmed helps businesses leverage artificial intelligence to streamline operations and create innovative solutions. His technical expertise combined with business acumen makes him ideal for companies looking to embrace AI technologies.",
     rating: 4.9,
-    reviewCount: 112,
-    calLink: "youssef-benali/30min",
-    image: '/images/consultants/youssef-benali.jpg',
-    specialty: 'Marketing',
+    reviewCount: 76,
+    calLink: "ahmed-boutahir/30min",
+    image: '/images/ConsultationAi.png',
+    specialty: 'Technology',
   },
 ]
 
@@ -83,21 +98,23 @@ const itemVariants = {
   }
 }
 
-// Consultant Card Component
-const ConsultantCard: React.FC<{
-  consultant: any;
+// Consultant Card Component with proper typing
+interface ConsultantCardProps {
+  consultant: Consultant;
   onLearnMore: (id: string) => void;
-}> = ({ consultant, onLearnMore }) => {
+}
+
+const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore }) => {
   return (
     <motion.div 
       className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300"
       whileHover={{ y: -5 }}
     >
-      <div className="h-64 overflow-hidden">
+      <div className="relative h-0 pb-[66.66%] overflow-hidden">
         <img 
           src={consultant.image} 
           alt={consultant.name} 
-          className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500" 
+          className="absolute w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500" 
         />
       </div>
       <div className="p-6">
@@ -135,10 +152,17 @@ const ConsultantCard: React.FC<{
             Learn More
           </button>
           <button 
+            onClick={() => {
+              // Properly initialize Cal.com
+              if (window.Cal) {
+                window.Cal('ui', {
+                  hideEventTypeDetails: false,
+                  layout: 'month_view',
+                });
+                window.Cal.ns["30min"]("showEventTypeDetails", consultant.calLink);
+              }
+            }}
             className="flex-1 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
-            data-cal-link={consultant.calLink}
-            data-cal-namespace="30min"
-            data-cal-config='{"layout":"month_view"}'
           >
             Book a Time <Calendar className="ml-1" size={14} />
           </button>
@@ -146,6 +170,13 @@ const ConsultantCard: React.FC<{
       </div>
     </motion.div>
   )
+}
+
+// Add type declaration for Cal.com
+declare global {
+  interface Window {
+    Cal: any;
+  }
 }
 
 // Main component
@@ -187,17 +218,17 @@ const Consultation: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/5 to-white py-12 sm:py-16 mb-8 rounded-2xl">
+      {/* Hero Section - Compact design similar to NoodShop */}
+      <section className="bg-gradient-to-br from-primary/5 to-white py-8 mb-6 rounded-xl">
         <div className="container mx-auto px-4">
           <motion.div 
-            className="text-center max-w-3xl mx-auto"
+            className="text-center max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Expert Consultation</h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">Expert Consultation</h1>
+            <p className="text-lg text-gray-600">
               Book a one-on-one session with our industry experts to accelerate your entrepreneurial journey
             </p>
           </motion.div>
@@ -205,11 +236,11 @@ const Consultation: React.FC = () => {
       </section>
 
       <div className="container mx-auto px-4 pb-16">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Section */}
           <div className="w-full lg:w-1/4">
             <motion.div 
-              className="bg-white rounded-2xl shadow-md p-6 sticky top-24"
+              className="bg-white rounded-xl shadow-sm p-5 sticky top-24"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -217,7 +248,7 @@ const Consultation: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4">Filters</h2>
               
               {/* Search */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -226,7 +257,7 @@ const Consultation: React.FC = () => {
                     placeholder="Search by name or expertise..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                   />
                   {searchTerm && (
                     <button 
@@ -240,7 +271,7 @@ const Consultation: React.FC = () => {
               </div>
               
               {/* Specialty Filter */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Specialty</label>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -270,7 +301,7 @@ const Consultation: React.FC = () => {
               </div>
               
               {/* Need Help Section */}
-              <div className="bg-primary/10 rounded-xl p-4 mt-8">
+              <div className="bg-primary/10 rounded-xl p-4 mt-6">
                 <h3 className="text-primary font-semibold mb-2">Need help choosing?</h3>
                 <p className="text-sm text-gray-700 mb-3">
                   Not sure which consultant is right for you? Contact us for a free matching service.
@@ -289,7 +320,7 @@ const Consultation: React.FC = () => {
           <div className="w-full lg:w-3/4">
             {/* Active Filters */}
             {isFiltered && (
-              <div className="flex flex-wrap mb-6">
+              <div className="flex flex-wrap mb-5">
                 <div className="text-sm text-gray-500 mr-2 flex items-center">Active filters:</div>
                 {selectedSpecialty && (
                   <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-sm mr-2 mb-2 flex items-center">
@@ -328,7 +359,7 @@ const Consultation: React.FC = () => {
                 ))
               ) : (
                 <motion.div 
-                  className="col-span-2 text-center py-16 bg-white rounded-2xl shadow-sm"
+                  className="col-span-2 text-center py-16 bg-white rounded-xl shadow-sm"
                   variants={itemVariants}
                 >
                   <p className="text-xl text-gray-600 mb-4">No consultants found matching your criteria.</p>
@@ -345,17 +376,17 @@ const Consultation: React.FC = () => {
               )}
             </motion.div>
             
-            {/* Testimonials */}
+            {/* Testimonials - Improved design */}
             <motion.section 
-              className="mt-16 bg-white shadow-md rounded-2xl p-8 text-center"
+              className="mt-12 bg-white shadow-sm rounded-xl p-6 text-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <h2 className="text-2xl font-bold mb-8">What Our Clients Say</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <div className="flex items-center mb-2">
+              <h2 className="text-2xl font-bold mb-6">What Our Clients Say</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="bg-gray-50 p-5 rounded-xl">
+                  <div className="flex items-center justify-center mb-2">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-yellow-500" />
                     ))}
@@ -363,8 +394,8 @@ const Consultation: React.FC = () => {
                   <p className="text-gray-600 italic mb-4">"The consultation session completely changed my approach to my e-commerce business. Worth every dirham!"</p>
                   <p className="font-medium">Fatima K.</p>
                 </div>
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <div className="flex items-center mb-2">
+                <div className="bg-gray-50 p-5 rounded-xl">
+                  <div className="flex items-center justify-center mb-2">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-yellow-500" />
                     ))}
@@ -372,13 +403,13 @@ const Consultation: React.FC = () => {
                   <p className="text-gray-600 italic mb-4">"I was stuck with my content strategy. After just one session, I had a clear roadmap for the next 6 months."</p>
                   <p className="font-medium">Hamza T.</p>
                 </div>
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <div className="flex items-center mb-2">
+                <div className="bg-gray-50 p-5 rounded-xl">
+                  <div className="flex items-center justify-center mb-2">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-yellow-500" />
                     ))}
                   </div>
-                  <p className="text-gray-600 italic mb-4">"The expert insights on sustainable fashion practices helped my brand stand out in a competitive market."</p>
+                  <p className="text-gray-600 italic mb-4">"The AI implementation strategies from my consultant helped us automate 40% of our customer service operations."</p>
                   <p className="font-medium">Leila M.</p>
                 </div>
               </div>
@@ -386,13 +417,13 @@ const Consultation: React.FC = () => {
             
             {/* CTA Section */}
             <motion.section 
-              className="mt-16 text-center py-16 bg-gradient-to-r from-primary via-secondary to-primary rounded-3xl text-white shadow-xl"
+              className="mt-10 text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl text-white shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <h2 className="text-3xl font-bold mb-4">{t('Not finding what you need?')}</h2>
-              <p className="text-xl mb-8 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-bold mb-3">{t('Not finding what you need?')}</h2>
+              <p className="text-lg mb-6 max-w-2xl mx-auto">
                 {t('We offer custom consultation packages for businesses with specific needs. Contact us to discuss a tailored solution.')}
               </p>
               <motion.div
@@ -401,9 +432,9 @@ const Consultation: React.FC = () => {
               >
                 <a 
                   href="mailto:enterprise@nood.ma"
-                  className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg"
+                  className="bg-white text-primary text-lg px-6 py-2.5 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-md"
                 >
-                  {t('Contact Enterprise Team')} <ArrowRight className="ml-2" size={20} />
+                  {t('Contact Enterprise Team')} <ArrowRight className="ml-2" size={18} />
                 </a>
               </motion.div>
             </motion.section>
