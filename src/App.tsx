@@ -14,7 +14,7 @@ import ProductDetail from './pages/ProductDetail'
 import CourseDetailPage from './pages/CourseDetailPage'
 import WorkshopDetail from './pages/WorkshopDetail'
 import HomePage from './pages/HomePage'
-import CoursesPage from './pages/CoursesPage'
+import Courses from './pages/Courses'
 import FashionBusinessMasterclass from './pages/FashionBusinessMasterclass'
 import EcommerceMasterclass from './pages/EcommerceMastery'
 import UGCCreationMasterclass from './pages/UGCCreation'
@@ -42,7 +42,7 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/courses" element={<Courses />} />
               <Route path="/courses/:slug" element={<CourseDetailPage />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/community" element={<Community />} />
