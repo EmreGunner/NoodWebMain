@@ -50,8 +50,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onClose }) 
       <div className="content-container flex items-center justify-between">
         <div className="flex items-center">
           <span className="font-bold text-gray-800 text-sm sm:text-base">🎁 Early Bird Special - 20% Off!</span>
-          <span className="mx-2 text-gray-700 hidden sm:inline">|</span>
-          <span className="text-gray-700 text-sm hidden sm:inline">Ends in:</span>
+
         </div>
         
         <div className="flex items-center">
