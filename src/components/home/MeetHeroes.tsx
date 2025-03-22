@@ -186,12 +186,14 @@ const MeetHeroes: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {HEROES.map((hero) => (
-              <div key={hero.id} className="transform transition-all duration-500">
-                <MeetHeroCard {...hero} />
-              </div>
-            ))}
+          <div className="hidden md:flex md:justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
+              {HEROES.map((hero) => (
+                <div key={hero.id} className="transform transition-all duration-500">
+                  <MeetHeroCard {...hero} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
