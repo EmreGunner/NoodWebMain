@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useRef } from "react";
+import React, { memo, useCallback, useState, useRef, useEffect } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import noodLogo from '/src/assets/nood.svg';
@@ -15,16 +15,73 @@ interface MeetHeroCardProps {
 
 const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, linkedin, course }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const touchTimerRef = useRef<number | null>(null);
+  const isMobileRef = useRef(false);
+  
+  // Detect if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      isMobileRef.current = window.innerWidth < 768;
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Use a single handler for hover without requestAnimationFrame to maintain smooth transitions
   const handleHover = useCallback((hovering: boolean) => {
-    setIsHovered(hovering);
+    if (!isMobileRef.current) {
+      setIsHovered(hovering);
+    }
   }, []);
+
+  // Touch handlers for mobile
+  const handleTouchStart = useCallback(() => {
+    if (isMobileRef.current) {
+      // Clear any existing timer
+      if (touchTimerRef.current) {
+        window.clearTimeout(touchTimerRef.current);
+      }
+      
+      setIsTouched(true);
+      setIsHovered(true);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (isMobileRef.current) {
+      // Set a timer to reset the touched state
+      touchTimerRef.current = window.setTimeout(() => {
+        setIsTouched(false);
+        setIsHovered(false);
+      }, 2000); // Keep animation visible for 2 seconds after touch
+    }
+  }, []);
+  
+  // Handle click events carefully to not interfere with scrolling
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    if (isMobileRef.current) {
+      e.preventDefault();
+      setIsTouched(!isTouched);
+      setIsHovered(!isHovered);
+    }
+  }, [isTouched, isHovered]);
 
   // Prevent event bubbling with a single handler
   const handleSocialClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+  }, []);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (touchTimerRef.current) {
+        window.clearTimeout(touchTimerRef.current);
+      }
+    };
   }, []);
 
   // Optimized image loading props
@@ -39,9 +96,12 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
 
   return (
     <div
-      className="hero-card-wrapper"
+      className={`hero-card-wrapper ${isTouched ? 'touched' : ''}`}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onClick={handleCardClick}
     >
       <div className="card" ref={cardRef}>
         <LazyLoadImage
