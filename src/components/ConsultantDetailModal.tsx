@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, Star, Check, Calendar } from 'lucide-react'
 
@@ -20,7 +20,7 @@ interface ConsultantDetailModalProps {
 
 const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultant, onClose }) => {
   // Handle escape key press
-  React.useEffect(() => {
+  useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
@@ -36,16 +36,50 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
     };
   }, [onClose]);
 
+  // Initialize Cal.com when the modal is opened
+  useEffect(() => {
+    // Make sure the Cal script is loaded
+    const script = document.createElement('script');
+    script.src = 'https://app.cal.com/embed/embed.js';
+    script.async = true;
+    script.onload = () => {
+      // Initialize Cal with the consultant's link
+      if (window.Cal) {
+        window.Cal("init", {origin:"https://cal.com"});
+        window.Cal("ui", {
+          styles: {branding: {brandColor: "#000000"}},
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+        window.Cal("inline", {
+          elementOrSelector: "#modal-cal-booking-placeholder",
+          calLink: consultant.calLink
+        });
+      }
+    };
+    
+    // Add the script if it's not already there
+    if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
+      document.head.appendChild(script);
+    } else if (window.Cal) {
+      // If script already loaded, just open the booking
+      window.Cal("inline", {
+        elementOrSelector: "#modal-cal-booking-placeholder",
+        calLink: consultant.calLink
+      });
+    }
+  }, [consultant.calLink]);
+
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 overflow-y-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
       <motion.div
-        className="bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row"
+        className="bg-white rounded-xl shadow-xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -104,14 +138,14 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
             </div>
           </div>
           
-          <button 
-            className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
-            data-cal-link={consultant.calLink}
-            data-cal-namespace="30min"
-            data-cal-config='{"layout":"month_view"}'
-          >
-            Book a Time <Calendar className="ml-2" size={18} />
-          </button>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
+            <div id="modal-cal-booking-placeholder" className="min-h-[300px] border border-gray-200 rounded-lg p-4">
+              <div className="flex justify-center items-center h-full">
+                <p className="text-gray-500">Loading calendar...</p>
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
     </motion.div>
