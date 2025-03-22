@@ -28,6 +28,7 @@ interface Consultant {
   calLink: string;
   image: string;
   specialty: string;
+  hourlyRate: number;
 }
 
 // Updated consultant data with correct information
@@ -42,8 +43,9 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     specialty: 'E-commerce',
+    hourlyRate: 50
   },
   {
     id: '2',
@@ -55,8 +57,9 @@ const consultants: Consultant[] = [
     rating: 4.7,
     reviewCount: 85,
     calLink: "imane-benali/30min",
-    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp',
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     specialty: 'Content',
+    hourlyRate: 25
   },
   {
     id: '3',
@@ -68,8 +71,9 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 76,
     calLink: "emre-yilmaz-t8ydsj/30min",
-    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
     specialty: 'Technology',
+    hourlyRate: 50
   },
 ]
 
@@ -172,10 +176,29 @@ const Consultation: React.FC = () => {
   
   // Initialize Cal.com in the main component as well
   useEffect(() => {
-    (async function() {
-      const cal = await getCalApi({"namespace": "30min"});
-      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
-    })();
+    // Create Cal.com embed script
+    const script = document.createElement('script');
+    script.src = 'https://cal.com/embed.js';
+    script.async = true;
+    script.onload = () => {
+      // Initialize Cal once script is loaded
+      if (window.Cal) {
+        window.Cal("ui", {
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+      }
+    };
+    
+    // Add script to document
+    document.body.appendChild(script);
+    
+    // Cleanup
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
   
   // Specialties for filtering

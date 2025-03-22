@@ -37,17 +37,32 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
     };
   }, [onClose]);
 
-  // Initialize Cal.com
+  // Initialize Cal.com using vanilla JavaScript approach
   useEffect(() => {
-    (async function() {
-      const { getCalApi } = await import("@calcom/embed-react");
-      const cal = await getCalApi();
-      cal("ui", {
-        styles: { branding: { brandColor: "#5046e5" } },
-        hideEventTypeDetails: false,
-        layout: "month_view"
-      });
-    })();
+    // Create Cal.com embed script
+    const script = document.createElement('script');
+    script.src = 'https://cal.com/embed.js';
+    script.async = true;
+    script.onload = () => {
+      // Initialize Cal once script is loaded
+      if (window.Cal) {
+        window.Cal("ui", {
+          styles: { branding: { brandColor: "#5046e5" } },
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+      }
+    };
+    
+    // Add script to document
+    document.body.appendChild(script);
+    
+    // Cleanup
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   return (
