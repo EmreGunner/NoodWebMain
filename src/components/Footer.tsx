@@ -4,7 +4,7 @@ import { Instagram, Mail, Phone } from 'lucide-react'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gradient-to-br from-[#1a3d2f] to-primary text-white pt-16 pb-8">
+    <footer className="bg-[#16a34a] text-white pt-16 pb-8">
       <div className="content-container">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -83,7 +83,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-8"></div>
+        <div className="h-px bg-white/20 my-8"></div>
 
         {/* Bottom Footer */}
         <div className="text-center">
