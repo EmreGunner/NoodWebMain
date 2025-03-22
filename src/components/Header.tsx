@@ -108,7 +108,7 @@ const Header: React.FC = () => {
                 key={item.to} 
                 to={item.to} 
                 className={`text-gray-700 hover:text-primary flex items-center relative pb-1 
-                  font-medium text-sm transition-colors
+                  font-medium text-base transition-colors
                   ${location.pathname === item.to ? 'text-primary' : ''}
                 `}
               >
@@ -124,27 +124,30 @@ const Header: React.FC = () => {
             <Link 
               to="/consultation" 
               className={`
-                flex items-center relative px-4 py-2 rounded-full
+                flex items-center relative px-4 py-2.5 rounded-full
                 ${isConsultationPage 
                   ? 'bg-primary text-white' 
                   : 'bg-primary/10 text-primary hover:bg-primary/20'}
-                transition-colors font-medium text-sm
+                transition-colors font-medium text-base
               `}
             >
-              <Calendar className="inline-block mr-2" size={16} />
+              <Calendar className="inline-block mr-2" size={18} />
               Book Consultation
             </Link>
-            
+          </nav>
+
+          <div className="flex items-center space-x-4 tablet:space-x-3">
+            {/* More Dropdown - Moved here */}
             <div 
-              className="relative" 
+              className="relative hidden md:block" 
               ref={moreDropdownRef}
             >
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
                 className={`
                   text-gray-700 hover:text-primary flex items-center
-                  tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm
-                  tablet:font-medium relative pb-1 font-medium text-sm
+                  px-3 py-1.5 rounded-md text-base
+                  font-medium relative
                   ${moreNavItems.some(item => location.pathname === item.to) ? 'text-primary' : ''}
                 `}
                 aria-haspopup="true"
@@ -174,7 +177,7 @@ const Header: React.FC = () => {
                         key={item.to} 
                         to={item.to} 
                         className={`
-                          block px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm
+                          block px-4 py-3 text-gray-700 hover:bg-gray-50 text-base
                           ${location.pathname === item.to 
                             ? 'bg-primary/5 font-medium border-l-4 border-primary' 
                             : 'border-l-4 border-transparent'}
@@ -189,14 +192,12 @@ const Header: React.FC = () => {
                 )}
               </AnimatePresence>
             </div>
-          </nav>
 
-          <div className="flex items-center space-x-4 tablet:space-x-3">
             <div className="relative">
               <select
                 value={i18n.language}
                 onChange={(e) => i18n.changeLanguage(e.target.value)}
-                className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-3 pr-8 text-base focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="en">EN</option>
                 <option value="fr">FR</option>
@@ -215,7 +216,7 @@ const Header: React.FC = () => {
                 ${isConsultationPage 
                   ? 'bg-primary text-white' 
                   : 'bg-primary/10 text-primary'}
-                transition-colors font-medium text-sm
+                transition-colors font-medium text-base
               `}
             >
               <Calendar className="w-4 h-4" />
@@ -249,7 +250,7 @@ const Header: React.FC = () => {
                     key={item.to}
                     to={item.to}
                     className={`
-                      flex items-center py-3 px-4 rounded-lg
+                      flex items-center py-3 px-4 rounded-lg text-base
                       ${location.pathname === item.to 
                         ? 'bg-primary/10 text-primary font-medium' 
                         : 'text-gray-700'}
@@ -264,7 +265,7 @@ const Header: React.FC = () => {
                 <Link
                   to="/consultation"
                   className={`
-                    flex items-center py-3 px-4 rounded-lg
+                    flex items-center py-3 px-4 rounded-lg text-base
                     ${isConsultationPage 
                       ? 'bg-primary text-white font-medium' 
                       : 'bg-primary/10 text-primary font-medium'}
@@ -282,7 +283,7 @@ const Header: React.FC = () => {
                     key={item.to}
                     to={item.to}
                     className={`
-                      py-3 px-4 rounded-lg
+                      py-3 px-4 rounded-lg text-base
                       ${location.pathname === item.to 
                         ? 'bg-gray-50 text-primary font-medium' 
                         : 'text-gray-700'}
