@@ -1,9 +1,8 @@
 import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Search, X, Filter, Calendar, Star } from 'lucide-react'
+import { ArrowRight, Search, X, Filter, Calendar, Star, ChevronLeft, Clock, MapPin, User } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDebounce } from 'use-debounce'
-
 
 // Lazy load the modal component
 const ConsultantDetailModal = lazy(() => import('../components/ConsultantDetailModal'))
@@ -31,7 +30,7 @@ interface Consultant {
   hourlyRate: number;
 }
 
-// Updated consultant data with correct information
+// Updated consultant data with correct information and image paths
 const consultants: Consultant[] = [
   {
     id: '1',
@@ -43,7 +42,7 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    image: '/ConsultationEcommerce.png', // Updated image path
     specialty: 'E-commerce',
     hourlyRate: 50
   },
@@ -57,7 +56,7 @@ const consultants: Consultant[] = [
     rating: 4.7,
     reviewCount: 85,
     calLink: "imane-benali/30min",
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    image: '/ConsultationUGC.png', // Updated image path
     specialty: 'Content',
     hourlyRate: 25
   },
@@ -71,7 +70,7 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 76,
     calLink: "emre-yilmaz-t8ydsj/30min",
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    image: '/ConsultationAi.png', // Updated image path
     specialty: 'Technology',
     hourlyRate: 50
   },
@@ -97,69 +96,85 @@ const itemVariants = {
   }
 }
 
-// Consultant Card Component with proper typing
+// Consultant Card Component with proper typing - redesigned for 3:2 ratio
 interface ConsultantCardProps {
   consultant: Consultant;
   onLearnMore: (id: string) => void;
 }
 
 const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore }) => {
+  console.log(`Rendering card for consultant: ${consultant.name}`);
+  
   return (
     <motion.div 
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300"
       whileHover={{ y: -5 }}
     >
-      <div className="relative h-0 pb-[66.66%] overflow-hidden">
-        <img 
-          src={consultant.image} 
-          alt={consultant.name} 
-          className="absolute w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500" 
-        />
-      </div>
-      <div className="p-5">
-        <div className="flex items-center mb-2">
-          <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-            {consultant.specialty}
-          </span>
-          <div className="ml-auto flex items-center">
-            <Star className="w-4 h-4 text-yellow-500" />
-            <span className="ml-1 text-sm font-medium">{consultant.rating}</span>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
+        {/* Image section - adjusted for 3:2 ratio */}
+        <div className="md:col-span-5 relative">
+          <div className="relative aspect-[3/2] md:h-full">
+            <img 
+              src={consultant.image} 
+              alt={consultant.name} 
+              className="w-full h-full object-cover object-center" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div className="absolute bottom-3 left-3">
+              <span className="px-3 py-1 bg-primary/90 rounded-full text-white text-sm font-medium">
+                {consultant.specialty}
+              </span>
+            </div>
           </div>
         </div>
         
-        <h3 className="text-xl font-bold mb-1">{consultant.name}</h3>
-        <p className="text-gray-600 mb-3">{consultant.title}</p>
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          {consultant.expertise.slice(0, 2).map((skill: string, index: number) => (
-            <span key={index} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-              {skill}
-            </span>
-          ))}
-          {consultant.expertise.length > 2 && (
-            <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-              +{consultant.expertise.length - 2}
-            </span>
-          )}
-        </div>
-        
-        <div className="flex gap-2">
-          <button 
-            onClick={() => onLearnMore(consultant.id)}
-            className="flex-1 py-2 border border-gray-200 text-gray-800 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
-          >
-            Learn More
-          </button>
-          <a 
-            href={consultant.id === '3' 
-              ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
-              : `https://cal.com/${consultant.calLink}`}
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex-1 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
-          >
-            Book a Time <Calendar className="ml-1" size={14} />
-          </a>
+        {/* Content section */}
+        <div className="md:col-span-7 p-4 md:p-5">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xl font-bold">{consultant.name}</h3>
+            <div className="flex items-center">
+              <Star className="w-4 h-4 text-yellow-500" />
+              <span className="ml-1 text-sm font-medium">{consultant.rating}</span>
+            </div>
+          </div>
+          
+          <p className="text-gray-600 mb-3">{consultant.title}</p>
+          
+          <div className="flex flex-wrap gap-2 mb-4">
+            {consultant.expertise.slice(0, 2).map((skill, index) => (
+              <span key={index} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                {skill}
+              </span>
+            ))}
+            {consultant.expertise.length > 2 && (
+              <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                +{consultant.expertise.length - 2}
+              </span>
+            )}
+          </div>
+          
+          <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+            {consultant.bio.substring(0, 120)}...
+          </p>
+          
+          <div className="flex gap-2 mt-auto">
+            <button 
+              onClick={() => onLearnMore(consultant.id)}
+              className="flex-1 py-2 border border-gray-200 text-gray-800 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+            >
+              View Details
+            </button>
+            <a 
+              href={consultant.id === '3' 
+                ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
+                : `https://cal.com/${consultant.calLink}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
+            >
+              Book a Time <Calendar className="ml-1" size={14} />
+            </a>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -174,8 +189,16 @@ const Consultation: React.FC = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null)
   const [selectedConsultant, setSelectedConsultant] = useState<string | null>(null)
   
+  console.log('Consultation page rendered', { 
+    searchTerm, 
+    selectedSpecialty, 
+    selectedConsultant 
+  });
+  
   // Initialize Cal.com in the main component as well
   useEffect(() => {
+    console.log('Initializing Cal.com embed script');
+    
     // Create Cal.com embed script
     const script = document.createElement('script');
     script.src = 'https://cal.com/embed.js';
@@ -183,6 +206,7 @@ const Consultation: React.FC = () => {
     script.onload = () => {
       // Initialize Cal once script is loaded
       if (window.Cal) {
+        console.log('Cal.com script loaded successfully');
         window.Cal("ui", {
           hideEventTypeDetails: false,
           layout: "month_view"
@@ -195,6 +219,7 @@ const Consultation: React.FC = () => {
     
     // Cleanup
     return () => {
+      console.log('Cleaning up Cal.com script');
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
@@ -203,18 +228,27 @@ const Consultation: React.FC = () => {
   
   // Specialties for filtering
   const specialties = useMemo(() => {
-    return Array.from(new Set(consultants.map(c => c.specialty)))
+    const uniqueSpecialties = Array.from(new Set(consultants.map(c => c.specialty)));
+    console.log('Available specialties:', uniqueSpecialties);
+    return uniqueSpecialties;
   }, [])
   
   // Filtered consultants
   const filteredConsultants = useMemo(() => {
-    return consultants.filter(consultant => 
+    const filtered = consultants.filter(consultant => 
       (selectedSpecialty ? consultant.specialty === selectedSpecialty : true) &&
       (debouncedSearchTerm 
         ? consultant.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
           consultant.expertise.some(e => e.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
         : true)
-    )
+    );
+    
+    console.log('Filtered consultants:', { 
+      count: filtered.length,
+      filters: { specialty: selectedSpecialty, search: debouncedSearchTerm }
+    });
+    
+    return filtered;
   }, [selectedSpecialty, debouncedSearchTerm])
 
   // Is any filter applied?
@@ -222,48 +256,57 @@ const Consultation: React.FC = () => {
   
   // Handle learn more (open modal)
   const handleLearnMore = (id: string) => {
+    console.log('Opening consultant details for ID:', id);
     setSelectedConsultant(id)
   }
   
   // Close modal
   const closeModal = () => {
+    console.log('Closing consultant details modal');
     setSelectedConsultant(null)
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Completely redesigned */}
-      <section className="bg-gradient-to-r from-primary to-secondary py-12 mb-8">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="text-center max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">Expert Consultation</h1>
-            <p className="text-lg md:text-xl text-white/90 mb-6">
-              Book a one-on-one session with our industry experts to accelerate your entrepreneurial journey
-            </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+      {/* Compact Header - Redesigned */}
+      <section className="bg-white shadow-sm border-b border-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold">Expert Consultations</h1>
+            <a 
+              href="#filters"
+              className="md:hidden bg-gray-100 p-2 rounded-full"
             >
-              <a 
-                href="#consultants"
-                className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg"
-              >
-                Find an Expert <ArrowRight className="ml-2" size={20} />
-              </a>
-            </motion.div>
-          </motion.div>
+              <Filter size={20} />
+            </a>
+          </div>
+          
+          <p className="text-lg text-gray-700 max-w-3xl mb-6">
+            Book a one-on-one session with our industry experts to accelerate your entrepreneurial journey. 
+            Get personalized advice on e-commerce, content strategy, or AI implementation.
+          </p>
+          
+          <div className="flex flex-wrap gap-4">
+            <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
+              <Clock size={16} className="mr-1 text-primary" />
+              30-min sessions
+            </span>
+            <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
+              <User size={16} className="mr-1 text-primary" />
+              Industry specialists
+            </span>
+            <span className="inline-flex items-center bg-gray-100 px-3 py-1 rounded-full text-sm">
+              <MapPin size={16} className="mr-1 text-primary" />
+              Online (Zoom)
+            </span>
+          </div>
         </div>
       </section>
-
-      <div id="consultants" className="container mx-auto px-4 pb-16">
+      
+      <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Section - Improved design */}
-          <div className="w-full lg:w-1/4">
+          {/* Filters Section - Now similar to WorkshopDetail sidebar */}
+          <div id="filters" className="w-full lg:w-1/4">
             <motion.div 
               className="bg-white rounded-xl shadow-sm p-6 sticky top-24"
               initial={{ opacity: 0, x: -20 }}
@@ -272,7 +315,7 @@ const Consultation: React.FC = () => {
             >
               <h2 className="text-xl font-semibold mb-5 flex items-center">
                 <Filter className="mr-2" size={20} />
-                Filters
+                Find Experts
               </h2>
               
               {/* Search - Improved design */}
@@ -282,15 +325,21 @@ const Consultation: React.FC = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
                     type="text"
-                    placeholder="Search by name or expertise..."
+                    placeholder="Name or expertise..."
                     className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     value={searchTerm}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      console.log('Search term changed:', e.target.value);
+                      setSearchTerm(e.target.value);
+                    }}
                   />
                   {searchTerm && (
                     <button 
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      onClick={() => setSearchTerm('')}
+                      onClick={() => {
+                        console.log('Clearing search term');
+                        setSearchTerm('');
+                      }}
                     >
                       <X size={18} />
                     </button>
@@ -308,7 +357,10 @@ const Consultation: React.FC = () => {
                         ? 'bg-primary text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
-                    onClick={() => setSelectedSpecialty(null)}
+                    onClick={() => {
+                      console.log('Clearing specialty filter');
+                      setSelectedSpecialty(null);
+                    }}
                   >
                     All
                   </button>
@@ -320,26 +372,49 @@ const Consultation: React.FC = () => {
                           ? 'bg-primary text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
-                      onClick={() => setSelectedSpecialty(specialty)}
+                      onClick={() => {
+                        console.log('Setting specialty filter:', specialty);
+                        setSelectedSpecialty(specialty);
+                      }}
                     >
                       {specialty}
                     </button>
                   ))}
                 </div>
               </div>
+              
+              {/* Call to action in sidebar */}
+              <div className="mt-8 p-4 bg-primary/5 rounded-xl">
+                <h3 className="text-lg font-semibold text-primary mb-2">Need custom help?</h3>
+                <p className="text-gray-700 text-sm mb-4">
+                  If you don't see an expert matching your needs, contact us for a custom consultation package.
+                </p>
+                <a 
+                  href="mailto:enterprise@nood.ma"
+                  className="block w-full py-2 bg-primary text-white rounded-lg text-center text-sm font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Contact Us
+                </a>
+              </div>
             </motion.div>
           </div>
           
-          {/* Main Content - Improved design */}
+          {/* Main Content - Similar to WorkshopDetail main content */}
           <div className="w-full lg:w-3/4">
-            {/* Active Filters - Improved design */}
+            {/* Active Filters */}
             {isFiltered && (
               <div className="flex flex-wrap mb-6 bg-white p-4 rounded-xl shadow-sm">
                 <div className="text-sm text-gray-500 mr-2 flex items-center">Active filters:</div>
                 {selectedSpecialty && (
                   <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm mr-2 mb-2 flex items-center">
                     {selectedSpecialty}
-                    <button onClick={() => setSelectedSpecialty(null)} className="ml-2 focus:outline-none">
+                    <button 
+                      onClick={() => {
+                        console.log('Clearing specialty filter');
+                        setSelectedSpecialty(null);
+                      }} 
+                      className="ml-2 focus:outline-none"
+                    >
                       <X size={14} />
                     </button>
                   </span>
@@ -347,7 +422,13 @@ const Consultation: React.FC = () => {
                 {debouncedSearchTerm && (
                   <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm mr-2 mb-2 flex items-center">
                     Search: {debouncedSearchTerm}
-                    <button onClick={() => setSearchTerm('')} className="ml-2 focus:outline-none">
+                    <button 
+                      onClick={() => {
+                        console.log('Clearing search term');
+                        setSearchTerm('');
+                      }} 
+                      className="ml-2 focus:outline-none"
+                    >
                       <X size={14} />
                     </button>
                   </span>
@@ -355,9 +436,9 @@ const Consultation: React.FC = () => {
               </div>
             )}
             
-            {/* Consultants Grid - Improved design */}
+            {/* Consultants List - Redesigned for larger cards */}
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+              className="space-y-6 mb-12"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -373,12 +454,13 @@ const Consultation: React.FC = () => {
                 ))
               ) : (
                 <motion.div 
-                  className="col-span-2 text-center py-16 bg-white rounded-xl shadow-sm"
+                  className="text-center py-16 bg-white rounded-xl shadow-sm"
                   variants={itemVariants}
                 >
                   <p className="text-xl text-gray-600 mb-4">No consultants found matching your criteria.</p>
                   <button 
                     onClick={() => {
+                      console.log('Clearing all filters');
                       setSelectedSpecialty(null);
                       setSearchTerm('');
                     }}
@@ -390,14 +472,14 @@ const Consultation: React.FC = () => {
               )}
             </motion.div>
             
-            {/* Testimonials - Completely redesigned */}
+            {/* Testimonials Section */}
             <motion.section 
-              className="mb-12 bg-white shadow-sm rounded-xl p-8 text-center"
+              className="mb-12 bg-white shadow-sm rounded-xl p-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <h2 className="text-2xl font-bold mb-8">What Our Clients Say</h2>
+              <h2 className="text-2xl font-bold mb-8 text-center">What Our Clients Say</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-center mb-3">
@@ -442,30 +524,6 @@ const Consultation: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </motion.section>
-            
-            {/* CTA Section - Completely redesigned */}
-            <motion.section 
-              className="text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl text-white shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <h2 className="text-3xl font-bold mb-4">{t('Not finding what you need?')}</h2>
-              <p className="text-xl mb-8 max-w-2xl mx-auto">
-                {t('We offer custom consultation packages for businesses with specific needs. Contact us to discuss a tailored solution.')}
-              </p>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <a 
-                  href="mailto:enterprise@nood.ma"
-                  className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg"
-                >
-                  {t('Contact Enterprise Team')} <ArrowRight className="ml-2" size={20} />
-                </a>
-              </motion.div>
             </motion.section>
           </div>
         </div>
