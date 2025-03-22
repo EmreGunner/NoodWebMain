@@ -1,108 +1,128 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Instagram, Mail, Phone } from 'lucide-react'
+import { Instagram, Mail, Phone, ArrowUpRight } from 'lucide-react'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#16a34a] text-white pt-16 pb-8">
-      <div className="content-container">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+    <footer className="bg-gray-900 text-gray-200">
+      {/* Newsletter Section */}
+      <div className="border-b border-gray-800">
+        <div className="content-container py-12">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-2">Stay in the loop</h3>
+              <p className="text-gray-400">Get updates on our latest courses and community events.</p>
+            </div>
+            <div className="flex gap-3">
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-gray-600 text-gray-200"
+              />
+              <button className="px-6 py-2 bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="content-container py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Section */}
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold tracking-tight">NOOD</h3>
-            <p className="text-gray-200 max-w-xs">
-              Empowering Moroccan youth through education and community.
-            </p>
-            <div className="pt-2">
-              <Link 
-                to="/about" 
-                className="inline-block text-sm px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2">NOOD</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Empowering Moroccan youth through education and community.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <a 
+                href="https://www.instagram.com/asmae_aboubigi" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
               >
-                Learn More About Us
-              </Link>
+                <Instagram size={20} />
+              </a>
+              <a 
+                href="mailto:contact@nood.ma"
+                className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <Mail size={20} />
+              </a>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold after:content-[''] after:block after:w-12 after:h-1 after:bg-secondary after:mt-2">
-              Quick Links
-            </h3>
-            <ul className="space-y-3">
+          <div>
+            <h3 className="text-white font-semibold mb-6">Quick Links</h3>
+            <ul className="space-y-4">
+              {['Academy', 'Community', 'Blog', 'About Us'].map((item) => (
+                <li key={item}>
+                  <Link 
+                    to={`/${item.toLowerCase().replace(' ', '-')}`}
+                    className="text-gray-400 hover:text-white transition-colors inline-flex items-center group"
+                  >
+                    {item}
+                    <ArrowUpRight 
+                      size={16} 
+                      className="ml-1 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" 
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-white font-semibold mb-6">Contact</h3>
+            <ul className="space-y-4">
               <li>
-                <Link to="/courses" className="text-gray-200 hover:text-white flex items-center transition duration-300">
-                  <span className="mr-2">•</span> Academy
-                </Link>
+                <a href="tel:+212666654451" className="text-gray-400 hover:text-white transition-colors">
+                  +212 666-654451
+                </a>
               </li>
               <li>
-                <Link to="/community" className="text-gray-200 hover:text-white flex items-center transition duration-300">
-                  <span className="mr-2">•</span> Community
-                </Link>
-              </li>
-              <li>
-                <Link to="/blog" className="text-gray-200 hover:text-white flex items-center transition duration-300">
-                  <span className="mr-2">•</span> Blog
-                </Link>
+                <a href="mailto:contact@nood.ma" className="text-gray-400 hover:text-white transition-colors">
+                  contact@nood.ma
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Contact Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold after:content-[''] after:block after:w-12 after:h-1 after:bg-secondary after:mt-2">
-              Contact
-            </h3>
-            <ul className="space-y-3">
-              <li className="flex items-center text-gray-200">
-                <Mail size={18} className="mr-3 text-secondary" />
-                <span>contact@nood.ma</span>
-              </li>
-              <li className="flex items-center text-gray-200">
-                <Phone size={18} className="mr-3 text-secondary" />
-                <span>+212 666-654451</span>
-              </li>
+          {/* Legal */}
+          <div>
+            <h3 className="text-white font-semibold mb-6">Legal</h3>
+            <ul className="space-y-4">
+              {['Privacy Policy', 'Terms & Conditions', 'Cookie Policy'].map((item) => (
+                <li key={item}>
+                  <Link 
+                    to={`/${item.toLowerCase().replace(/[& ]/g, '-')}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </div>
-
-          {/* Follow Us Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold after:content-[''] after:block after:w-12 after:h-1 after:bg-secondary after:mt-2">
-              Follow Us
-            </h3>
-            <div className="flex space-x-3">
-              <a href="https://www.instagram.com/asmae_aboubigi" target="_blank" rel="noopener noreferrer" 
-                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors duration-300">
-                <Instagram size={20} />
-              </a>
-            </div>
-            <p className="text-sm text-gray-300">
-              Stay updated with our latest courses and community events!
-            </p>
           </div>
         </div>
+      </div>
 
-        {/* Divider */}
-        <div className="h-px bg-white/20 my-8"></div>
-
-        {/* Bottom Footer */}
-        <div className="text-center">
-          <p className="text-sm text-gray-300 mb-2">
-            &copy; 2022 - 2025 All prices mentioned are exclusive of VAT.
-          </p>
-          <p className="text-sm text-gray-300 mb-4">
-            NOOD SARL - RC: 559737 | TP: 3160177 | IF: 52699250 | ICE: 003156748000055
-          </p>
-          
-          {/* Legal Links */}
-          <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-300 mt-4">
-            <Link to="/privacy-policy" className="hover:text-white transition duration-300">
-              Privacy Policy
-            </Link>
-            <span className="text-gray-500">•</span>
-            <Link to="/terms-and-conditions" className="hover:text-white transition duration-300">
-              Terms & Conditions
-            </Link>
+      {/* Bottom Footer */}
+      <div className="border-t border-gray-800">
+        <div className="content-container py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+            <div>
+              &copy; {new Date().getFullYear()} NOOD SARL. All rights reserved.
+            </div>
+            <div className="text-center md:text-right">
+              <p>RC: 559737 | TP: 3160177 | IF: 52699250 | ICE: 003156748000055</p>
+            </div>
           </div>
         </div>
       </div>
