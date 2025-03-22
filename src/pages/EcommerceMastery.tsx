@@ -231,7 +231,7 @@ const EcommerceMastery: React.FC = () => {
           
           {/* Main Content */}
           <div className="md:col-span-3">
-            {/* Hero Image with Overlay */}
+            {/* Hero Image */}
             <div className="relative rounded-xl overflow-hidden mb-8">
               <img 
                 src={course.coursePhoto} 
@@ -239,12 +239,6 @@ const EcommerceMastery: React.FC = () => {
                 className="w-full object-cover" 
                 style={{ maxHeight: "400px" }}
               />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-green-500 text-white px-6 py-3 text-2xl font-bold">
-                  {course.name} <br />
-                  <span className="text-xl">{course.arabicName}</span>
-                </div>
-              </div>
             </div>
             
             {/* Course Description */}
