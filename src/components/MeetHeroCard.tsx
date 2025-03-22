@@ -119,22 +119,3 @@ const MeetHeroCard: React.FC<MeetHeroCardProps> = memo(({ name, title, image, li
 MeetHeroCard.displayName = 'MeetHeroCard';
 
 export default MeetHeroCard;
-
-/* Mobile-specific fixes */
-@media (max-width: 767px) {
-  .hero-card-wrapper .card {
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .hero-card-wrapper .card .bottom {
-    transition: top 0.3s ease-in-out;
-  }
-  
-  .hero-card-wrapper .card .profile-pic {
-    transition: all 0.3s ease-in-out !important;
-  }
-  
-  .hero-card-wrapper .card .bottom.expanded {
-    top: 65%;
-  }
-}
