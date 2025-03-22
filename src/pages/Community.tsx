@@ -87,21 +87,21 @@ const Community: React.FC = () => {
                 <div className="p-2 bg-white rounded-lg shadow-sm border border-gray-100">
                   <img 
                     src={qrImage} 
-                    alt="WhatsApp Community QR Code" 
+                    alt="Telegram Community QR Code" 
                     className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
                   />
                 </div>
               </div>
 
               <motion.a 
-                href="https://whatsapp.com/channel/example" 
+                href="https://t.me/+HkqC-U3JHA8zZmM0" 
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="mt-4 w-full inline-flex items-center justify-center py-3 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700 transition-colors"
               >
-                Join WhatsApp Channel <ArrowRight className="ml-2" size={18} />
+                Join Telegram Channel <ArrowRight className="ml-2" size={18} />
               </motion.a>
             </Card>
           </motion.div>
@@ -176,14 +176,14 @@ const Community: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <motion.a 
-              href="https://whatsapp.com/channel/example"
+              href="https://t.me/+HkqC-U3JHA8zZmM0"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white text-primary px-6 py-2.5 rounded-lg transition-colors inline-flex items-center justify-center font-medium"
             >
-              Join WhatsApp <ArrowRight className="ml-1.5" size={16} />
+              Join Telegram <ArrowRight className="ml-1.5" size={16} />
             </motion.a>
             <motion.button 
               onClick={openWaitlistForm}
