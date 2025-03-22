@@ -34,7 +34,7 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: '/src/assets/images/ConsultationEcommerce.png',
+    image: '../../assets/images/herowomen.png',
     specialty: 'E-commerce',
   },
   {
