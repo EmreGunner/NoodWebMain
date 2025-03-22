@@ -38,31 +38,7 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
 
   // Initialize Cal.com when the modal is opened
   useEffect(() => {
-    // Make sure the Cal script is loaded
-    const script = document.createElement('script');
-    script.src = 'https://app.cal.com/embed/embed.js';
-    script.async = true;
-    script.onload = () => {
-      // Initialize Cal with the consultant's link
-      if (window.Cal) {
-        window.Cal("init", {origin:"https://cal.com"});
-        window.Cal("ui", {
-          styles: {branding: {brandColor: "#000000"}},
-          hideEventTypeDetails: false,
-          layout: "month_view"
-        });
-        window.Cal("inline", {
-          elementOrSelector: "#modal-cal-booking-placeholder",
-          calLink: consultant.calLink
-        });
-      }
-    };
-    
-    // Add the script if it's not already there
-    if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
-      document.head.appendChild(script);
-    } else if (window.Cal) {
-      // If script already loaded, just open the booking
+    if (window.Cal) {
       window.Cal("inline", {
         elementOrSelector: "#modal-cal-booking-placeholder",
         calLink: consultant.calLink
@@ -71,27 +47,30 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
   }, [consultant.calLink]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 overflow-y-auto"
+    <motion.div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
-      <motion.div
-        className="bg-white rounded-xl shadow-xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row"
+      <motion.div 
+        className="bg-white rounded-xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row shadow-2xl"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="md:w-2/5 h-64 md:h-auto relative">
-          <img 
-            src={consultant.image} 
-            alt={consultant.name} 
-            className="w-full h-full object-cover" 
-          />
-          <button
+        <div className="md:w-2/5 relative">
+          <div className="h-64 md:h-full relative">
+            <img 
+              src={consultant.image} 
+              alt={consultant.name}
+              className="w-full h-full object-cover object-center" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          <button 
             className="absolute top-4 right-4 md:hidden bg-white/90 p-2 rounded-full"
             onClick={onClose}
           >
@@ -131,7 +110,7 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {consultant.expertise.map((skill, index) => (
                 <div key={index} className="flex items-center">
-                  <Check size={16} className="text-primary mr-2" />
+                  <Check size={16} className="text-primary mr-2 flex-shrink-0" />
                   <span>{skill}</span>
                 </div>
               ))}
@@ -140,7 +119,15 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
           
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
-            <div id="modal-cal-booking-placeholder" className="min-h-[300px] border border-gray-200 rounded-lg p-4">
+            <button 
+              data-cal-link={consultant.calLink}
+              data-cal-namespace="30min"
+              data-cal-config='{"layout":"month_view"}'
+              className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
+            >
+              Book a Time <Calendar className="ml-2" size={18} />
+            </button>
+            <div id="modal-cal-booking-placeholder" className="mt-4 min-h-[300px] border border-gray-200 rounded-lg p-4">
               <div className="flex justify-center items-center h-full">
                 <p className="text-gray-500">Loading calendar...</p>
               </div>

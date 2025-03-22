@@ -1,4 +1,4 @@
-import React, { useState, useMemo, lazy, Suspense } from 'react'
+import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Search, X, Filter, Calendar, Star } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -6,6 +6,13 @@ import { useDebounce } from 'use-debounce'
 
 // Lazy load the modal component
 const ConsultantDetailModal = lazy(() => import('../components/ConsultantDetailModal'))
+
+// Add Cal.com type definition to window
+declare global {
+  interface Window {
+    Cal?: any;
+  }
+}
 
 // Define proper types for the consultant data
 interface Consultant {
@@ -22,45 +29,45 @@ interface Consultant {
   specialty: string;
 }
 
-// Consultant data with updated image paths
+// Updated consultant data with correct information
 const consultants: Consultant[] = [
   {
     id: '1',
     slug: 'asmae-aboubigi',
     name: 'Asmae Aboubigi',
     title: 'E-commerce Strategist',
-    expertise: ['E-commerce Strategy', 'Digital Marketing', 'Business Development'],
+    expertise: ['E-commerce Strategy', 'Digital Marketing', 'Business Development', 'Shopify & WooCommerce', 'Sales Funnel Optimization'],
     bio: "With over 5 years of experience in the e-commerce industry, Asmae helps entrepreneurs build sustainable online businesses. Her expertise spans from market research to operational efficiency and growth strategies.",
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: 'https://i.ibb.co/TB4M9xkw/Consultation-Ecommerce.webp',
+    image: 'https://i.ibb.co/TB4M9xk/Consultation-Ecommerce.webp',
     specialty: 'E-commerce',
   },
   {
-    id: '3',
-    slug: 'samira-el-amrani',
-    name: 'Samira El Amrani',
-    title: 'Fashion Business Consultant',
-    expertise: ['Fashion Business', 'Supply Chain Management', 'Sustainable Fashion'],
-    bio: "Samira brings her extensive experience in the fashion industry to help emerging designers and fashion entrepreneurs. She specializes in sustainable practices, production optimization, and market positioning for fashion brands.",
+    id: '2',
+    slug: 'imane-benali',
+    name: 'Imane Benali',
+    title: 'UGC & Content Specialist',
+    expertise: ['User-Generated Content', 'Social Media Strategy', 'Brand Storytelling', 'Content Creation', 'Influencer Marketing'],
+    bio: "Imane specializes in creating authentic user-generated content strategies that drive engagement and conversion. She helps brands find their voice and connect with audiences through compelling storytelling and strategic content planning.",
     rating: 4.7,
     reviewCount: 85,
-    calLink: "samira-el-amrani/30min",
-    image: 'https://i.ibb.co/PZsXtwKD/Consultation-UGC.webp',
-    specialty: 'Fashion',
+    calLink: "imane-benali/30min",
+    image: 'https://i.ibb.co/PZsXtwK/Consultation-UGC.webp',
+    specialty: 'Content',
   },
   {
-    id: '4',
-    slug: 'ahmed-boutahir',
-    name: 'Ahmed Boutahir',
-    title: 'AI Integration Specialist',
-    expertise: ['AI Implementation', 'Process Automation', 'Tech Strategy'],
-    bio: "Ahmed helps businesses leverage artificial intelligence to streamline operations and create innovative solutions. His technical expertise combined with business acumen makes him ideal for companies looking to embrace AI technologies.",
+    id: '3',
+    slug: 'emre-gunner',
+    name: 'Emre Gunner',
+    title: 'AI Marketing Expert',
+    expertise: ['AI Implementation', 'Personalized Outreach', 'Marketing Automation', 'AI Content Strategy', 'Data Analytics'],
+    bio: "Emre helps businesses leverage artificial intelligence to streamline marketing operations and create personalized outreach campaigns. He specializes in implementing AI automation systems that increase efficiency while maintaining authentic customer connections.",
     rating: 4.9,
     reviewCount: 76,
-    calLink: "ahmed-boutahir/30min",
-    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ai.webp',
+    calLink: "emre-yılmaz-t8ydsj/30min",
+    image: 'https://i.ibb.co/1tjYsv4/Consultation-Ai.webp',
     specialty: 'Technology',
   },
 ]
@@ -85,46 +92,29 @@ const itemVariants = {
   }
 }
 
-// Consultant Card Component with proper typing
+// Consultant Card Component with proper Cal.com integration
 interface ConsultantCardProps {
   consultant: Consultant;
   onLearnMore: (id: string) => void;
 }
 
 const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore }) => {
-  // Function to initialize Cal.com properly
-  const handleBookTime = () => {
-    // Make sure the Cal script is loaded
-    const script = document.createElement('script');
-    script.src = 'https://app.cal.com/embed/embed.js';
-    script.async = true;
-    script.onload = () => {
-      // Initialize Cal with the consultant's link
-      if (window.Cal) {
-        window.Cal("init", {origin:"https://cal.com"});
-        window.Cal("ui", {
-          styles: {branding: {brandColor: "#000000"}},
-          hideEventTypeDetails: false,
-          layout: "month_view"
-        });
-        window.Cal("inline", {
-          elementOrSelector: "#cal-booking-placeholder",
-          calLink: consultant.calLink
-        });
-      }
-    };
-    
-    // Add the script if it's not already there
+  // Properly initialize Cal.com with data attributes
+  useEffect(() => {
+    // Load the Cal.com script once
     if (!document.querySelector('script[src="https://app.cal.com/embed/embed.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://app.cal.com/embed/embed.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.Cal) {
+          window.Cal("init", "30min", {origin:"https://cal.com"});
+          window.Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+        }
+      };
       document.head.appendChild(script);
-    } else if (window.Cal) {
-      // If script already loaded, just open the booking
-      window.Cal("inline", {
-        elementOrSelector: "#cal-booking-placeholder",
-        calLink: consultant.calLink
-      });
     }
-  };
+  }, []);
 
   return (
     <motion.div 
@@ -173,281 +163,383 @@ const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore
             Learn More
           </button>
           <button 
-            onClick={handleBookTime}
+            data-cal-link={consultant.calLink}
+            data-cal-namespace="30min"
+            data-cal-config='{"layout":"month_view"}'
             className="flex-1 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
           >
             Book a Time <Calendar className="ml-1" size={14} />
           </button>
         </div>
-        
-        {/* Hidden placeholder for Cal.com to render into */}
-        <div id="cal-booking-placeholder" className="hidden"></div>
       </div>
     </motion.div>
   )
 }
 
-// Add type declaration for Cal.com
-declare global {
-  interface Window {
-    Cal: any;
-  }
-}
-
-// Main component
 const Consultation: React.FC = () => {
   const { t } = useTranslation()
+  const [selectedConsultant, setSelectedConsultant] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null)
-  const [selectedConsultant, setSelectedConsultant] = useState<string | null>(null)
-  
-  // Specialties for filtering
-  const specialties = useMemo(() => {
-    return Array.from(new Set(consultants.map(c => c.specialty)))
-  }, [])
-  
-  // Filtered consultants
-  const filteredConsultants = useMemo(() => {
-    return consultants.filter(consultant => 
-      (selectedSpecialty ? consultant.specialty === selectedSpecialty : true) &&
-      (debouncedSearchTerm 
-        ? consultant.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          consultant.expertise.some(e => e.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
-        : true)
-    )
-  }, [selectedSpecialty, debouncedSearchTerm])
+  const [activeSpecialties, setActiveSpecialties] = useState<string[]>([])
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Is any filter applied?
-  const isFiltered = !!selectedSpecialty || debouncedSearchTerm !== ''
-  
-  // Handle learn more (open modal)
-  const handleLearnMore = (id: string) => {
+  // Load Cal.com script once at component mount
+  useEffect(() => {
+    // Add the Cal.com script to the document
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.innerHTML = `
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", "30min", {origin:"https://cal.com"});
+      Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+    `;
+    
+    if (!document.querySelector('script[data-cal-init="true"]')) {
+      script.setAttribute('data-cal-init', 'true');
+      document.body.appendChild(script);
+    }
+    
+    return () => {
+      // Clean up (though we typically don't remove scripts)
+      const calScript = document.querySelector('script[data-cal-init="true"]');
+      if (calScript) {
+        // In a real app we might not want to remove this if it's used elsewhere
+        // calScript.remove();
+      }
+    };
+  }, []);
+
+  // View details modal for a consultant
+  const openModal = (id: string) => {
     setSelectedConsultant(id)
   }
-  
-  // Close modal
+
+  // Close the details modal
   const closeModal = () => {
     setSelectedConsultant(null)
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Completely redesigned */}
-      <section className="bg-gradient-to-r from-primary to-secondary py-12 mb-8">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="text-center max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">Expert Consultation</h1>
-            <p className="text-lg md:text-xl text-white/90 mb-6">
-              Book a one-on-one session with our industry experts to accelerate your entrepreneurial journey
-            </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <a 
-                href="#consultants"
-                className="bg-white text-primary text-lg px-8 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center font-semibold shadow-lg"
-              >
-                Find an Expert <ArrowRight className="ml-2" size={20} />
-              </a>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+  // Toggle a specialty filter
+  const toggleSpecialty = (specialty: string) => {
+    setActiveSpecialties(prev => 
+      prev.includes(specialty) 
+        ? prev.filter(s => s !== specialty)
+        : [...prev, specialty]
+    )
+  }
 
-      <div id="consultants" className="container mx-auto px-4 pb-16">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Section - Improved design */}
-          <div className="w-full lg:w-1/4">
-            <motion.div 
-              className="bg-white rounded-xl shadow-sm p-6 sticky top-24"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
+  // Reset all filters
+  const clearFilters = () => {
+    setSearchTerm('')
+    setActiveSpecialties([])
+  }
+
+  // Filter consultants based on search and active specialties
+  const filteredConsultants = useMemo(() => {
+    return consultants.filter(consultant => {
+      // Filter by search term
+      const matchesSearch = 
+        debouncedSearchTerm === '' || 
+        consultant.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        consultant.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        consultant.expertise.some(skill => 
+          skill.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+        )
+      
+      // Filter by specialty
+      const matchesSpecialty = 
+        activeSpecialties.length === 0 || 
+        activeSpecialties.includes(consultant.specialty)
+      
+      return matchesSearch && matchesSpecialty
+    })
+  }, [debouncedSearchTerm, activeSpecialties])
+
+  // Get unique specialties for filter
+  const specialties = useMemo(() => {
+    return Array.from(new Set(consultants.map(c => c.specialty)))
+  }, [])
+
+  return (
+    <div className="min-h-screen pt-20 bg-gray-50">
+      {/* Hero section */}
+      <div className="bg-gradient-to-r from-primary to-secondary text-white py-10 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('Expert Consultations for Your Business')}</h1>
+            <p className="text-lg md:text-xl mb-8 opacity-90">
+              {t('Book one-on-one sessions with our experienced consultants to solve your specific business challenges')}
+            </p>
+            <button 
+              onClick={() => window.scrollTo({top: 600, behavior: 'smooth'})}
+              className="bg-white text-primary hover:bg-gray-100 transition-colors px-8 py-3 rounded-full font-semibold inline-flex items-center shadow-lg"
             >
-              <h2 className="text-xl font-semibold mb-5 flex items-center">
-                <Filter className="mr-2" size={20} />
-                Filters
-              </h2>
-              
-              {/* Search - Improved design */}
+              {t('Browse Consultants')} <ArrowRight size={18} className="ml-2" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="container mx-auto px-4 py-10">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Sidebar filters for larger screens */}
+          <div className="hidden md:block w-64 flex-shrink-0">
+            <div className="bg-white p-6 rounded-xl shadow-sm sticky top-24">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-lg flex items-center">
+                  <Filter size={18} className="mr-2" /> {t('Filters')}
+                </h2>
+                {(debouncedSearchTerm || activeSpecialties.length > 0) && (
+                  <button 
+                    onClick={clearFilters}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    {t('Clear all')}
+                  </button>
+                )}
+              </div>
+
+              {/* Search input */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <label className="block text-sm font-medium mb-2">{t('Search')}</label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
                     type="text"
-                    placeholder="Search by name or expertise..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     value={searchTerm}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder={t('Search by name or skill')}
+                    className="w-full py-2 pl-9 pr-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
                   />
+                  <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
                   {searchTerm && (
                     <button 
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       onClick={() => setSearchTerm('')}
+                      className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
                     >
-                      <X size={18} />
+                      <X size={16} />
                     </button>
                   )}
                 </div>
               </div>
-              
-              {/* Specialty Filter - Improved design */}
+
+              {/* Specialty filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Specialty</label>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      selectedSpecialty === null
-                        ? 'bg-primary text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                <label className="block text-sm font-medium mb-2">{t('Specialty')}</label>
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => setActiveSpecialties([])}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                      activeSpecialties.length === 0 
+                        ? 'bg-primary text-white' 
+                        : 'hover:bg-gray-100 text-gray-700'
                     }`}
-                    onClick={() => setSelectedSpecialty(null)}
                   >
-                    All
+                    {t('All')}
                   </button>
                   {specialties.map(specialty => (
-                    <button
+                    <button 
                       key={specialty}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                        selectedSpecialty === specialty
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      onClick={() => toggleSpecialty(specialty)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                        activeSpecialties.includes(specialty) 
+                          ? 'bg-primary text-white' 
+                          : 'hover:bg-gray-100 text-gray-700'
                       }`}
-                      onClick={() => setSelectedSpecialty(specialty)}
                     >
                       {specialty}
                     </button>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-          
-          {/* Main Content - Improved design */}
-          <div className="w-full lg:w-3/4">
-            {/* Active Filters - Improved design */}
-            {isFiltered && (
-              <div className="flex flex-wrap mb-6 bg-white p-4 rounded-xl shadow-sm">
-                <div className="text-sm text-gray-500 mr-2 flex items-center">Active filters:</div>
-                {selectedSpecialty && (
-                  <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm mr-2 mb-2 flex items-center">
-                    {selectedSpecialty}
-                    <button onClick={() => setSelectedSpecialty(null)} className="ml-2 focus:outline-none">
-                      <X size={14} />
-                    </button>
-                  </span>
-                )}
-                {debouncedSearchTerm && (
-                  <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm mr-2 mb-2 flex items-center">
-                    Search: {debouncedSearchTerm}
-                    <button onClick={() => setSearchTerm('')} className="ml-2 focus:outline-none">
-                      <X size={14} />
-                    </button>
-                  </span>
-                )}
-              </div>
-            )}
-            
-            {/* Consultants Grid - Improved design */}
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
+
+          {/* Mobile filters button */}
+          <div className="md:hidden">
+            <button 
+              onClick={() => setIsFilterOpen(true)}
+              className="w-full mb-4 py-3 px-4 bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-between"
             >
-              {filteredConsultants.length > 0 ? (
-                filteredConsultants.map(consultant => (
-                  <motion.div key={consultant.id} variants={itemVariants}>
-                    <ConsultantCard 
-                      consultant={consultant}
-                      onLearnMore={handleLearnMore}
-                    />
-                  </motion.div>
-                ))
-              ) : (
+              <span className="font-medium flex items-center">
+                <Filter size={18} className="mr-2" /> {t('Filters')}
+                {(activeSpecialties.length > 0) && (
+                  <span className="ml-2 px-2 py-0.5 text-xs bg-primary text-white rounded-full">
+                    {activeSpecialties.length}
+                  </span>
+                )}
+              </span>
+              <span>
+                <Search size={18} />
+              </span>
+            </button>
+          </div>
+
+          {/* Mobile filters slideout */}
+          <AnimatePresence>
+            {isFilterOpen && (
+              <motion.div 
+                className="fixed inset-0 z-50 md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-40" onClick={() => setIsFilterOpen(false)}></div>
                 <motion.div 
-                  className="col-span-2 text-center py-16 bg-white rounded-xl shadow-sm"
-                  variants={itemVariants}
+                  className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-6 max-h-[90vh] overflow-y-auto"
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                 >
-                  <p className="text-xl text-gray-600 mb-4">No consultants found matching your criteria.</p>
-                  <button 
-                    onClick={() => {
-                      setSelectedSpecialty(null);
-                      setSearchTerm('');
-                    }}
-                    className="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="font-bold text-lg">{t('Filters')}</h2>
+                    <div className="flex gap-4">
+                      {(debouncedSearchTerm || activeSpecialties.length > 0) && (
+                        <button 
+                          onClick={clearFilters}
+                          className="text-sm text-primary hover:underline"
+                        >
+                          {t('Clear all')}
+                        </button>
+                      )}
+                      <button onClick={() => setIsFilterOpen(false)}>
+                        <X size={24} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Search input for mobile */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-2">{t('Search')}</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder={t('Search by name or skill')}
+                        className="w-full py-3 pl-10 pr-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
+                      />
+                      <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                      {searchTerm && (
+                        <button 
+                          onClick={() => setSearchTerm('')}
+                          className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                        >
+                          <X size={18} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Specialty filter for mobile */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-2">{t('Specialty')}</label>
+                    <div className="space-y-2">
+                      <button 
+                        onClick={() => setActiveSpecialties([])}
+                        className={`w-full text-left px-4 py-3 rounded-lg text-base transition-colors ${
+                          activeSpecialties.length === 0 
+                            ? 'bg-primary text-white' 
+                            : 'hover:bg-gray-100 text-gray-700 border border-gray-200'
+                        }`}
+                      >
+                        {t('All')}
+                      </button>
+                      {specialties.map(specialty => (
+                        <button 
+                          key={specialty}
+                          onClick={() => toggleSpecialty(specialty)}
+                          className={`w-full text-left px-4 py-3 rounded-lg text-base transition-colors ${
+                            activeSpecialties.includes(specialty) 
+                              ? 'bg-primary text-white' 
+                              : 'hover:bg-gray-100 text-gray-700 border border-gray-200'
+                          }`}
+                        >
+                          {specialty}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="w-full py-3 bg-primary text-white rounded-lg font-medium"
                   >
-                    Clear All Filters
+                    {t('Apply Filters')}
                   </button>
                 </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Main content area */}
+          <div className="flex-1">
+            {/* Results summary */}
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              <h2 className="text-2xl font-bold mr-4">{t('Consultants')}</h2>
+              {activeSpecialties.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {activeSpecialties.map(specialty => (
+                    <span 
+                      key={specialty}
+                      className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm"
+                    >
+                      {specialty}
+                      <button 
+                        onClick={() => toggleSpecialty(specialty)}
+                        className="ml-1 p-0.5 rounded-full hover:bg-primary/20"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  ))}
+                  <button 
+                    onClick={clearFilters}
+                    className="text-sm text-primary hover:underline flex items-center"
+                  >
+                    <X size={14} className="mr-1" /> {t('Clear all')}
+                  </button>
+                </div>
               )}
-            </motion.div>
-            
-            {/* Testimonials - Completely redesigned */}
-            <motion.section 
-              className="mb-12 bg-white shadow-sm rounded-xl p-8 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <h2 className="text-2xl font-bold mb-8">What Our Clients Say</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 italic mb-5">"The consultation session completely changed my approach to my e-commerce business. Worth every dirham!"</p>
-                  <div className="font-medium flex items-center justify-center">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary mr-2">
-                      F
-                    </div>
-                    Fatima K.
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 italic mb-5">"I was stuck with my content strategy. After just one session, I had a clear roadmap for the next 6 months."</p>
-                  <div className="font-medium flex items-center justify-center">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary mr-2">
-                      H
-                    </div>
-                    Hamza T.
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 italic mb-5">"The AI implementation strategies from my consultant helped us automate 40% of our customer service operations."</p>
-                  <div className="font-medium flex items-center justify-center">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary mr-2">
-                      L
-                    </div>
-                    Leila M.
-                  </div>
-                </div>
+              <div className="ml-auto text-sm text-gray-500">
+                {filteredConsultants.length} {t('results')}
               </div>
-            </motion.section>
-            
-            {/* CTA Section - Completely redesigned */}
+            </div>
+
+            {/* Results grid */}
+            {filteredConsultants.length > 0 ? (
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {filteredConsultants.map(consultant => (
+                  <motion.div key={consultant.id} variants={itemVariants}>
+                    <ConsultantCard 
+                      consultant={consultant} 
+                      onLearnMore={openModal} 
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-lg text-gray-500 mb-4">{t('No consultants match your filters')}</p>
+                <button 
+                  onClick={clearFilters}
+                  className="text-primary hover:underline font-medium"
+                >
+                  {t('Clear all filters')}
+                </button>
+              </div>
+            )}
+
+            {/* CTA Section */}
             <motion.section 
-              className="text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl text-white shadow-lg"
+              className="mt-16 text-center py-12 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl text-white shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -490,9 +582,11 @@ const Consultation: React.FC = () => {
         </AnimatePresence>
       </Suspense>
 
-      {/* Cal.com Script - Updated for better initialization */}
+      {/* Cal.com element-click embed code (exactly as provided) */}
       <script type="text/javascript" dangerouslySetInnerHTML={{ __html: `
         (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+        Cal("init", "30min", {origin:"https://cal.com"});
+        Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
       ` }} />
     </div>
   )
