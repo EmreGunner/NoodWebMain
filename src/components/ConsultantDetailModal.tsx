@@ -37,13 +37,8 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
     };
   }, [onClose]);
 
-  // Initialize Cal.com when the modal is opened
-  useEffect(() => {
-    (async function() {
-      const cal = await getCalApi({"namespace": "30min"});
-      cal("ui", {"hideEventTypeDetails": false, "layout": "month_view"});
-    })();
-  }, []);
+  // No longer initializing Cal.com via getCalApi - we use direct links now
+  // Removing the problematic useEffect
 
   return (
     <motion.div 
