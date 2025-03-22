@@ -13,10 +13,13 @@ import NotFound from './pages/NotFound'
 import ProductDetail from './pages/ProductDetail'
 import CourseDetailPage from './pages/CourseDetailPage'
 import WorkshopDetail from './pages/WorkshopDetail'
+import HomePage from './pages/HomePage'
+import CoursesPage from './pages/CoursesPage'
+import FashionBusinessMasterclass from './pages/FashionBusinessMasterclass'
+import EcommerceMasterclass from './pages/EcommerceMastery'
+import UGCCreationMasterclass from './pages/UGCCreation'
 
 // Lazy load the pages
-const HomePage = React.lazy(() => import('./pages/HomePage'))
-const Courses = React.lazy(() => import('./pages/Courses')) // Changed from Academy to Courses
 const Blog = React.lazy(() => import('./pages/Blog'))
 const Community = React.lazy(() => import('./pages/Community'))
 const Careers = React.lazy(() => import('./pages/Careers'))
@@ -39,7 +42,7 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/courses" element={<Courses />} />
+              <Route path="/courses" element={<CoursesPage />} />
               <Route path="/courses/:slug" element={<CourseDetailPage />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/community" element={<Community />} />
@@ -55,6 +58,9 @@ const App: React.FC = () => {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/products/:slug" element={<ProductDetail />} />
+              <Route path="/courses/fashion-business-masterclass" element={<FashionBusinessMasterclass />} />
+              <Route path="/courses/ecommerce-fundamentals" element={<EcommerceMasterclass />} />
+              <Route path="/courses/ugc-creation-masterclass" element={<UGCCreationMasterclass />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
