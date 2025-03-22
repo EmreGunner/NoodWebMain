@@ -18,6 +18,7 @@ const Header: React.FC = () => {
 
   // Calculate if we're on the home page
   const isHomePage = location.pathname === "/";
+  const isConsultationPage = location.pathname === "/consultation";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,85 +78,116 @@ const Header: React.FC = () => {
   return (
     <motion.header
       className={`
-      fixed top-0 left-5 right-0 bg-white z-50
-        
-        ${isScrolled ? 'shadow-lg' : 'shadow-sm'}
+        fixed top-0 left-0 right-0 bg-white z-50
+        border-b border-gray-100
+        ${isScrolled ? 'shadow-md' : ''}
+        transition-all duration-300
       `}
     >
       <div className="container mx-auto px-4 tablet:px-2">
-        <div className="flex justify-between items-center h-12 md:h-14 lg:h-16 tablet:h-16 tablet:gap-4">
-          <Link to="/" className={`flex items-center group ${isHomePage ? 'border-b-2 border-[#ffed00]' : ''}`}>
+        <div className="flex justify-between items-center h-14 md:h-16 lg:h-16 tablet:h-16 tablet:gap-4">
+          <Link to="/" className="flex items-center group">
             <img 
               src={noodLogoGreen} 
               alt="Nood Logo" 
               className="
                 w-12 h-12                    /* Base size for mobile */
                 sm:w-14 sm:h-14              /* Slightly larger for small screens */
-                md:w-16 md:h-16              /* Medium screens */
-                lg:w-16 lg:h-16              /* Large screens */
+                md:w-14 md:h-14              /* Medium screens */
+                lg:w-14 lg:h-14              /* Large screens */
                 object-contain               /* Maintain aspect ratio */
                 min-w-[48px]                 /* Prevent logo from getting too small */
               "
             />
+            {isHomePage && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"></span>}
           </Link>
 
-          <nav className="hidden md:flex space-x-8 tablet:space-x-6">
+          <nav className="hidden md:flex items-center space-x-8 tablet:space-x-6">
             {mainNavItems.map((item) => (
               <Link 
                 key={item.to} 
                 to={item.to} 
-                className={`text-gray-700 hover:text-primary flex items-center relative pb-1 ${
-                  location.pathname === item.to ? 'font-medium' : ''
-                }`}
+                className={`text-gray-700 hover:text-primary flex items-center relative pb-1 
+                  font-medium text-sm transition-colors
+                  ${location.pathname === item.to ? 'text-primary' : ''}
+                `}
               >
-                <item.icon className="inline-block mr-2" size={20} />
+                <item.icon className="inline-block mr-2" size={18} />
                 <span>{item.text}</span>
                 {location.pathname === item.to && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ffed00]"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"></span>
                 )}
               </Link>
             ))}
+            
+            {/* Book Consultation Button */}
+            <Link 
+              to="/consultation" 
+              className={`
+                flex items-center relative px-4 py-2 rounded-full
+                ${isConsultationPage 
+                  ? 'bg-primary text-white' 
+                  : 'bg-primary/10 text-primary hover:bg-primary/20'}
+                transition-colors font-medium text-sm
+              `}
+            >
+              <Calendar className="inline-block mr-2" size={16} />
+              Book Consultation
+            </Link>
+            
             <div 
               className="relative" 
               ref={moreDropdownRef}
             >
               <button
                 onClick={() => setIsMoreDropdownOpen(!isMoreDropdownOpen)}
-                className={`text-gray-700 hover:text-primary flex items-center tablet:bg-gray-50 tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm tablet:ml-auto tablet:font-medium relative pb-1 ${
-                  moreNavItems.some(item => location.pathname === item.to) ? 'font-medium' : ''
-                }`}
+                className={`
+                  text-gray-700 hover:text-primary flex items-center
+                  tablet:px-3 tablet:py-1.5 tablet:rounded-md tablet:text-sm
+                  tablet:font-medium relative pb-1 font-medium text-sm
+                  ${moreNavItems.some(item => location.pathname === item.to) ? 'text-primary' : ''}
+                `}
                 aria-haspopup="true"
                 aria-expanded={isMoreDropdownOpen}
               >
-                <MoreHorizontal className="inline-block mr-2 tablet:hidden" size={20} />
                 <span>More</span>
-                <ChevronDown className="ml-1.5 tablet:ml-2 w-4 h-8" />
+                <ChevronDown className="ml-1.5 tablet:ml-2 w-4 h-4" />
                 {moreNavItems.some(item => location.pathname === item.to) && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ffed00]"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"></span>
                 )}
               </button>
-              {isMoreDropdownOpen && (
-                <div
-                  className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-20"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="more-menu"
-                >
-                  {moreNavItems.map((item) => (
-                    <Link 
-                      key={item.to} 
-                      to={item.to} 
-                      className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                        location.pathname === item.to ? 'bg-[#ffed00]/10 font-medium border-l-4 border-[#ffed00]' : ''
-                      }`}
-                      role="menuitem"
-                      onClick={() => setIsMoreDropdownOpen(false)}
-                    >
-                      {item.text}
-                    </Link>
-                  ))}
-                </div>
-              )}
+              
+              <AnimatePresence>
+                {isMoreDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg z-20 overflow-hidden"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="more-menu"
+                  >
+                    {moreNavItems.map((item) => (
+                      <Link 
+                        key={item.to} 
+                        to={item.to} 
+                        className={`
+                          block px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm
+                          ${location.pathname === item.to 
+                            ? 'bg-primary/5 font-medium border-l-4 border-primary' 
+                            : 'border-l-4 border-transparent'}
+                        `}
+                        role="menuitem"
+                        onClick={() => setIsMoreDropdownOpen(false)}
+                      >
+                        {item.text}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </nav>
 
@@ -164,111 +196,109 @@ const Header: React.FC = () => {
               <select
                 value={i18n.language}
                 onChange={(e) => i18n.changeLanguage(e.target.value)}
-                className="appearance-none bg-gray-100 border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="appearance-none bg-gray-50 border border-gray-200 rounded-md py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="en">EN</option>
                 <option value="fr">FR</option>
                 <option value="ar">AR</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDown size={16} />
+                <ChevronDown size={14} />
               </div>
             </div>
 
+            {/* Mobile Book Consultation Button */}
+            <Link 
+              to="/consultation" 
+              className={`
+                md:hidden flex items-center relative px-3 py-1.5 rounded-full
+                ${isConsultationPage 
+                  ? 'bg-primary text-white' 
+                  : 'bg-primary/10 text-primary'}
+                transition-colors font-medium text-sm
+              `}
+            >
+              <Calendar className="w-4 h-4" />
+            </Link>
+
             <button
+              className="block md:hidden text-gray-700"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
-              aria-expanded={isMenuOpen}
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.nav
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-4"
-            >
-              <ul className="flex flex-col space-y-2">
-                <li className="mb-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search courses..."
-                      className="w-full pl-8 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
-                      value={searchTerm}
-                      onChange={handleSearch}
-                    />
-                    <Search className="absolute left-2 top-2.5 text-gray-400" size={18} />
-                  </div>
-                  {searchResults.length > 0 && (
-                    <div className="mt-2 bg-white rounded-md shadow-lg">
-                      {searchResults.map(course => (
-                        <Link
-                          key={course.id}
-                          to={`/courses/${course.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => {
-                            setSearchResults([])
-                            setIsMenuOpen(false)
-                          }}
-                        >
-                          {course.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-
-                {mainNavItems.map((item, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={item.to} 
-                      className={`text-gray-700 hover:text-primary transition duration-300 flex items-center py-2 px-2 rounded-md
-                        ${location.pathname === item.to ? 'text-primary font-semibold bg-gray-100' : ''}
-                      `}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <item.icon className="mr-2" size={18} />
-                      {item.text}
-                    </Link>
-                  </li>
-                ))}
-
-                <li>
-                  <details className="group">
-                    <summary className="flex items-center py-2 px-2 text-gray-700 hover:text-primary cursor-pointer list-none">
-                      <MoreHorizontal className="mr-2" size={18} />
-                      More
-                      <ChevronDown className="ml-auto" size={16} />
-                    </summary>
-                    <ul className="pl-6 mt-2 space-y-2">
-                      {moreNavItems.map((item, index) => (
-                        <li key={index}>
-                          <Link 
-                            to={item.to} 
-                            className="block py-2 px-2 text-gray-700 hover:text-primary"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {item.text}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </li>
-              </ul>
-            </motion.nav>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-white border-t border-gray-100"
+          >
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex flex-col space-y-1">
+                {mainNavItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`
+                      flex items-center py-3 px-4 rounded-lg
+                      ${location.pathname === item.to 
+                        ? 'bg-primary/10 text-primary font-medium' 
+                        : 'text-gray-700'}
+                    `}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <item.icon className="mr-3" size={20} />
+                    {item.text}
+                  </Link>
+                ))}
+                
+                <Link
+                  to="/consultation"
+                  className={`
+                    flex items-center py-3 px-4 rounded-lg
+                    ${isConsultationPage 
+                      ? 'bg-primary text-white font-medium' 
+                      : 'bg-primary/10 text-primary font-medium'}
+                  `}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Calendar className="mr-3" size={20} />
+                  Book Consultation
+                </Link>
+                
+                <div className="py-2 px-4 text-sm font-medium text-gray-500">More Links</div>
+                
+                {moreNavItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`
+                      py-3 px-4 rounded-lg
+                      ${location.pathname === item.to 
+                        ? 'bg-gray-50 text-primary font-medium' 
+                        : 'text-gray-700'}
+                    `}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.text}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
-};
+}
 
 export default Header;
