@@ -91,18 +91,18 @@ const About: React.FC = () => {
     }
   ];
 
-  // Our core values - maintained but enhanced
+  // Our core values - maintained but enhanced with fixed apostrophes
   const values = [
     { 
       icon: Users, 
       title: 'Community-Driven', 
-      description: 'Every feature we build, every course we create starts with our community's needs. Your success stories fuel our mission.',
+      description: "Every feature we build, every course we create starts with our community's needs. Your success stories fuel our mission.",
       color: 'from-blue-500 to-cyan-400'
     },
     { 
       icon: Lightbulb, 
       title: 'Innovation', 
-      description: 'The digital landscape changes rapidly. We stay ahead of trends to ensure our community is equipped for tomorrow's challenges.',
+      description: "The digital landscape changes rapidly. We stay ahead of trends to ensure our community is equipped for tomorrow's challenges.",
       color: 'from-yellow-500 to-amber-400'
     },
     { 
