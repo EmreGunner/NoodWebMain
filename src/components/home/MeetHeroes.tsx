@@ -17,27 +17,27 @@ interface Hero {
 const HEROES: Hero[] = [
   {
     id: 1,
-    name: 'Sarah Johnson',
-    title: 'Marketing Expert',
+    name: 'Laila Samat',
+    title: 'Fashion Business Trainer',
     image: 'https://i.postimg.cc/KjqZxGPK/People-2.png',
     linkedin: '#',
-    course: 'Digital Marketing Mastery',
+    course: 'Fashion Business',
+  },
+  {
+    id: 2,
+    name: 'Asmae Aboubigi',
+    title: 'E-commerce Expert',
+    image: 'https://i.postimg.cc/sxDVkQhd/People-1.png',
+    linkedin: 'https://www.linkedin.com/in/asmae-aboubigi/',
+    course: 'E-commerce Mastery',
   },
   {
     id: 3,
-    name: 'Neale Donald Walsch',
-    title: 'Awaken The Species',
-    image: 'https://i.postimg.cc/sxDVkQhd/People-1.png',
-    linkedin: 'https://www.linkedin.com/in/neale-donald-walsch/', 
-    course: 'Spiritual Awakening',
-  },
-  {
-    id: 4,
-    name: 'Vishen',
-    title: "Unlock Your Mind's Potential",
+    name: 'Zaroui Imane',
+    title: 'UGC Creation Specialist',
     image: 'https://i.postimg.cc/NGpG143g/People.png',
-    linkedin: 'https://www.linkedin.com/in/vishen/',
-    course: 'Mindvalley Mastery',
+    linkedin: '#',
+    course: 'UGC Creation',
   },
 ];
 
