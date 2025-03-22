@@ -36,16 +36,6 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
     };
   }, [onClose]);
 
-  // Initialize Cal.com when the modal is opened
-  useEffect(() => {
-    if (window.Cal) {
-      window.Cal("inline", {
-        elementOrSelector: "#modal-cal-booking-placeholder",
-        calLink: consultant.calLink
-      });
-    }
-  }, [consultant.calLink]);
-
   return (
     <motion.div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
@@ -119,19 +109,14 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
           
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
-            <button 
-              data-cal-link={consultant.calLink}
-              data-cal-namespace="30min"
-              data-cal-config='{"layout":"month_view"}'
+            <a 
+              href={`https://cal.com/${consultant.calLink}`}
+              target="_blank" 
+              rel="noopener noreferrer"
               className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
             >
               Book a Time <Calendar className="ml-2" size={18} />
-            </button>
-            <div id="modal-cal-booking-placeholder" className="mt-4 min-h-[300px] border border-gray-200 rounded-lg p-4">
-              <div className="flex justify-center items-center h-full">
-                <p className="text-gray-500">Loading calendar...</p>
-              </div>
-            </div>
+            </a>
           </div>
         </div>
       </motion.div>
