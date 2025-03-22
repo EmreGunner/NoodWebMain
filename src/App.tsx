@@ -11,6 +11,8 @@ import TermsAndConditions from './pages/TermsAndConditions'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import NotFound from './pages/NotFound'
 import ProductDetail from './pages/ProductDetail'
+import CourseDetailPage from './pages/CourseDetailPage'
+import WorkshopDetail from './pages/WorkshopDetail'
 
 // Lazy load the pages
 const HomePage = React.lazy(() => import('./pages/HomePage'))
@@ -18,13 +20,11 @@ const Courses = React.lazy(() => import('./pages/Courses')) // Changed from Acad
 const Blog = React.lazy(() => import('./pages/Blog'))
 const Community = React.lazy(() => import('./pages/Community'))
 const Careers = React.lazy(() => import('./pages/Careers'))
-const CourseDetailPage = React.lazy(() => import('./pages/CourseDetailPage'))
 const ContactUs = React.lazy(() => import('./pages/ContactUs'))
 const Consultation = React.lazy(() => import('./pages/Consultation'))
 const About = React.lazy(() => import('./pages/About'))
 const NoodShop = React.lazy(() => import('./pages/NoodShop'))
 const Workshops = React.lazy(() => import('./pages/Workshops'))
-const WorkshopDetail = React.lazy(() => import('./pages/WorkshopDetail'))
 const HostCourse = React.lazy(() => import('./pages/HostCourse'))
 const Support = React.lazy(() => import('./pages/Support'))
 
@@ -40,7 +40,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/courses" element={<Courses />} />
-              <Route path="/courses/:slug" element={<CourseDetail />} />
+              <Route path="/courses/:slug" element={<CourseDetailPage />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/community" element={<Community />} />
               <Route path="/careers" element={<Careers />} />
