@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Instagram, Facebook, Twitter, Linkedin, Mail, Phone } from 'lucide-react'
+import { Instagram, Mail, Phone } from 'lucide-react'
 
 const Footer: React.FC = () => {
   return (
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
             </h3>
             <div className="flex space-x-3">
               <a href="https://www.instagram.com/asmae_aboubigi" target="_blank" rel="noopener noreferrer" 
-                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-secondary transition-colors duration-300">
+                className="h-10 w-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors duration-300">
                 <Instagram size={20} />
               </a>
             </div>
