@@ -42,7 +42,7 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 127,
     calLink: "asmae-aboubigi/30min",
-    image: '/ConsultationEcommerce.png', // Updated image path
+    image: 'https://i.ibb.co/TB4M9xkw/Consultation-Ecommerce.webp', // Updated image path
     specialty: 'E-commerce',
     hourlyRate: 50
   },
@@ -56,7 +56,7 @@ const consultants: Consultant[] = [
     rating: 4.7,
     reviewCount: 85,
     calLink: "imane-benali/30min",
-    image: '/ConsultationUGC.png', // Updated image path
+    image: 'https://i.ibb.co/PZsXtwKD/Consultation-UGC.webp', // Updated image path
     specialty: 'Content',
     hourlyRate: 25
   },
@@ -70,7 +70,7 @@ const consultants: Consultant[] = [
     rating: 4.9,
     reviewCount: 76,
     calLink: "emre-yilmaz-t8ydsj/30min",
-    image: '/ConsultationAi.png', // Updated image path
+    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp', // Updated image path
     specialty: 'Technology',
     hourlyRate: 50
   },

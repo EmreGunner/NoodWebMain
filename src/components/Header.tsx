@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BookOpen, Users, ShoppingBag, ChevronDown, Search, MoreHorizontal } from 'lucide-react';
+import { Menu, X, BookOpen, Users, ShoppingBag, ChevronDown, Search, MoreHorizontal, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import courses from '../data/courses.json';
@@ -174,27 +174,6 @@ const Header: React.FC = () => {
                 <ChevronDown size={16} />
               </div>
             </div>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-            to="/consultation"
-            className={`
-              flex-shrink-0
-              bg-primary text-white
-              px-2 xxs:px-3 sm:px-4
-              py-1.5 sm:py-2
-              rounded-full
-              text-xs xxs:text-sm sm:text-base
-              whitespace-nowrap
-              ml-1 sm:ml-2
-            `}
-          >
-            Book Consultation
-          </Link>
-            </motion.div>
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
