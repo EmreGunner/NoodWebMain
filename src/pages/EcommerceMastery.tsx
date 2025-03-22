@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, Calendar, Clock, Users, Check, BookOpen } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Users, Check, BookOpen, GraduationCap, FileText, Video } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { PopupButton } from '@typeform/embed-react'
 import { Helmet } from 'react-helmet'
@@ -15,7 +15,8 @@ const EcommerceMastery: React.FC = () => {
   const course = {
     id: 'ecommerce-mastery',
     slug: 'ecommerce-mastery',
-    name: 'E-COMMERCE التجارة الالكترونية',
+    name: 'E-COMMERCE',
+    arabicName: 'التجارة الالكترونية',
     description: 'رحلتك نحو النجاح في التجارة الإلكترونية: من الفكرة إلى إطلاق متجر ناجح',
     longDescription: 'اكتشف عالم التجارة الإلكترونية وتعلّم كيف تبني مشروعًا ناجحًا من الصفر، بخطوات عملية ومبسطة. ستتعرف على اختيار فكرة المشروع، تحليل السوق، إنشاء متجر إلكتروني احترافي، وتسويق منتجاتك بفعالية باستخدام أحدث الأدوات والاستراتيجيات. هذه الدورة ليست مجرد تعليم نظري، بل هي دليل عملي لبدء وتحقيق النجاح في أعمالك الرقمية',
     courseType: 'Virtual',
@@ -31,8 +32,6 @@ const EcommerceMastery: React.FC = () => {
     assessments: 10,
     liveSessions: 12
   }
-  
-  const instructorImage = 'https://i.postimg.cc/wBR6VpKf/People-1.png';
   
   const courseLessons = [
     {
@@ -158,7 +157,7 @@ const EcommerceMastery: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="course-detail-page bg-gray-50"
+      className="course-detail-page bg-white"
     >
       <Helmet>
         <title>{course.name} | Nood Academy</title>
@@ -177,92 +176,92 @@ const EcommerceMastery: React.FC = () => {
         </Link>
       </div>
       
-      <div className="flex flex-col lg:flex-row">
-        {/* Left sidebar with course info - based on provided image */}
-        <div className="lg:w-1/4 bg-green-50 p-6">
-          <div className="space-y-6">
-            <div className="flex items-start">
-              <div className="text-green-600 mr-3">
-                <BookOpen size={20} />
+      {/* Main content area with sidebar */}
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Sidebar - Course Info */}
+          <div className="md:col-span-1 bg-green-50 rounded-xl p-6">
+            <div className="space-y-6">
+              {/* Instructor */}
+              <div className="flex items-center">
+                <GraduationCap className="text-primary mr-3 flex-shrink-0" size={20} />
+                <div>
+                  <div className="text-gray-500 text-sm">Author:</div>
+                  <div className="font-medium">{course.instructor}</div>
+                </div>
               </div>
-              <div>
-                <h3 className="text-gray-600 text-sm">Author:</h3>
-                <p className="font-medium">{course.instructor}</p>
+              
+              {/* Level */}
+              <div className="flex items-center">
+                <BookOpen className="text-primary mr-3 flex-shrink-0" size={20} />
+                <div>
+                  <div className="text-gray-500 text-sm">Level:</div>
+                  <div className="font-medium">{course.level}</div>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start">
-              <div className="text-green-600 mr-3">
-                <BookOpen size={20} />
+              
+              {/* Study Time */}
+              <div className="flex items-center">
+                <Clock className="text-primary mr-3 flex-shrink-0" size={20} />
+                <div>
+                  <div className="text-gray-500 text-sm">Study time:</div>
+                  <div className="font-medium">{course.studyTime}</div>
+                </div>
               </div>
-              <div>
-                <h3 className="text-gray-600 text-sm">Level:</h3>
-                <p className="font-medium">{course.level}</p>
+              
+              {/* Assessments */}
+              <div className="flex items-center">
+                <FileText className="text-primary mr-3 flex-shrink-0" size={20} />
+                <div>
+                  <div className="text-gray-500 text-sm">Assessments:</div>
+                  <div className="font-medium">{course.assessments}</div>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start">
-              <div className="text-green-600 mr-3">
-                <Clock size={20} />
-              </div>
-              <div>
-                <h3 className="text-gray-600 text-sm">Study time:</h3>
-                <p className="font-medium">{course.studyTime}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <div className="text-green-600 mr-3">
-                <BookOpen size={20} />
-              </div>
-              <div>
-                <h3 className="text-gray-600 text-sm">Assessments:</h3>
-                <p className="font-medium">{course.assessments}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <div className="text-green-600 mr-3">
-                <Users size={20} />
-              </div>
-              <div>
-                <h3 className="text-gray-600 text-sm">Live Sessions:</h3>
-                <p className="font-medium">{course.liveSessions}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Main content area with hero image */}
-        <div className="lg:w-3/4">
-          {/* Hero Banner */}
-          <div className="relative">
-            <img 
-              src={course.coursePhoto} 
-              alt={course.name} 
-              className="w-full object-cover" 
-            />
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="bg-green-500 text-white p-4 text-center">
-                <h1 className="text-4xl font-bold">E-COMMERCE</h1>
-                <p className="text-2xl">التجارة الالكترونية</p>
+              
+              {/* Live Sessions */}
+              <div className="flex items-center">
+                <Video className="text-primary mr-3 flex-shrink-0" size={20} />
+                <div>
+                  <div className="text-gray-500 text-sm">Live Sessions:</div>
+                  <div className="font-medium">{course.liveSessions}</div>
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Main content section */}
-          <div className="p-6">
-            {/* Course title and description */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4" dir="rtl">{course.description}</h2>
-              <p className="text-gray-700" dir="rtl">{course.longDescription}</p>
+          {/* Main Content */}
+          <div className="md:col-span-3">
+            {/* Hero Image with Overlay */}
+            <div className="relative rounded-xl overflow-hidden mb-8">
+              <img 
+                src={course.coursePhoto} 
+                alt={course.name} 
+                className="w-full object-cover" 
+                style={{ maxHeight: "400px" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-green-500 text-white px-6 py-3 text-2xl font-bold">
+                  {course.name} <br />
+                  <span className="text-xl">{course.arabicName}</span>
+                </div>
+              </div>
             </div>
             
-            {/* Enroll button */}
+            {/* Course Description */}
             <div className="mb-10">
+              <h2 className="text-2xl font-bold mb-4">{course.description}</h2>
+              <p className="text-gray-700 leading-relaxed">{course.longDescription}</p>
+            </div>
+            
+            {/* Enrollment Button */}
+            <div className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-3xl font-bold">${course.price}</div>
+              </div>
+              
               <PopupButton 
                 id="YOUR_TYPEFORM_ID"
-                className="bg-primary text-white py-3 px-6 rounded-lg font-bold text-lg hover:bg-primary-dark transition-colors duration-300"
+                className="bg-primary text-white w-full py-3 rounded-full font-bold text-lg mb-6 hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center"
               >
                 {t('Reserve Your Seat Now')}
               </PopupButton>
