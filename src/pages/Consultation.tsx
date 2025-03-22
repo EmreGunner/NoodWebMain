@@ -110,36 +110,37 @@ const ConsultantCard: React.FC<{
             <span className="ml-1 text-sm font-medium">{consultant.rating}</span>
           </div>
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-1">{consultant.name}</h3>
-        <p className="text-gray-600 mb-3">{consultant.title}</p>
         
-        <div className="flex flex-wrap gap-1 mb-4">
+        <h3 className="text-xl font-bold mb-1">{consultant.name}</h3>
+        <p className="text-gray-600 mb-4">{consultant.title}</p>
+        
+        <div className="flex flex-wrap gap-2 mb-5">
           {consultant.expertise.slice(0, 2).map((skill: string, index: number) => (
-            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+            <span key={index} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
               {skill}
             </span>
           ))}
           {consultant.expertise.length > 2 && (
-            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+            <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
               +{consultant.expertise.length - 2}
             </span>
           )}
         </div>
         
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-3">
           <button 
-            className="flex-1 px-4 py-2 bg-white border border-primary text-primary rounded-xl font-medium hover:bg-primary/5 transition-colors"
             onClick={() => onLearnMore(consultant.id)}
+            className="flex-1 py-2.5 border border-gray-200 text-gray-800 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium"
           >
             Learn More
           </button>
           <button 
-            className="flex-1 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors flex items-center justify-center"
+            className="flex-1 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors text-sm font-medium flex items-center justify-center"
             data-cal-link={consultant.calLink}
             data-cal-namespace="30min"
             data-cal-config='{"layout":"month_view"}'
           >
-            Book a Time <Calendar className="ml-1 w-4 h-4" />
+            Book a Time <Calendar className="ml-1" size={14} />
           </button>
         </div>
       </div>
