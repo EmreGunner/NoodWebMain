@@ -22,7 +22,7 @@ const UGCCreation: React.FC = () => {
     startDate: '2024-07-11',
     duration: 12,
     coursePhoto: 'https://i.ibb.co/hF4SttDS/3.webp',
-    price: 75,
+    price: 60,
     instructor: 'Layla Ahmed',
     level: 'All Levels',
     language: 'English & Arabic'

@@ -16,7 +16,7 @@ import WorkshopDetail from './pages/WorkshopDetail'
 import HomePage from './pages/HomePage'
 import Courses from './pages/Courses'
 import FashionBusinessMasterclass from './pages/FashionBusinessMasterclass'
-import EcommerceMasterclass from './pages/EcommerceMastery'
+import EcommerceMastery from './pages/EcommerceMastery'
 import UGCCreationMasterclass from './pages/UGCCreation'
 
 // Lazy load the pages
@@ -59,7 +59,7 @@ const App: React.FC = () => {
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/products/:slug" element={<ProductDetail />} />
               <Route path="/courses/fashion-business-masterclass" element={<FashionBusinessMasterclass />} />
-              <Route path="/courses/ecommerce-fundamentals" element={<EcommerceMasterclass />} />
+              <Route path="/courses/ecommerce-mastery" element={<EcommerceMastery />} />
               <Route path="/courses/ugc-creation-masterclass" element={<UGCCreationMasterclass />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

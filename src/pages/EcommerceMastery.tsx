@@ -14,18 +14,18 @@ const EcommerceMastery: React.FC = () => {
   // Course specific data
   const course = {
     id: 'ecommerce-mastery',
-    slug: 'ecommerce-fundamentals',
-    name: 'E-commerce Fundamentals',
+    slug: 'ecommerce-mastery',
+    name: 'E-commerce Mastery',
     description: 'Launch your online store with confidence. Our E-commerce Business Course covers everything from market research to digital marketing strategies.',
     courseType: 'Virtual',
     domain: 'E-commerce',
     startDate: '2024-07-12',
     duration: 12,
     coursePhoto: 'https://i.ibb.co/3mf75C6R/2.webp',
-    price: 80,
-    instructor: 'Michael Chen',
+    price: 170,
+    instructor: 'Asmae Aboubigi',
     level: 'Beginner to Intermediate',
-    language: 'English & Arabic'
+    language: 'Arabic'
   }
   
   const instructorImage = 'https://i.postimg.cc/wBR6VpKf/People-1.png';
@@ -118,32 +118,32 @@ const EcommerceMastery: React.FC = () => {
         </Link>
       </div>
       
-      {/* Hero Banner */}
+      {/* Hero Banner - Removed text overlay */}
       <div className="relative h-[400px] md:h-[500px] overflow-hidden">
         <img 
           src={course.coursePhoto} 
           alt={course.name} 
           className="w-full h-full object-cover" 
         />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl text-white">
-              <h1 className="text-3xl md:text-5xl font-bold mb-4">Master the Art of {course.domain}</h1>
-              <p className="text-xl md:text-2xl mb-8">Transform your career with expert-led training</p>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full flex items-center">
-                  <Calendar size={18} className="mr-2" />
-                  <span>{new Date(course.startDate).toLocaleDateString()}</span>
-                </div>
-                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full flex items-center">
-                  <Clock size={18} className="mr-2" />
-                  <span>{course.duration} {t('weeks')}</span>
-                </div>
-                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full flex items-center">
-                  <Users size={18} className="mr-2" />
-                  <span>{course.courseType}</span>
-                </div>
-              </div>
+      </div>
+      
+      {/* Course title outside of image - to avoid text over image */}
+      <div className="bg-white py-8 border-b border-gray-200">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">{course.name}</h1>
+          <p className="text-xl md:text-2xl text-gray-700 mb-6">Transform your career with expert-led training</p>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <div className="bg-gray-100 px-4 py-2 rounded-full flex items-center">
+              <Calendar size={18} className="mr-2 text-primary" />
+              <span>{new Date(course.startDate).toLocaleDateString()}</span>
+            </div>
+            <div className="bg-gray-100 px-4 py-2 rounded-full flex items-center">
+              <Clock size={18} className="mr-2 text-primary" />
+              <span>{course.duration} {t('weeks')}</span>
+            </div>
+            <div className="bg-gray-100 px-4 py-2 rounded-full flex items-center">
+              <Users size={18} className="mr-2 text-primary" />
+              <span>{course.courseType}</span>
             </div>
           </div>
         </div>
