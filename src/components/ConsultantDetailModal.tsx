@@ -14,6 +14,7 @@ interface ConsultantDetailModalProps {
     calLink: string;
     image: string;
     specialty: string;
+    hourlyRate: number;
   };
   onClose: () => void;
 }
@@ -36,16 +37,29 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
     };
   }, [onClose]);
 
+  // Initialize Cal.com
+  useEffect(() => {
+    (async function() {
+      const { getCalApi } = await import("@calcom/embed-react");
+      const cal = await getCalApi();
+      cal("ui", {
+        styles: { branding: { brandColor: "#5046e5" } },
+        hideEventTypeDetails: false,
+        layout: "month_view"
+      });
+    })();
+  }, []);
+
   return (
     <motion.div 
-      className="fixed inset-0 z-50 bg-white md:bg-black md:bg-opacity-70 overflow-auto"
+      className="fixed inset-0 z-50 bg-black bg-opacity-70 overflow-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="min-h-screen md:py-10 flex justify-center">
-        <div className="w-full max-w-5xl bg-white rounded-none md:rounded-xl overflow-hidden relative">
-          {/* Header with close button on mobile */}
+      <div className="min-h-screen py-10 px-4 flex justify-center">
+        <div className="w-full max-w-5xl bg-white rounded-xl overflow-hidden relative">
+          {/* Mobile header with back button */}
           <div className="sticky top-0 z-10 flex items-center justify-between p-4 md:hidden bg-white border-b">
             <button 
               onClick={onClose}
@@ -62,18 +76,20 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
             </button>
           </div>
           
-          {/* Main content */}
-          <div className="md:flex">
-            {/* Large image on desktop, hidden on mobile */}
-            <div className="hidden md:block md:w-2/5 relative h-full">
-              <div className="sticky top-0 h-screen max-h-[600px]">
+          {/* Main content layout similar to ProductDetail/WorkshopDetail */}
+          <div className="md:grid md:grid-cols-12 gap-0">
+            {/* Left column - Image and basic info */}
+            <div className="md:col-span-5 relative">
+              <div className="relative h-64 md:h-full">
                 <img 
                   src={consultant.image} 
                   alt={consultant.name}
                   className="w-full h-full object-cover" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute top-6 left-6">
+                
+                {/* Close button on desktop */}
+                <div className="absolute top-6 left-6 hidden md:block">
                   <button
                     onClick={onClose}
                     className="rounded-full p-2 bg-white/90 hover:bg-white"
@@ -81,6 +97,8 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
                     <X size={18} />
                   </button>
                 </div>
+                
+                {/* Name and title info on the image */}
                 <div className="absolute bottom-6 left-6 text-white">
                   <span className="px-3 py-1 bg-primary/90 rounded-full text-white text-sm font-medium">
                     {consultant.specialty}
@@ -91,27 +109,11 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
               </div>
             </div>
             
-            {/* Mobile image - visible only on mobile */}
-            <div className="block md:hidden w-full h-48 relative">
-              <img 
-                src={consultant.image} 
-                alt={consultant.name}
-                className="w-full h-full object-cover" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div className="absolute bottom-4 left-4 text-white">
-                <span className="px-3 py-1 bg-primary/90 rounded-full text-white text-sm font-medium">
-                  {consultant.specialty}
-                </span>
-                <h1 className="text-2xl font-bold mt-2 drop-shadow-md">{consultant.name}</h1>
-              </div>
-            </div>
-            
-            {/* Content area */}
-            <div className="w-full md:w-3/5 p-4 md:p-8">
-              {/* Mobile-only title */}
-              <div className="block md:hidden mb-4">
-                <p className="text-gray-600 text-lg">{consultant.title}</p>
+            {/* Right column - Consultant details */}
+            <div className="md:col-span-7 p-5 md:p-8">
+              {/* Pricing badge */}
+              <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                ${consultant.hourlyRate}/hour consultation
               </div>
               
               {/* Details section */}
@@ -154,9 +156,16 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
                   </div>
                 </div>
                 
-                {/* Booking button */}
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-3">Book a Session</h3>
+                {/* Booking section */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Book a Session</h3>
+                  
+                  {/* Payment notice */}
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                    <p className="font-medium">Important:</p>
+                    <p>After selecting an available time slot, please complete the payment process to confirm your consultation.</p>
+                  </div>
+                  
                   <a 
                     href={consultant.id === '3' 
                       ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
@@ -167,8 +176,8 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
                   >
                     Book a Time <Calendar className="ml-2" size={18} />
                   </a>
-                  <p className="text-sm text-gray-500 mt-2 text-center">
-                    Free 30-minute initial consultation
+                  <p className="text-sm text-gray-500 text-center">
+                    ${consultant.hourlyRate} for a 30-minute consultation
                   </p>
                 </div>
               </div>
@@ -177,7 +186,7 @@ const ConsultantDetailModal: React.FC<ConsultantDetailModalProps> = ({ consultan
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
 export default ConsultantDetailModal 
