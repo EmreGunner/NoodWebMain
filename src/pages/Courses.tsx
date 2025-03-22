@@ -35,8 +35,8 @@ export const courses = [
 },
   {
     id: '3',
-    slug: 'ecommerce-fundamentals',
-    name: 'E-commerce Fundamentals',
+    slug: 'ecommerce-mastery',
+    name: 'E-commerce Mastery',
     description: "Launch your online store with confidence. Our E-commerce Business Course covers everything from market research to digital marketing strategies.",
     courseType: 'Virtual',
     consultation: true,

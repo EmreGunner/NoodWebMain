@@ -17,7 +17,7 @@ interface MeetHeroCardProps {
 // Course URL mapping
 const COURSE_URLS: Record<string, string> = {
   'Fashion Business': '/courses/fashion-business-masterclass',
-  'E-commerce Mastery': '/courses/ecommerce-fundamentals',
+  'E-commerce Mastery': '/courses/ecommerce-mastery',
   'UGC Creation': '/courses/ugc-creation-masterclass',
 };
 
