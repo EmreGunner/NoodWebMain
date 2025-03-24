@@ -130,7 +130,7 @@ const Footer: React.FC = () => {
                   <div>
                     <p className="text-sm text-white/60">Location</p>
                     <address className="text-white/90 not-italic">
-                      Rabat, Morocco
+                    Rue Al Araar, Casablanca 20250, Rabat, Morocco
                     </address>
                   </div>
                 </li>
