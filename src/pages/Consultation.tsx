@@ -41,9 +41,23 @@ const consultants: Consultant[] = [
     bio: "With over 5 years of experience in the e-commerce industry, Asmae helps entrepreneurs build sustainable online businesses. Her expertise spans from market research to operational efficiency and growth strategies.",
     rating: 4.9,
     reviewCount: 127,
-    calLink: "asmae-aboubigi/30min",
+    calLink: "asmae-aboubaigi-5xxgge/discovery-call",
     image: 'https://i.ibb.co/TB4M9xkw/Consultation-Ecommerce.webp', // Updated image path
     specialty: 'E-commerce',
+    hourlyRate: 50
+  },
+  {
+    id: '3',
+    slug: 'emre-gunner',
+    name: 'Emre Gunner',
+    title: 'AI Marketing Expert',
+    expertise: ['AI Implementation', 'Personalized Outreach', 'Marketing Automation', 'AI Content Strategy', 'Data Analytics'],
+    bio: "Emre helps businesses leverage artificial intelligence to streamline marketing operations and create personalized outreach campaigns. He specializes in implementing AI automation systems that increase efficiency while maintaining authentic customer connections.",
+    rating: 4.9,
+    reviewCount: 76,
+    calLink: "emreg/discovery-call",
+    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp', // Updated image path
+    specialty: 'Technology',
     hourlyRate: 50
   },
   {
@@ -59,21 +73,7 @@ const consultants: Consultant[] = [
     image: 'https://i.ibb.co/PZsXtwKD/Consultation-UGC.webp', // Updated image path
     specialty: 'Content',
     hourlyRate: 25
-  },
-  {
-    id: '3',
-    slug: 'emre-gunner',
-    name: 'Emre Gunner',
-    title: 'AI Marketing Expert',
-    expertise: ['AI Implementation', 'Personalized Outreach', 'Marketing Automation', 'AI Content Strategy', 'Data Analytics'],
-    bio: "Emre helps businesses leverage artificial intelligence to streamline marketing operations and create personalized outreach campaigns. He specializes in implementing AI automation systems that increase efficiency while maintaining authentic customer connections.",
-    rating: 4.9,
-    reviewCount: 76,
-    calLink: "emre-yilmaz-t8ydsj/30min",
-    image: 'https://i.ibb.co/1tjYsv4m/Consultation-Ecommerce.webp', // Updated image path
-    specialty: 'Technology',
-    hourlyRate: 50
-  },
+  }
 ]
 
 // Animation variants
