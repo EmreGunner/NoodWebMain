@@ -166,7 +166,7 @@ const ConsultantCard: React.FC<ConsultantCardProps> = ({ consultant, onLearnMore
             </button>
             <a 
               href={consultant.id === '3' 
-                ? "https://cal.com/emre-y%C4%B1lmaz-t8ydsj/30min"
+                ? "https://cal.com/emreg/discovery-call"
                 : `https://cal.com/${consultant.calLink}`}
               target="_blank" 
               rel="noopener noreferrer"
