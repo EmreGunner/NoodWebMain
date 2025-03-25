@@ -18,6 +18,7 @@ import Courses from './pages/Courses'
 import FashionBusinessMasterclass from './pages/FashionBusinessMasterclass'
 import EcommerceMastery from './pages/EcommerceMastery'
 import UGCCreationMasterclass from './pages/UGCCreation'
+import { Analytics } from "@vercel/analytics/react"
 
 // Lazy load the pages
 const Blog = React.lazy(() => import('./pages/Blog'))
@@ -63,6 +64,7 @@ const App: React.FC = () => {
               <Route path="/courses/ugc-creation-masterclass" element={<UGCCreationMasterclass />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Analytics />
           </Suspense>
         </main>
         <Footer />
