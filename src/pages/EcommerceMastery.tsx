@@ -18,7 +18,7 @@ const EcommerceMastery: React.FC = () => {
   const course = {
     id: 'ecommerce-mastery',
     slug: 'ecommerce-mastery',
-    name: 'E-COMMERCE',
+    name: 'E-COMMERCE MASTERY',
     arabicName: 'التجارة الالكترونية',
     description: 'رحلتك نحو النجاح في التجارة الإلكترونية: من الفكرة إلى إطلاق متجر ناجح',
     longDescription: 'اكتشف عالم التجارة الإلكترونية وتعلّم كيف تبني مشروعًا ناجحًا من الصفر، بخطوات عملية ومبسطة. ستتعرف على اختيار فكرة المشروع، تحليل السوق، إنشاء متجر إلكتروني احترافي، وتسويق منتجاتك بفعالية باستخدام أحدث الأدوات والاستراتيجيات. هذه الدورة ليست مجرد تعليم نظري، بل هي دليل عملي لبدء وتحقيق النجاح في أعمالك الرقمية',
@@ -81,48 +81,114 @@ const EcommerceMastery: React.FC = () => {
         'avatar client',
         'مفهوم المنتج الرابح وأهميته',
         'مميزات المنتج الرابح وكيفية تحسينها',
-        'تحديد المنافسة وطرق التميز عنها',
-        'E-book part 2 فن التسويق الرقمي'
+        'طرق البحث عن المنتجات الرابحة',
+        'Notion app'
+      ]
+    },
+    {
+      title: '06',
+      subtitle: 'إنشاء خطة العمل (Business Model Canvas)',
+      lessons: [
+        'تسعير المنتجات',
+        'تسعير الخدمات',
+        'إنشاء Business Model Canvas: شرح الأجزاء الأساسية',
+        'دراسة حالة عملية لإنشاء نموذج عمل لمشروع فعلي'
+      ]
+    },
+    {
+      title: '07',
+      subtitle: 'التسويق',
+      lessons: [
+        'أهمية التسويق والفرق بين البراندينغ والماركتينغ',
+        'هوية العلامة التجارية',
+        'مدخل عام إلى التسويق الرقمي',
+        'التسويق المؤثر (Influencer marketing)',
+        'العلامة التجارية الشخصية Personal branding',
+        'EBOOK'
+      ]
+    },
+    {
+      title: '08',
+      subtitle: 'التسويق بالمحتوى (content marketing)',
+      lessons: [
+        'التسويق بالمحتوى (content marketing)',
+        'تحديد أهداف المحتوى لمواقع التواصل الاجتماعي',
+        'تحديد أفكار المحتوى',
+        'أنواع المحتوى'
+      ]
+    },
+    {
+      title: '09',
+      subtitle: 'إنشاء العلامة التجارية',
+      lessons: [
+        'Brand name 1',
+        'brand name 2',
+        'color palette',
+        'Logo'
+      ]
+    },
+    {
+      title: '10',
+      subtitle: 'social media content',
+      lessons: [
+        'social media part 1',
+        'social media part 2',
+        'social media part 3'
+      ]
+    },
+    {
+      title: '11',
+      subtitle: 'store creation',
+      lessons: [
+        'شراء الدومين (Domain)',
+        'إنشاء المتجر الإلكتروني',
+        'إنشاء تصاميم الموقع'
+      ]
+    },
+    {
+      title: '12',
+      subtitle: 'إنشاء فيديو إشهاري',
+      lessons: [
+        'مراحل إنشاء فيديو إشهاري',
+        'المفهوم الإبداعي ودوره في الفيديو الإشهاري',
+        'إنشاء السكريبت (النص الإعلاني)',
+        'التصوير',
+        'المونتاج'
       ]
     }
   ]
-  
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="course-detail-page bg-white"
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-white"
     >
       <Helmet>
         <title>{course.name} | Nood Academy</title>
         <meta name="description" content={course.description} />
-        <meta property="og:title" content={`${course.name} | Nood Academy`} />
-        <meta property="og:description" content={course.description} />
-        <meta property="og:image" content={course.coursePhoto} />
-        <meta property="og:type" content="website" />
       </Helmet>
       
-      {/* Course header with title only - removed Enroll button */}
-      <div className="bg-white border-b shadow-sm py-4 sticky top-0 z-10">
+      {/* Header with course title */}
+      <div className="bg-white py-4 mb-2 border-b">
         <div className="container mx-auto px-4">
-          <h1 className="text-2xl font-bold text-gray-800">E-commerce P7</h1>
+          <div className="flex justify-between items-center">
+            <Link to="/courses" className="text-primary hover:text-primary-dark flex items-center">
+              <ArrowLeft className="mr-2" size={20} />
+              <span>{t('Back to Courses')}</span>
+            </Link>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">{course.name}</h1>
+          </div>
         </div>
       </div>
       
-      {/* Hero section with course details */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link to="/courses" className="flex items-center text-primary hover:underline">
-            <ArrowLeft size={20} className="mr-2" />
-            {t('Back to Courses')}
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          {/* Course info card */}
+      {/* Course info and video section */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+          {/* Course card with details */}
           <div className="md:col-span-4 lg:col-span-3">
-            <div className="bg-green-50 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-green-50 rounded-xl overflow-hidden shadow-lg">
               <div className="p-7 space-y-6">
                 {/* Author */}
                 <div className="flex items-center">
@@ -142,7 +208,7 @@ const EcommerceMastery: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Study time */}
+                {/* Study Time */}
                 <div className="flex items-center">
                   <Clock className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
@@ -170,9 +236,9 @@ const EcommerceMastery: React.FC = () => {
                 </div>
                 
                 {/* Apply Now Button */}
-                <button
+                <button 
                   onClick={() => setIsFormOpen(true)}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 py-4 px-6 rounded-lg font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl mt-4"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-6 rounded-lg text-xl transition duration-300 shadow-md hover:shadow-lg"
                 >
                   {t('Apply Now')}
                 </button>
@@ -182,14 +248,14 @@ const EcommerceMastery: React.FC = () => {
           
           {/* Main Content */}
           <div className="md:col-span-8 lg:col-span-9">
-            {/* Video with thumbnail */}
+            {/* Video section - improved for immediate play */}
             <div className="mb-8">
               {!isVideoPlaying ? (
                 <div 
                   className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer"
                   onClick={() => setIsVideoPlaying(true)}
                   style={{
-                    backgroundImage: `url(${course.coursePhoto})`,
+                    backgroundImage: `url(https://i.ibb.co/Sm5dSFP/1.webp)`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   }}
@@ -203,7 +269,7 @@ const EcommerceMastery: React.FC = () => {
               ) : (
                 <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video">
                   <iframe 
-                    src="https://drive.google.com/file/d/153S-BNzRb5pojgUfRhaLXckSJjFCaiW_/preview"
+                    src={`${course.videoUrl}?autoplay=1`}
                     title={course.name}
                     className="absolute top-0 left-0 w-full h-full"
                     frameBorder="0"
@@ -214,80 +280,73 @@ const EcommerceMastery: React.FC = () => {
               )}
             </div>
             
-            {/* Course title */}
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-right">{course.description}</h1>
-            
-            {/* Course description */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-10 text-right">
-              <p className="text-lg leading-relaxed">{course.longDescription}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Instructor section - Updated with new image */}
-      <div className="bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Meet Your Instructor</h2>
-          
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="p-8">
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="md:w-1/3 flex justify-center">
-                  <img 
-                    src={heroWomen} 
-                    alt={course.instructor} 
-                    className="w-56 h-56 object-cover rounded-full border-4 border-primary/20"
-                  />
-                </div>
-                <div className="md:w-2/3">
-                  <h3 className="text-2xl font-bold mb-2">{course.instructor}</h3>
-                  <div className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-4">
-                    E-commerce Expert
-                  </div>
-                  <div className="space-y-4">
-                    <p className="text-gray-700 leading-relaxed">{course.instructorBioEn}</p>
-                    <p className="text-gray-700 leading-relaxed text-right" dir="rtl">{course.instructorBioAr}</p>
-                  </div>
+            {/* Course title and description */}
+            <div className="mb-10">
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{course.arabicName}</h2>
+                  <p className="text-xl text-gray-700">{course.description}</p>
                 </div>
               </div>
+              <p className="text-gray-700 text-lg">{course.longDescription}</p>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Course content - Vertical Layout */}
-      <div className="container mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-8 text-center">Course Content</h2>
-        
-        <div className="space-y-6">
-          {courseLessons.map((module, idx) => (
-            <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="p-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="flex items-center">
-                    <div className="bg-primary/10 text-primary text-xl font-bold w-12 h-12 rounded-full flex items-center justify-center mr-4">
-                      {module.title}
-                    </div>
-                    <h3 className="text-xl font-bold">{module.subtitle}</h3>
+      {/* Course Content Section - Vertical Layout */}
+      <div className="bg-gray-50 py-12">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">Course Content</h2>
+          
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {courseLessons.map((module, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-primary text-white p-4 flex items-start">
+                  <div className="bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center font-bold mr-3 flex-shrink-0">
+                    {module.title}
                   </div>
-                  <div className="text-gray-500 text-sm">
-                    {module.lessons.length} {module.lessons.length === 1 ? 'lesson' : 'lessons'}
-                  </div>
+                  <h3 className="text-xl font-medium">{module.subtitle}</h3>
                 </div>
-                
-                <div className="mt-4 pl-16">
-                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                    {module.lessons.map((lesson, lessonIdx) => (
-                      <li key={lessonIdx}>
-                        {lesson}
+                <div className="p-4">
+                  <ul className="space-y-2">
+                    {module.lessons.map((lesson, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <div className="bg-primary/10 rounded-full w-6 h-6 flex items-center justify-center text-primary text-sm mr-3 mt-0.5 flex-shrink-0">
+                          {idx + 1}
+                        </div>
+                        <span className="text-gray-700">{lesson}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      {/* Meet Your Instructor */}
+      <div className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center">Meet Your Instructor</h2>
+          
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 max-w-5xl mx-auto">
+            <div className="lg:w-1/3">
+              <img 
+                src={heroWomen} 
+                alt={course.instructor} 
+                className="w-64 h-64 object-cover rounded-full mx-auto border-4 border-primary shadow-lg"
+              />
             </div>
-          ))}
+            <div className="lg:w-2/3 space-y-6">
+              <h3 className="text-2xl font-bold">{course.instructor}</h3>
+              <div className="space-y-4">
+                <p className="text-gray-700">{course.instructorBioEn}</p>
+                <p className="text-gray-700 text-right" dir="rtl">{course.instructorBioAr}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -317,14 +376,14 @@ const EcommerceMastery: React.FC = () => {
         </div>
       </div>
       
-      {/* Final CTA section - Updated to match footer style */}
-      <div className="bg-primary text-white py-16">
+      {/* Final CTA section - Improved design with proper spacing */}
+      <div className="bg-primary text-white py-16 mb-0">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">{t('Start Your E-commerce Journey Today')}</h2>
-          <p className="text-xl max-w-3xl mx-auto mb-8">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6">{t('Start Your E-commerce Journey Today')}</h2>
+          <p className="text-xl max-w-3xl mx-auto mb-10">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
           <button 
             onClick={() => setIsFormOpen(true)}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-12 py-5 rounded-lg font-bold text-2xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-14 py-6 rounded-xl font-bold text-2xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
           >
             {t('Enroll Now')}
           </button>
