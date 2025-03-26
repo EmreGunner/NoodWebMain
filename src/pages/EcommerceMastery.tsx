@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, Calendar, Clock, Users, Check, BookOpen, GraduationCap, FileText, Video } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Users, Check, BookOpen, GraduationCap, FileText, Video, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
@@ -11,6 +11,7 @@ import './CourseDetailPage.css'
 const EcommerceMastery: React.FC = () => {
   const { t } = useTranslation()
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   
   // Course specific data based on provided information
   const course = {
@@ -108,16 +109,34 @@ const EcommerceMastery: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Video on the left (2/3 width) */}
           <div className="lg:col-span-2">
-            <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video h-full">
-              <iframe 
-                src={course.videoUrl}
-                title={course.name}
-                className="absolute top-0 left-0 w-full h-full"
-                frameBorder="0"
-                allow="autoplay"
-                allowFullScreen
-              />
-            </div>
+            {!isVideoPlaying ? (
+              <div 
+                className="relative rounded-xl overflow-hidden shadow-lg aspect-video h-full cursor-pointer"
+                onClick={() => setIsVideoPlaying(true)}
+                style={{
+                  backgroundImage: `url(${course.coursePhoto})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-primary bg-opacity-90 flex items-center justify-center shadow-lg">
+                    <Play size={36} className="text-white ml-1" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video h-full">
+                <iframe 
+                  src={course.videoUrl}
+                  title={course.name}
+                  className="absolute top-0 left-0 w-full h-full"
+                  frameBorder="0"
+                  allow="autoplay"
+                  allowFullScreen
+                />
+              </div>
+            )}
           </div>
           
           {/* Course details card on the right (1/3 width) */}
