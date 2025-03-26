@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Calendar, Clock, Users, Star, Check, Award, ChevronRight, BookOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { PopupButton } from '@typeform/embed-react'
 import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
+import CourseApplicationForm from '../components/CourseApplicationForm'
 import './CourseDetailPage.css'
 
 const FashionBusinessMasterclass: React.FC = () => {
   const { t } = useTranslation()
+  // Add state for modal
+  const [isFormOpen, setIsFormOpen] = useState(false)
   
   // Course specific data
   const course = {
@@ -258,12 +260,18 @@ const FashionBusinessMasterclass: React.FC = () => {
                 </ul>
               </div>
               
-              <PopupButton
-                id="YOUR_TYPEFORM_ID"
-                className="bg-primary text-white font-bold py-3 rounded-full w-full transition-all duration-300 hover:bg-primary-dark flex items-center justify-center"
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold mb-2">{t('Enroll in this Course')}</h3>
+                <p className="text-primary text-3xl font-bold">${course.price}</p>
+                <p className="text-gray-500 text-sm">{t('One-time payment')}</p>
+              </div>
+              
+              <button
+                onClick={() => setIsFormOpen(true)}
+                className="bg-primary text-white w-full py-3 rounded-full font-bold text-lg mb-6 hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center"
               >
-                {t('Enroll Now')} <ChevronRight className="ml-2" size={18} />
-              </PopupButton>
+                {t('Register Now')}
+              </button>
               
               <button
                 onClick={handleShare}
@@ -343,12 +351,12 @@ const FashionBusinessMasterclass: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6">{t('Transform Your Career Today')}</h2>
           <p className="text-xl max-w-3xl mx-auto mb-8">{t('Join our Fashion Business Masterclass and take the first step towards becoming a fashion business professional.')}</p>
-          <PopupButton 
-            id="YOUR_TYPEFORM_ID"
+          <button
+            onClick={() => setIsFormOpen(true)}
             className="bg-white text-primary text-xl px-12 py-4 rounded-full hover:bg-gray-100 transition-all duration-300 inline-flex items-center justify-center font-semibold shadow-lg hover:shadow-xl"
           >
             {t('Enroll Now')} <ChevronRight className="ml-2" size={24} />
-          </PopupButton>
+          </button>
         </div>
       </div>
 
@@ -368,6 +376,13 @@ const FashionBusinessMasterclass: React.FC = () => {
           timeRequired: `PT${course.duration * 7 * 24}H`,
           image: course.coursePhoto
         }}
+      />
+
+      {/* Add CourseApplicationForm component */}
+      <CourseApplicationForm 
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        courseName={course.name}
       />
     </motion.div>
   );
