@@ -113,7 +113,7 @@ const submitFormToAirtable = async (email: string, productName: string) => {
     // Create a form element
     const formElement = document.createElement("form");
     formElement.method = "POST";
-    formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appziEgZIh15IcxSW/wflNIr39R5Yce086a/wtriIdn8eaC69HBoI";
+    formElement.action = "https://hooks.airtable.com/workflows/v1/genericWebhook/appjLYqUMTB9KjB3S/wflabxHsbrEEZDYhj/wtrwzbU9o5dgwdIgZ";
     formElement.target = "hidden-form-iframe";
     formElement.enctype = "application/x-www-form-urlencoded";
     formElement.style.display = "none";
@@ -121,7 +121,7 @@ const submitFormToAirtable = async (email: string, productName: string) => {
     // Add form fields
     const payload = {
       Email: email,
-      Course: productName,
+      Tool: productName,
       Product: productName,
       Status: "Interested",
     };
