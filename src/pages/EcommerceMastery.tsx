@@ -179,59 +179,61 @@ const EcommerceMastery: React.FC = () => {
       
       {/* Main content area with sidebar */}
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Sidebar - Course Info */}
-          <div className="md:col-span-1 bg-green-50 rounded-xl p-6">
-            <div className="space-y-6">
-              {/* Instructor */}
-              <div className="flex items-center">
-                <GraduationCap className="text-primary mr-3 flex-shrink-0" size={20} />
-                <div>
-                  <div className="text-gray-500 text-sm">Author:</div>
-                  <div className="font-medium">{course.instructor}</div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Sidebar - Course Info - Make it more compact */}
+          <div className="md:col-span-3 lg:col-span-3">
+            <div className="bg-green-50 rounded-xl p-5 shadow-sm border border-green-100 sticky top-4">
+              <div className="space-y-4">
+                {/* Instructor */}
+                <div className="flex items-center">
+                  <GraduationCap className="text-primary mr-3 flex-shrink-0" size={18} />
+                  <div>
+                    <div className="text-gray-500 text-xs">Author:</div>
+                    <div className="font-medium text-sm">{course.instructor}</div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Level */}
-              <div className="flex items-center">
-                <BookOpen className="text-primary mr-3 flex-shrink-0" size={20} />
-                <div>
-                  <div className="text-gray-500 text-sm">Level:</div>
-                  <div className="font-medium">{course.level}</div>
+                
+                {/* Level */}
+                <div className="flex items-center">
+                  <BookOpen className="text-primary mr-3 flex-shrink-0" size={18} />
+                  <div>
+                    <div className="text-gray-500 text-xs">Level:</div>
+                    <div className="font-medium text-sm">{course.level}</div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Study Time */}
-              <div className="flex items-center">
-                <Clock className="text-primary mr-3 flex-shrink-0" size={20} />
-                <div>
-                  <div className="text-gray-500 text-sm">Study time:</div>
-                  <div className="font-medium">{course.studyTime}</div>
+                
+                {/* Study Time */}
+                <div className="flex items-center">
+                  <Clock className="text-primary mr-3 flex-shrink-0" size={18} />
+                  <div>
+                    <div className="text-gray-500 text-xs">Study time:</div>
+                    <div className="font-medium text-sm">{course.studyTime}</div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Assessments */}
-              <div className="flex items-center">
-                <FileText className="text-primary mr-3 flex-shrink-0" size={20} />
-                <div>
-                  <div className="text-gray-500 text-sm">Assessments:</div>
-                  <div className="font-medium">{course.assessments}</div>
+                
+                {/* Assessments */}
+                <div className="flex items-center">
+                  <FileText className="text-primary mr-3 flex-shrink-0" size={18} />
+                  <div>
+                    <div className="text-gray-500 text-xs">Assessments:</div>
+                    <div className="font-medium text-sm">{course.assessments}</div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Live Sessions */}
-              <div className="flex items-center">
-                <Video className="text-primary mr-3 flex-shrink-0" size={20} />
-                <div>
-                  <div className="text-gray-500 text-sm">Live Sessions:</div>
-                  <div className="font-medium">{course.liveSessions}</div>
+                
+                {/* Live Sessions */}
+                <div className="flex items-center">
+                  <Video className="text-primary mr-3 flex-shrink-0" size={18} />
+                  <div>
+                    <div className="text-gray-500 text-xs">Live Sessions:</div>
+                    <div className="font-medium text-sm">{course.liveSessions}</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Main Content */}
-          <div className="md:col-span-3">
+          {/* Main Content - Give more horizontal space */}
+          <div className="md:col-span-9 lg:col-span-9">
             {/* Hero Image */}
             <div className="relative rounded-xl overflow-hidden mb-8">
               <img 
