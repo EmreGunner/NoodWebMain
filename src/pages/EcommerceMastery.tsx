@@ -178,13 +178,13 @@ const EcommerceMastery: React.FC = () => {
               <ArrowLeft className="mr-2" size={20} />
               <span>{t('Back to Courses')}</span>
             </Link>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">{course.name}</h1>
+            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">{course.name}</h1>
           </div>
         </div>
       </div>
       
       {/* Course info and video section */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-2">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           {/* Course card with details */}
           <div className="md:col-span-4 lg:col-span-3">
@@ -249,7 +249,7 @@ const EcommerceMastery: React.FC = () => {
           {/* Main Content */}
           <div className="md:col-span-8 lg:col-span-9">
             {/* Video section - improved for immediate play */}
-            <div className="mb-8">
+            <div className="mb-6">
               {!isVideoPlaying ? (
                 <div 
                   className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer"
@@ -269,11 +269,11 @@ const EcommerceMastery: React.FC = () => {
               ) : (
                 <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video">
                   <iframe 
-                    src={`${course.videoUrl}?autoplay=1`}
+                    src={course.videoUrl.replace('/preview', '/preview?autoplay=1&embed=true')}
                     title={course.name}
                     className="absolute top-0 left-0 w-full h-full"
                     frameBorder="0"
-                    allow="autoplay"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 </div>
