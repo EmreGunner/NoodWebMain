@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Calendar, Clock, Users, Check, BookOpen, GraduationCap, FileText, Video } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { PopupButton } from '@typeform/embed-react'
 import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
+import CourseApplicationForm from '../components/CourseApplicationForm'
 import './CourseDetailPage.css'
 
 const EcommerceMastery: React.FC = () => {
   const { t } = useTranslation()
+  const [isFormOpen, setIsFormOpen] = useState(false)
   
   // Course specific data based on provided information
   const course = {
@@ -253,12 +254,12 @@ const EcommerceMastery: React.FC = () => {
                 <div className="text-3xl font-bold">${course.price}</div>
               </div>
               
-              <PopupButton 
-                id="YOUR_TYPEFORM_ID"
+              <button 
+                onClick={() => setIsFormOpen(true)}
                 className="bg-primary text-white w-full py-3 rounded-full font-bold text-lg mb-6 hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center"
               >
                 {t('Reserve Your Seat Now')}
-              </PopupButton>
+              </button>
             </div>
             
             {/* Course Lessons */}
@@ -308,6 +309,12 @@ const EcommerceMastery: React.FC = () => {
           timeRequired: `PT${course.duration * 7 * 24}H`,
           image: course.coursePhoto
         }}
+      />
+      
+      <CourseApplicationForm 
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        courseName={course.name}
       />
     </motion.div>
   );
