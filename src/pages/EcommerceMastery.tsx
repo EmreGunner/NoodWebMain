@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet'
 import { JsonLd } from 'react-schemaorg'
 import CourseApplicationForm from '../components/CourseApplicationForm'
 import './CourseDetailPage.css'
+import heroWomen from '../assets/images/herowomen.png'
 
 const EcommerceMastery: React.FC = () => {
   const { t } = useTranslation()
@@ -80,83 +81,12 @@ const EcommerceMastery: React.FC = () => {
         'avatar client',
         'مفهوم المنتج الرابح وأهميته',
         'مميزات المنتج الرابح وكيفية تحسينها',
-        'طرق البحث عن المنتجات الرابحة',
-        'Notion app'
-      ]
-    },
-    {
-      title: '06',
-      subtitle: 'إنشاء خطة العمل (Business Model Canvas)',
-      lessons: [
-        'تسعير المنتجات',
-        'تسعير الخدمات',
-        'إنشاء Business Model Canvas: شرح الأجزاء الأساسية',
-        'دراسة حالة عملية لإنشاء نموذج عمل لمشروع فعلي'
-      ]
-    },
-    {
-      title: '07',
-      subtitle: 'التسويق',
-      lessons: [
-        'أهمية التسويق والفرق بين البراندينغ والماركتينغ',
-        'هوية العلامة التجارية',
-        'مدخل عام إلى التسويق الرقمي',
-        'التسويق المؤثر (Influencer marketing)',
-        'العلامة التجارية الشخصية Personal branding',
-        'EBOOK'
-      ]
-    },
-    {
-      title: '08',
-      subtitle: 'التسويق بالمحتوى (content marketing)',
-      lessons: [
-        'التسويق بالمحتوى (content marketing)',
-        'تحديد أهداف المحتوى لمواقع التواصل الاجتماعي',
-        'تحديد أفكار المحتوى',
-        'أنواع المحتوى'
-      ]
-    },
-    {
-      title: '09',
-      subtitle: 'إنشاء العلامة التجارية',
-      lessons: [
-        'Brand name 1',
-        'brand name 2',
-        'color palette',
-        'Logo'
-      ]
-    },
-    {
-      title: '10',
-      subtitle: 'social media content',
-      lessons: [
-        'social media part 1',
-        'social media part 2',
-        'social media part 3'
-      ]
-    },
-    {
-      title: '11',
-      subtitle: 'store creation',
-      lessons: [
-        'شراء الدومين (Domain)',
-        'إنشاء المتجر الإلكتروني',
-        'إنشاء تصاميم الموقع'
-      ]
-    },
-    {
-      title: '12',
-      subtitle: 'إنشاء فيديو إشهاري',
-      lessons: [
-        'مراحل إنشاء فيديو إشهاري',
-        'المفهوم الإبداعي ودوره في الفيديو الإشهاري',
-        'إنشاء السكريبت (النص الإعلاني)',
-        'التصوير',
-        'المونتاج'
+        'تحديد المنافسة وطرق التميز عنها',
+        'E-book part 2 فن التسويق الرقمي'
       ]
     }
-  ];
-
+  ]
+  
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -173,80 +103,79 @@ const EcommerceMastery: React.FC = () => {
         <meta property="og:type" content="website" />
       </Helmet>
       
-      {/* Course header with title and enroll button */}
+      {/* Course header with title only - removed Enroll button */}
       <div className="bg-white border-b shadow-sm py-4 sticky top-0 z-10">
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="container mx-auto px-4">
           <h1 className="text-2xl font-bold text-gray-800">E-commerce P7</h1>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="bg-yellow-400 hover:bg-yellow-500 px-8 py-3 rounded-lg font-bold text-gray-800 transition-colors duration-300"
-          >
-            Enroll
-          </button>
         </div>
       </div>
       
       {/* Hero section with course details */}
       <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <Link to="/courses" className="flex items-center text-primary hover:underline">
+            <ArrowLeft size={20} className="mr-2" />
+            {t('Back to Courses')}
+          </Link>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          {/* Course sidebar */}
+          {/* Course info card */}
           <div className="md:col-span-4 lg:col-span-3">
-            <div className="bg-green-50 rounded-xl overflow-hidden shadow-sm">
+            <div className="bg-green-50 rounded-xl shadow-lg overflow-hidden">
               <div className="p-7 space-y-6">
                 {/* Author */}
                 <div className="flex items-center">
-                  <div className="bg-primary/10 p-2 rounded-full mr-3">
-                    <Users className="text-primary" size={24} />
-                  </div>
+                  <GraduationCap className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
-                    <div className="text-gray-500 text-lg font-medium">Author:</div>
-                    <div className="font-semibold text-xl">{course.instructor}</div>
+                    <div className="text-gray-500 text-sm">Author:</div>
+                    <div className="font-medium text-lg">{course.instructor}</div>
                   </div>
                 </div>
                 
                 {/* Level */}
                 <div className="flex items-center">
-                  <div className="bg-primary/10 p-2 rounded-full mr-3">
-                    <BookOpen className="text-primary" size={24} />
-                  </div>
+                  <BookOpen className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
-                    <div className="text-gray-500 text-lg font-medium">Level:</div>
-                    <div className="font-semibold text-xl">{course.level}</div>
+                    <div className="text-gray-500 text-sm">Level:</div>
+                    <div className="font-medium text-lg">{course.level}</div>
                   </div>
                 </div>
                 
                 {/* Study time */}
                 <div className="flex items-center">
-                  <div className="bg-primary/10 p-2 rounded-full mr-3">
-                    <Clock className="text-primary" size={24} />
-                  </div>
+                  <Clock className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
-                    <div className="text-gray-500 text-lg font-medium">Study time:</div>
-                    <div className="font-semibold text-xl">{course.studyTime}</div>
+                    <div className="text-gray-500 text-sm">Study time:</div>
+                    <div className="font-medium text-lg">{course.studyTime}</div>
                   </div>
                 </div>
                 
                 {/* Assessments */}
                 <div className="flex items-center">
-                  <div className="bg-primary/10 p-2 rounded-full mr-3">
-                    <FileText className="text-primary" size={24} />
-                  </div>
+                  <FileText className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
-                    <div className="text-gray-500 text-lg font-medium">Assessments:</div>
-                    <div className="font-semibold text-xl">{course.assessments}</div>
+                    <div className="text-gray-500 text-sm">Assessments:</div>
+                    <div className="font-medium text-lg">{course.assessments}</div>
                   </div>
                 </div>
                 
                 {/* Live Sessions */}
                 <div className="flex items-center">
-                  <div className="bg-primary/10 p-2 rounded-full mr-3">
-                    <Video className="text-primary" size={24} />
-                  </div>
+                  <Video className="text-primary mr-4 flex-shrink-0" size={24} />
                   <div>
-                    <div className="text-gray-500 text-lg font-medium">Live Sessions:</div>
-                    <div className="font-semibold text-xl">{course.liveSessions}</div>
+                    <div className="text-gray-500 text-sm">Live Sessions:</div>
+                    <div className="font-medium text-lg">{course.liveSessions}</div>
                   </div>
                 </div>
+                
+                {/* Apply Now Button */}
+                <button
+                  onClick={() => setIsFormOpen(true)}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 py-4 px-6 rounded-lg font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl mt-4"
+                >
+                  {t('Apply Now')}
+                </button>
               </div>
             </div>
           </div>
@@ -296,7 +225,7 @@ const EcommerceMastery: React.FC = () => {
         </div>
       </div>
 
-      {/* Instructor section */}
+      {/* Instructor section - Updated with new image */}
       <div className="bg-gray-50 py-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-8 text-center">Meet Your Instructor</h2>
@@ -306,7 +235,7 @@ const EcommerceMastery: React.FC = () => {
               <div className="flex flex-col md:flex-row gap-8">
                 <div className="md:w-1/3 flex justify-center">
                   <img 
-                    src={course.coursePhoto} 
+                    src={heroWomen} 
                     alt={course.instructor} 
                     className="w-56 h-56 object-cover rounded-full border-4 border-primary/20"
                   />
@@ -331,20 +260,27 @@ const EcommerceMastery: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         <h2 className="text-3xl font-bold mb-8 text-center">Course Content</h2>
         
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="space-y-6">
           {courseLessons.map((module, idx) => (
-            <div key={idx} className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-              <div className="flex items-start">
-                <div className="bg-primary text-white font-bold rounded-full w-14 h-14 flex items-center justify-center text-xl mr-4 flex-shrink-0">
-                  {module.title}
+            <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="flex items-center">
+                    <div className="bg-primary/10 text-primary text-xl font-bold w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                      {module.title}
+                    </div>
+                    <h3 className="text-xl font-bold">{module.subtitle}</h3>
+                  </div>
+                  <div className="text-gray-500 text-sm">
+                    {module.lessons.length} {module.lessons.length === 1 ? 'lesson' : 'lessons'}
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold mb-3">{module.subtitle}</h4>
-                  <ul className="space-y-2">
+                
+                <div className="mt-4 pl-16">
+                  <ul className="list-disc pl-6 space-y-2 text-gray-700">
                     {module.lessons.map((lesson, lessonIdx) => (
-                      <li key={lessonIdx} className="flex items-start">
-                        <Check size={20} className="text-primary mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-lg">{lesson}</span>
+                      <li key={lessonIdx}>
+                        {lesson}
                       </li>
                     ))}
                   </ul>
@@ -381,21 +317,17 @@ const EcommerceMastery: React.FC = () => {
         </div>
       </div>
       
-      {/* Final CTA section */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark text-white py-16">
+      {/* Final CTA section - Updated to match footer style */}
+      <div className="bg-primary text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6">{t('Start Your E-commerce Journey Today')}</h2>
           <p className="text-xl max-w-3xl mx-auto mb-8">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="text-3xl font-bold">${course.price}</div>
-            <button 
-              onClick={() => setIsFormOpen(true)}
-              className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-10 py-4 rounded-lg font-bold text-xl transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              {t('Enroll Now')}
-            </button>
-          </div>
-          <p className="text-white/80 mt-4">Limited spots available. Next cohort starts {new Date(course.startDate).toLocaleDateString()}</p>
+          <button 
+            onClick={() => setIsFormOpen(true)}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-12 py-5 rounded-lg font-bold text-2xl transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            {t('Enroll Now')}
+          </button>
         </div>
       </div>
       
