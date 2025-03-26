@@ -26,7 +26,7 @@ const EcommerceMastery: React.FC = () => {
     domain: 'E-commerce',
     startDate: '2024-07-12',
     duration: 12,
-    coursePhoto: 'https://i.ibb.co/Sm5dSFP/1.webp',
+    coursePhoto: 'https://i.ibb.co/3mf75C6R/2.webp',
     price: 170,
     instructor: 'Asmae Aboubigi',
     instructorBioEn: 'Is an engineer and entrepreneur with over 7 years of experience in e-commerce and digital project development. After working for years in engineering, she realized her true passion lies in the world of entrepreneurship and helping others build their own successful businesses. Throughout her career, she has guided hundreds of young individuals into the e-commerce world using innovative strategies and practical tools. With her extensive experience and dedication to sharing knowledge, she has become a trusted reference for those seeking success and financial independence in the digital marketplace.',
@@ -39,6 +39,125 @@ const EcommerceMastery: React.FC = () => {
     videoUrl: 'https://drive.google.com/file/d/153S-BNzRb5pojgUfRhaLXckSJjFCaiW_/preview'
   }
   
+  const courseLessons = [
+    {
+      title: '01',
+      subtitle: 'Introduction to e-commerce',
+      lessons: [
+        'مقدمة حول الدورة',
+        'أهمية التواجد على الإنترنت'
+      ]
+    },
+    {
+      title: '02',
+      subtitle: 'فهم التجارة الإلكترونية',
+      lessons: [
+        'ما هي التجارة الإلكترونية',
+        'dropshipping',
+        'les types de e-commerce',
+        'E-book part 1 الكنز الرقمي'
+      ]
+    },
+    {
+      title: '03',
+      subtitle: 'عقلية المقاول والمهارات الضرورية',
+      lessons: [
+        'عقلية المقاول الرقمي',
+        'المهارات الضرورية لكل مقاول'
+      ]
+    },
+    {
+      title: '04',
+      subtitle: 'تحليل السوق واختيار فكرة المشروع',
+      lessons: [
+        'كيفية اختيار فكرة المشروع المناسبة',
+        'مراحل التجارة الإلكترونية: من الفكرة إلى الإطلاق'
+      ]
+    },
+    {
+      title: '05',
+      subtitle: 'إنشاء المشروع وبناء الأساسيات',
+      lessons: [
+        'avatar client',
+        'مفهوم المنتج الرابح وأهميته',
+        'مميزات المنتج الرابح وكيفية تحسينها',
+        'طرق البحث عن المنتجات الرابحة',
+        'Notion app'
+      ]
+    },
+    {
+      title: '06',
+      subtitle: 'إنشاء خطة العمل (Business Model Canvas)',
+      lessons: [
+        'تسعير المنتجات',
+        'تسعير الخدمات',
+        'إنشاء Business Model Canvas: شرح الأجزاء الأساسية',
+        'دراسة حالة عملية لإنشاء نموذج عمل لمشروع فعلي'
+      ]
+    },
+    {
+      title: '07',
+      subtitle: 'التسويق',
+      lessons: [
+        'أهمية التسويق والفرق بين البراندينغ والماركتينغ',
+        'هوية العلامة التجارية',
+        'مدخل عام إلى التسويق الرقمي',
+        'التسويق المؤثر (Influencer marketing)',
+        'العلامة التجارية الشخصية Personal branding',
+        'EBOOK'
+      ]
+    },
+    {
+      title: '08',
+      subtitle: 'التسويق بالمحتوى (content marketing)',
+      lessons: [
+        'التسويق بالمحتوى (content marketing)',
+        'تحديد أهداف المحتوى لمواقع التواصل الاجتماعي',
+        'تحديد أفكار المحتوى',
+        'أنواع المحتوى'
+      ]
+    },
+    {
+      title: '09',
+      subtitle: 'إنشاء العلامة التجارية',
+      lessons: [
+        'Brand name 1',
+        'brand name 2',
+        'color palette',
+        'Logo'
+      ]
+    },
+    {
+      title: '10',
+      subtitle: 'social media content',
+      lessons: [
+        'social media part 1',
+        'social media part 2',
+        'social media part 3'
+      ]
+    },
+    {
+      title: '11',
+      subtitle: 'store creation',
+      lessons: [
+        'شراء الدومين (Domain)',
+        'إنشاء المتجر الإلكتروني',
+        'إنشاء تصاميم الموقع'
+      ]
+    },
+    {
+      title: '12',
+      subtitle: 'إنشاء فيديو إشهاري',
+      lessons: [
+        'مراحل إنشاء فيديو إشهاري',
+        'المفهوم الإبداعي ودوره في الفيديو الإشهاري',
+        'إنشاء السكريبت (النص الإعلاني)',
+        'التصوير',
+        'المونتاج'
+      ]
+    }
+  ]
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -59,7 +178,7 @@ const EcommerceMastery: React.FC = () => {
               <ArrowLeft className="mr-2" size={20} />
               <span>{t('Back to Courses')}</span>
             </Link>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{course.name}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">{course.name}</h1>
           </div>
         </div>
       </div>
@@ -115,17 +234,11 @@ const EcommerceMastery: React.FC = () => {
                     <div className="font-medium text-lg">{course.liveSessions}</div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Price and CTA Button in sidebar */}
-              <div className="bg-white p-7 border-t">
-                <div className="flex justify-between items-center mb-5">
-                  <span className="text-gray-500 text-sm">Price:</span>
-                  <span className="text-2xl font-bold text-primary">${course.price}</span>
-                </div>
+                
+                {/* Apply Now Button */}
                 <button 
                   onClick={() => setIsFormOpen(true)}
-                  className="bg-primary text-white w-full py-3 rounded-lg font-semibold"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-6 rounded-lg text-xl transition duration-300 shadow-md hover:shadow-lg"
                 >
                   {t('Apply Now')}
                 </button>
@@ -135,14 +248,14 @@ const EcommerceMastery: React.FC = () => {
           
           {/* Main Content */}
           <div className="md:col-span-8 lg:col-span-9">
-            {/* Video section - Fixed for immediate play */}
+            {/* Video section - improved for immediate play */}
             <div className="mb-8">
               {!isVideoPlaying ? (
                 <div 
                   className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer"
                   onClick={() => setIsVideoPlaying(true)}
                   style={{
-                    backgroundImage: `url(${course.coursePhoto})`,
+                    backgroundImage: `url(https://i.ibb.co/Sm5dSFP/1.webp)`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   }}
@@ -160,7 +273,7 @@ const EcommerceMastery: React.FC = () => {
                     title={course.name}
                     className="absolute top-0 left-0 w-full h-full"
                     frameBorder="0"
-                    allow="autoplay; fullscreen"
+                    allow="autoplay"
                     allowFullScreen
                   />
                 </div>
@@ -187,120 +300,7 @@ const EcommerceMastery: React.FC = () => {
           <h2 className="text-3xl font-bold mb-8 text-center">Course Content</h2>
           
           <div className="space-y-4 max-w-4xl mx-auto">
-            {/* Manually include the course lessons here since they were cut off in the previous code */}
-            {[
-              {
-                title: '01',
-                subtitle: 'Introduction to e-commerce',
-                lessons: [
-                  'مقدمة حول الدورة',
-                  'أهمية التواجد على الإنترنت'
-                ]
-              },
-              {
-                title: '02',
-                subtitle: 'فهم التجارة الإلكترونية',
-                lessons: [
-                  'ما هي التجارة الإلكترونية',
-                  'dropshipping',
-                  'les types de e-commerce',
-                  'E-book part 1 الكنز الرقمي'
-                ]
-              },
-              {
-                title: '03',
-                subtitle: 'عقلية المقاول والمهارات الضرورية',
-                lessons: [
-                  'عقلية المقاول الرقمي',
-                  'المهارات الضرورية لكل مقاول'
-                ]
-              },
-              {
-                title: '04',
-                subtitle: 'كيف تختار منتجاتك',
-                lessons: [
-                  'Niche اختيار',
-                  'اختيار المنتج',
-                  'المنتج الذي ينتج لك المال خلال 24 ساعة',
-                  'dropshipping الاستثمار المطلوب ل'
-                ]
-              },
-              {
-                title: '05',
-                subtitle: 'بناء متجرك على shopify',
-                lessons: [
-                  'إنشاء حساب',
-                  'التعرف على المتجر واختيار الثيم',
-                  'إضافة المنتج',
-                  'E-book part 2 الكنز الرقمي'
-                ]
-              },
-              {
-                title: '06',
-                subtitle: 'التسويق عبر فيسبوك',
-                lessons: [
-                  'فهم الخوارزمية',
-                  'كيفية بناء صفحة ناجحة',
-                  'المحتويات التي يتفاعل معها الجمهور',
-                  'مهارات إنتاج المحتوى'
-                ]
-              },
-              {
-                title: '07',
-                subtitle: 'نصائح حول التسويق عبر انستجرام',
-                lessons: [
-                  'أهمية أنستجرام وTIK TOK',
-                  'كيفية نشر منشورات ناجحة',
-                  'الإستراتيجية وكيفية التعامل مع الخوارزمية'
-                ]
-              },
-              {
-                title: '08',
-                subtitle: 'التسويق باستخدام أنفلونسرز',
-                lessons: [
-                  'لماذا هم مهمون',
-                  'كيفية اختيار أنفلونسر مناسب',
-                  'كيفية إرسال المنتج والتعامل مع المؤثرين',
-                  'E-book part 3 الكنز الرقمي'
-                ]
-              },
-              {
-                title: '09',
-                subtitle: 'التواصل مع الزبون',
-                lessons: [
-                  'استراتيجية التواصل',
-                  'قاموس أجوبة لجميع أسئلة الزبناء',
-                  'كيفية صنع علاقة تجارية ناجحة مع الزبون'
-                ]
-              },
-              {
-                title: '10',
-                subtitle: 'Fulfillment',
-                lessons: [
-                  'طرق الشحن المتاحة',
-                  'العمل مع Amazon fulfillment',
-                  'طرق الدفع '
-                ]
-              },
-              {
-                title: '11',
-                subtitle: 'فرص أخرى في التجارة الإلكترونية',
-                lessons: [
-                  'البيع على Amazon',
-                  'POD Print on demand',
-                  'E-book part 4 الكنز الرقمي'
-                ]
-              },
-              {
-                title: '12',
-                subtitle: 'الختام',
-                lessons: [
-                  'مراجعة ما تم دراسته',
-                  'مشاريع الطلبة ونصائح أخيرة',
-                  'Q&A'
-                ]
-              }
-            ].map((module, index) => (
+            {courseLessons.map((module, index) => (
               <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-primary text-white p-4 flex items-start">
                   <div className="bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center font-bold mr-3 flex-shrink-0">
@@ -332,11 +332,11 @@ const EcommerceMastery: React.FC = () => {
           <h2 className="text-3xl font-bold mb-12 text-center">Meet Your Instructor</h2>
           
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8 max-w-5xl mx-auto">
-            <div className="lg:w-1/3 flex justify-center">
+            <div className="lg:w-1/3">
               <img 
                 src={heroWomen} 
                 alt={course.instructor} 
-                className="w-64 h-64 object-cover rounded-full border-4 border-primary shadow-lg"
+                className="w-64 h-64 object-cover rounded-full mx-auto border-4 border-primary shadow-lg"
               />
             </div>
             <div className="lg:w-2/3 space-y-6">
@@ -376,12 +376,11 @@ const EcommerceMastery: React.FC = () => {
         </div>
       </div>
       
-      {/* Final CTA section - Updated with $170 price */}
+      {/* Final CTA section - Improved design with proper spacing */}
       <div className="bg-primary text-white py-16 mb-0">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl sm:text-5xl font-bold mb-6">{t('Start Your E-commerce Journey Today')}</h2>
-          <p className="text-xl max-w-3xl mx-auto mb-4">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
-          <p className="text-3xl font-bold mb-8">Only ${course.price}</p>
+          <p className="text-xl max-w-3xl mx-auto mb-10">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
           <button 
             onClick={() => setIsFormOpen(true)}
             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-14 py-6 rounded-xl font-bold text-2xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
