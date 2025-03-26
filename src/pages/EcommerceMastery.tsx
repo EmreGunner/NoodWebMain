@@ -248,14 +248,14 @@ const EcommerceMastery: React.FC = () => {
           
           {/* Main Content */}
           <div className="md:col-span-8 lg:col-span-9">
-            {/* Video section - improved for immediate play */}
+            {/* Video section - Fixed for autoplay */}
             <div className="mb-6">
               {!isVideoPlaying ? (
                 <div 
                   className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer"
                   onClick={() => setIsVideoPlaying(true)}
                   style={{
-                    backgroundImage: `url(https://i.ibb.co/Sm5dSFP/1.webp)`,
+                    backgroundImage: `url(${course.coursePhoto})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   }}
@@ -269,11 +269,11 @@ const EcommerceMastery: React.FC = () => {
               ) : (
                 <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video">
                   <iframe 
-                    src={course.videoUrl.replace('/preview', '/preview?autoplay=1&embed=true')}
+                    src="https://drive.google.com/file/d/153S-BNzRb5pojgUfRhaLXckSJjFCaiW_/preview?autoplay=1"
                     title={course.name}
                     className="absolute top-0 left-0 w-full h-full"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="autoplay; fullscreen"
                     allowFullScreen
                   />
                 </div>
