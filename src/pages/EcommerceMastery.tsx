@@ -170,18 +170,26 @@ const EcommerceMastery: React.FC = () => {
         <meta name="description" content={course.description} />
       </Helmet>
       
-      {/* Header with course title */}
-      <div className="bg-white py-4 mb-2 border-b">
+      {/* Refined professional header with proper sizing */}
+      <header className="border-b border-gray-200 py-4">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <Link to="/courses" className="text-primary hover:text-primary-dark flex items-center">
-              <ArrowLeft className="mr-2" size={20} />
-              <span>{t('Back to Courses')}</span>
+          {/* Back button */}
+          <div className="flex items-center mb-4">
+            <Link 
+              to="/courses" 
+              className="text-primary hover:text-primary-dark flex items-center transition-colors"
+            >
+              <ArrowLeft className="mr-1" size={18} />
+              <span className="text-sm font-medium">Back to Courses</span>
             </Link>
-            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">{course.name}</h1>
           </div>
+          
+          {/* Title with refined sizing */}
+          <h1 className="font-sans font-bold text-3xl md:text-4xl text-center text-gray-900 mb-2">
+            E-COMMERCE MASTERY
+          </h1>
         </div>
-      </div>
+      </header>
       
       {/* Course info and video section */}
       <div className="container mx-auto px-4 py-2">
@@ -269,26 +277,50 @@ const EcommerceMastery: React.FC = () => {
               ) : (
                 <div className="relative rounded-xl overflow-hidden shadow-lg aspect-video">
                   <iframe 
-                    src="https://drive.google.com/file/d/153S-BNzRb5pojgUfRhaLXckSJjFCaiW_/preview?autoplay=1"
-                    title={course.name}
+                    src="https://drive.google.com/file/d/153S-BNzRb5pojgUfRhaLXckSJjFCaiW_/preview"
+                    title="Course video"
                     className="absolute top-0 left-0 w-full h-full"
                     frameBorder="0"
                     allow="autoplay; fullscreen"
-                    allowFullScreen
                   />
                 </div>
               )}
             </div>
             
-            {/* Course title and description */}
-            <div className="mb-10">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{course.arabicName}</h2>
-                  <p className="text-xl text-gray-700">{course.description}</p>
+            {/* Arabic course information with proper RTL support */}
+            <div className="bg-gradient-to-br from-white to-[color:var(--color-light)] py-12">
+              <div className="content-container">
+                <div className="card-enhanced p-8 max-w-4xl mx-auto">
+                  {/* Arabic title with proper RTL styling */}
+                  <h2 
+                    className="text-3xl md:text-4xl font-bold mb-4 text-center text-[color:var(--color-dark)]" 
+                    dir="rtl" 
+                    lang="ar"
+                  >
+                    {course.arabicName}
+                  </h2>
+                  
+                  {/* Arabic subtitle with proper styling */}
+                  <p 
+                    className="text-xl text-gray-700 mb-6 text-center border-b border-gray-200 pb-6" 
+                    dir="rtl" 
+                    lang="ar"
+                  >
+                    {course.description}
+                  </p>
+                  
+                  {/* Arabic description with proper RTL formatting */}
+                  <div 
+                    className="text-gray-700 leading-relaxed bg-white/60 p-6 rounded-xl shadow-[var(--shadow-subtle)]" 
+                    dir="rtl" 
+                    lang="ar"
+                  >
+                    <p className="text-lg">
+                      {course.longDescription}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <p className="text-gray-700 text-lg">{course.longDescription}</p>
             </div>
           </div>
         </div>
@@ -326,18 +358,25 @@ const EcommerceMastery: React.FC = () => {
         </div>
       </div>
       
-      {/* Meet Your Instructor */}
+      {/* Meet Your Instructor - FIXED image positioning */}
       <div className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Meet Your Instructor</h2>
           
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8 max-w-5xl mx-auto">
-            <div className="lg:w-1/3">
-              <img 
-                src={heroWomen} 
-                alt={course.instructor} 
-                className="w-64 h-64 object-cover rounded-full mx-auto border-4 border-primary shadow-lg"
-              />
+            <div className="lg:w-1/3 flex justify-center">
+              {/* Fixed circular image with proper positioning */}
+              <div className="w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg relative">
+                <img 
+                  src={heroWomen} 
+                  alt={course.instructor} 
+                  className="absolute h-full w-full object-cover object-center"
+                  style={{
+                    objectPosition: "center 5%", /* Adjust this value to center the person's face */
+                    transform: "scale(1)" /* Slightly enlarge the image to fill the circle better */
+                  }}
+                />
+              </div>
             </div>
             <div className="lg:w-2/3 space-y-6">
               <h3 className="text-2xl font-bold">{course.instructor}</h3>
