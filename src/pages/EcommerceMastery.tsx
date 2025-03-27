@@ -171,8 +171,8 @@ const EcommerceMastery: React.FC = () => {
       </Helmet>
       
       {/* Refined professional header with proper sizing */}
-      <header className="border-b border-gray-200 py-4">
-        <div className="container mx-auto px-4">
+      <header className="border-b border-gray-200">
+        <div className="container mx-auto ">
           {/* Back button */}
           <div className="flex items-center mb-4">
             <Link 
@@ -257,10 +257,10 @@ const EcommerceMastery: React.FC = () => {
           {/* Main Content */}
           <div className="md:col-span-8 lg:col-span-9">
             {/* Video section - Fixed for autoplay */}
-            <div className="mb-6">
+            <div className="relative mb-6 rounded-2xl overflow-hidden">
               {!isVideoPlaying ? (
                 <div 
-                  className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer"
+                  className="relative rounded-xl overflow-hidden shadow-lg aspect-video cursor-pointer group"
                   onClick={() => setIsVideoPlaying(true)}
                   style={{
                     backgroundImage: `url(${course.coursePhoto})`,
@@ -268,10 +268,11 @@ const EcommerceMastery: React.FC = () => {
                     backgroundPosition: 'center'
                   }}
                 >
-                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-primary bg-opacity-90 flex items-center justify-center shadow-lg">
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                    <div className="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <Play size={36} className="text-white ml-1" />
                     </div>
+                    <span className="absolute bottom-4 text-white font-medium bg-black/50 px-4 py-1 rounded-full text-sm">Watch course preview</span>
                   </div>
                 </div>
               ) : (
@@ -403,12 +404,12 @@ const EcommerceMastery: React.FC = () => {
               { title: "Content Creation", desc: "Learn how to create compelling content that converts visitors into customers" },
               { title: "Financial Independence", desc: "Build a sustainable business model that can lead to financial freedom" }
             ].map((benefit, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+              <div key={idx} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-t-2 border-primary/10 hover:border-primary/30">
+                <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 text-primary">
                   <Check className="text-primary" size={24} />
                 </div>
-                <h3 className="text-xl font-bold mb-2">{benefit.title}</h3>
-                <p className="text-gray-700">{benefit.desc}</p>
+                <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{benefit.desc}</p>
               </div>
             ))}
           </div>
@@ -422,9 +423,10 @@ const EcommerceMastery: React.FC = () => {
           <p className="text-xl max-w-3xl mx-auto mb-10">{t('Join hundreds of successful students who have transformed their careers through this course.')}</p>
           <button 
             onClick={() => setIsFormOpen(true)}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-14 py-6 rounded-xl font-bold text-2xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-14 py-6 rounded-xl font-bold text-2xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 relative overflow-hidden group"
           >
             {t('Enroll Now')}
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-yellow-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </button>
         </div>
       </div>
