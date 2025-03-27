@@ -371,7 +371,7 @@ const EcommerceMastery: React.FC = () => {
                 <img 
                   src={heroWomen} 
                   alt={course.instructor} 
-                  className="absolute h-full w-full object-cover object-center"
+                  className="absolute h-full w-full object-cover object-right"
                   style={{
                     objectPosition: "center 5%", /* Adjust this value to center the person's face */
                     transform: "scale(1)" /* Slightly enlarge the image to fill the circle better */
