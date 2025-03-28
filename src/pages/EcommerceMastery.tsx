@@ -288,35 +288,38 @@ const EcommerceMastery: React.FC = () => {
               )}
             </div>
             
-            {/* Arabic course information with proper RTL support */}
-            <div className="bg-gradient-to-br from-white to-[color:var(--color-light)] py-12">
-              <div className="content-container">
-                <div className="card-enhanced p-8 max-w-4xl mx-auto">
-                  {/* Arabic title with proper RTL styling */}
+            {/* Enhanced Arabic course description section */}
+            <div className="bg-gray-50 py-10 my-12 border-t border-b border-gray-200">
+              <div className="container mx-auto px-4">
+                <div className="max-w-3xl mx-auto">
+                  {/* Arabic title with improved styling */}
                   <h2 
-                    className="text-3xl md:text-4xl font-bold mb-4 text-center text-[color:var(--color-dark)]" 
+                    className="text-3xl font-bold mb-4 text-right text-gray-900" 
                     dir="rtl" 
                     lang="ar"
                   >
                     {course.arabicName}
                   </h2>
                   
-                  {/* Arabic subtitle with proper styling */}
+                  {/* Decorative accent line */}
+                  <div className="w-24 h-1 bg-primary ml-auto mb-6"></div>
+                  
+                  {/* Arabic subtitle with improved styling */}
                   <p 
-                    className="text-xl text-gray-700 mb-6 text-center border-b border-gray-200 pb-6" 
+                    className="text-xl mb-6 text-right text-gray-700" 
                     dir="rtl" 
                     lang="ar"
                   >
                     {course.description}
                   </p>
                   
-                  {/* Arabic description with proper RTL formatting */}
+                  {/* Arabic description in a card for better readability */}
                   <div 
-                    className="text-gray-700 leading-relaxed bg-white/60 p-6 rounded-xl shadow-[var(--shadow-subtle)]" 
+                    className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm" 
                     dir="rtl" 
                     lang="ar"
                   >
-                    <p className="text-lg">
+                    <p className="text-gray-700 leading-relaxed text-lg">
                       {course.longDescription}
                     </p>
                   </div>
